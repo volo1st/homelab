@@ -1,0 +1,17 @@
+# Storage mounts for the homelab host.
+#
+# Branch disks are mounted at /media/1 through /media/4 and combined into
+# /mnt/nas_pool with mergerfs.
+
+# Root disk
+UUID=f2642fe0-ab96-4b85-b43e-1256a958b80d  /      ext4  defaults  0  1
+UUID=9A52-BC1E                             /boot/efi  vfat  defaults  0  1
+
+# NAS branch disks
+UUID=17976c3b-0d4c-4c1b-9eb8-d99b4ca90018  /media/1  ext4  defaults  0  2
+UUID=97caca7d-101b-45f8-8527-f881822d6ce2  /media/2  ext4  defaults  0  2
+UUID=eb317902-0497-4151-b343-57cd4823931e  /media/3  ext4  defaults  0  2
+UUID=a4f268c3-4e0e-431b-9877-1181453f7369  /media/4  ext4  defaults  0  2
+
+# NAS pool
+/media/1:/media/2:/media/3:/media/4  /mnt/nas_pool  fuse.mergerfs  defaults,nonempty,allow_other,use_ino,cache.files=partial,dropcacheonclose=true,category.create=mfs,fsname=mergerfs_pool  0  0

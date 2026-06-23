@@ -81,6 +81,49 @@ Expected role groups:
 
 Run `setup-access.sh` on the host to create the groups, apply memberships, and create the expected share directories.
 
+
+## Operations
+
+Apply the access model first when setting up a host:
+
+```bash
+./host/samba/setup-access.sh
+```
+
+Then install and validate the Samba config:
+
+```bash
+./host/samba/apply.sh
+```
+
+`apply.sh` validates the repo config with `testparm`, backs up the current `/etc/samba/smb.conf`, installs the repo config, validates the installed config, and restarts `smbd`.
+
+Run a non-mutating health check with concise default output:
+
+```bash
+./host/samba/check.sh
+```
+
+Print detailed command output when diagnosing:
+
+```bash
+./host/samba/check.sh --verbose
+DEBUG=1 ./host/samba/check.sh
+```
+
+Samba users must exist both as Unix users and in Samba passdb. Add or update Samba credentials with:
+
+```bash
+sudo smbpasswd -a vincent
+sudo smbpasswd -a nas
+```
+
+List Samba users with:
+
+```bash
+sudo pdbedit -L
+```
+
 ## Open Items
 
 - Run `setup-access.sh` on the host, then run `testparm -s /etc/samba/smb.conf` before restarting Samba.

@@ -12,14 +12,14 @@ UUID=9A52-BC1E                            /boot/efi     vfat    defaults  0     
 # NAS Data Disks (Mapped Permanently to Physical Motherboard Slots 0-3)
 #
 
-# <file system>                           <mount point> <type>  <options>               <dump>  <pass>
-UUID=97caca7d-101b-45f8-8527-f881822d6ce2 /media/1      ext4    defaults,noatime,nofail 0       2
-UUID=17976c3b-0d4c-4c1b-9eb8-d99b4ca90018 /media/2      ext4    defaults,noatime,nofail 0       2
-UUID=a4f268c3-4e0e-431b-9877-1181453f7369 /media/3      ext4    defaults,noatime,nofail 0       2
-UUID=eb317902-0497-4151-b343-57cd4823931e /media/4      ext4    defaults,noatime,nofail 0       2
+# <file system>                           <mount point>     <type>  <options>               <dump>  <pass>
+UUID=97caca7d-101b-45f8-8527-f881822d6ce2 /mnt/disks/ssd1   ext4    defaults,noatime,nofail 0       2
+UUID=17976c3b-0d4c-4c1b-9eb8-d99b4ca90018 /mnt/disks/ssd2   ext4    defaults,noatime,nofail 0       2
+UUID=a4f268c3-4e0e-431b-9877-1181453f7369 /mnt/disks/ssd3   ext4    defaults,noatime,nofail 0       2
+UUID=eb317902-0497-4151-b343-57cd4823931e /mnt/disks/ssd4   ext4    defaults,noatime,nofail 0       2
 
 #
 # MERGERFS POOL
 #
 # <file system>                     <mount point> <type>        <options>                                                                                                                                                                           <dump>  <pass>
-/media/1:/media/2:/media/3:/media/4 /mnt/nas_pool fuse.mergerfs defaults,nonempty,allow_other,use_ino,cache.files=partial,dropcacheonclose=true,category.create=epmfs,minfreespace=50G,nofail,x-systemd.after=local-fs.target,fsname=mergerfs_pool  0       0
+/mnt/disks/ssd1:/mnt/disks/ssd2:/mnt/disks/ssd3:/mnt/disks/ssd4 /ocean fuse.mergerfs defaults,nonempty,allow_other,use_ino,cache.files=partial,dropcacheonclose=true,category.create=epmfs,minfreespace=50G,nofail,x-systemd.after=local-fs.target,fsname=mergerfs_pool  0       0

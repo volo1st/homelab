@@ -83,10 +83,10 @@ else
   FAILURES=$((FAILURES + 1))
 fi
 
-check "Checking NAS pool mount" findmnt /mnt/nas_pool || true
-check "Checking NasShare path" test -d /mnt/nas_pool || true
-check "Checking Media path" test -d /mnt/nas_pool/Media || true
-check "Checking Public path" test -d /mnt/nas_pool/Public || true
+check "Checking NAS pool mount" findmnt /ocean || true
+check "Checking NasShare path" test -d /ocean || true
+check "Checking Media path" test -d /ocean/Media || true
+check "Checking Public path" test -d /ocean/Public || true
 
 printf '\nSamba users:\n'
 if command -v pdbedit >/dev/null 2>&1; then
@@ -118,7 +118,7 @@ done
 
 if is_verbose; then
   printf '\nStorage paths:\n'
-  ls -ld /mnt/nas_pool /mnt/nas_pool/Media /mnt/nas_pool/Public /media/1 /media/2 /media/3 /media/4 || true
+  ls -ld /ocean /ocean/Media /ocean/Public /media/1 /media/2 /media/3 /media/4 || true
 
   if command -v smbstatus >/dev/null 2>&1; then
     printf '\nActive Samba sessions:\n'

@@ -1,6 +1,6 @@
 # Samba
 
-Samba exposes the mergerfs NAS pool at `/mnt/nas_pool` as `NasShare`.
+Samba exposes the mergerfs NAS pool at `/ocean` as `NasShare`.
 
 ## Primary Clients
 
@@ -25,9 +25,9 @@ For direct Mac Studio work, the share should prioritize stable editing from the 
 
 | Share | Path | Access | Purpose |
 | --- | --- | --- | --- |
-| `NasShare` | `/mnt/nas_pool` | `@smbwriters` read/write | Full NAS access for trusted writer accounts |
-| `Media` | `/mnt/nas_pool/Media` | `@smbreaders` read-only, `@smbwriters` read/write | Media-focused access for TV and playback clients |
-| `Public` | `/mnt/nas_pool/Public` | `@smbshareusers` read-only, `@smbwriters` read/write | Limited public area for low-privilege accounts |
+| `NasShare` | `/ocean` | `@smbwriters` read/write | Full NAS access for trusted writer accounts |
+| `Media` | `/ocean/Media` | `@smbreaders` read-only, `@smbwriters` read/write | Media-focused access for TV and playback clients |
+| `Public` | `/ocean/Public` | `@smbshareusers` read-only, `@smbwriters` read/write | Limited public area for low-privilege accounts |
 
 `access based share enum = yes` is enabled so accounts should only see shares they are allowed to access.
 
@@ -36,7 +36,7 @@ For direct Mac Studio work, the share should prioritize stable editing from the 
 From the current host:
 
 ```text
-/mnt/nas_pool mergerfs_pool fuse.mergerfs rw,relatime,user_id=0,group_id=0,default_permissions,allow_other
+/ocean mergerfs_pool fuse.mergerfs rw,relatime,user_id=0,group_id=0,default_permissions,allow_other
 ```
 
 Directory ownership:
@@ -46,7 +46,7 @@ drwxrws--- vincent smbshareusers /media/1
 drwxrws--- vincent smbshareusers /media/2
 drwxrws--- vincent smbshareusers /media/3
 drwxrws--- vincent smbshareusers /media/4
-drwxrws--- vincent smbshareusers /mnt/nas_pool
+drwxrws--- vincent smbshareusers /ocean
 ```
 
 `testparm` accepts `smb.conf` on the host running Samba 4.19.5-Ubuntu.

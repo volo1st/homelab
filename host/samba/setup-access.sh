@@ -9,7 +9,7 @@ WRITER_USERS=(vincent)
 READER_USERS=(nas)
 PUBLIC_ONLY_USERS=()
 
-POOL_PATH="/mnt/nas_pool"
+POOL_PATH="/ocean"
 MEDIA_PATH="${POOL_PATH}/Media"
 PUBLIC_PATH="${POOL_PATH}/Public"
 

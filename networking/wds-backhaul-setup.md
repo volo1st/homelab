@@ -136,6 +136,23 @@ uci commit wireless
 wifi
 ```
 
+> Note: extra improvement on unstable ping (unverified)
+
+This one's less concerning and likely unrelated to WDS — since Air connects to MT6000 directly, this is purely a normal wifi-client-to-AP phenomenon. The "every ~5 packets, 40-80ms spike" pattern is a classic signature of one of:
+
+802.11k neighbor report polling — MT6000's config has ieee80211k='1' enabled, which periodically asks clients to scan and report on neighboring APs for roaming optimization. That scan briefly interrupts normal data flow.
+Power-save/PS-poll behavior — if Air's wifi radio cycles into a light power-saving state between bursts, waking up adds latency to the next packet.
+Periodic background wifi scanning by macOS — looking for better APs/networks, independent of anything on MT6000's side.
+
+None of these are wrong or broken — they're standard, expected background wifi management behavior, and 40-80ms every 5th packet is mild. If you want to rule out 802.11k as the specific cause, you could test-disable it temporarily:
+
+```sh
+uci set wireless.wifi5g.ieee80211k='0'
+uci set wireless.wifi5g.bss_transition='0'
+uci commit wireless
+wifi
+```
+
 ## Testing notes
 
 - **iperf3 for throughput**, wired between real devices — not router-

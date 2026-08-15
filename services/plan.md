@@ -25,14 +25,17 @@ of truth for the iPhone, NAS transport, and Immich integration.
       the Samba fallback only if SSH is unsuitable.
 - [ ] Confirm the NAS path mounted into the Immich service and choose a temporary
       landing path such as `/volume/photos/_incoming/`.
-- [ ] Prototype iPhone enumeration, download, and deletion with both candidate
-      backends (`afcclient`/libimobiledevice and Image Capture).
-  - Needs you: run the Mac-specific commands against the connected, unlocked iPhone;
-        record the exact macOS version, tool versions, and observed behavior in the
-        project notes.
-- [ ] Run the defined benchmark on a representative set that includes photos,
-      large videos, and Live Photos; record throughput and failure behavior.
-- [ ] Pick the initial import backend, while keeping the CLI independent of it.
+- [x] Prototype iPhone enumeration and download with both candidate backends
+      (`afcclient`/libimobiledevice and Image Capture). Image Capture worked manually
+      but has no usable scripting interface; AFC successfully enumerated and copied
+      DCIM media. Deletion behavior remains a Stage 2 real-device test.
+  - Recorded: [AFC and Image Capture experiments](project-notes.md).
+- [x] Run the defined benchmark on a representative set that includes photos,
+      videos, and Live Photos; record throughput and failure behavior.
+  - Recorded: [AFC batch benchmark](project-notes.md).
+- [x] Pick the initial import backend, while keeping the CLI independent of it.
+  - Decision: use `afcclient`/libimobiledevice first; retain Image Capture only as a
+        manual fallback until another scriptable native interface is available.
 - [ ] Confirm the clearing policy: Stage 1 never clears the phone; subsequent
       manual `clear` operations require a successfully published NAS copy, but do
       not require a mandatory end-to-end checksum comparison.

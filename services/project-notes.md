@@ -115,6 +115,24 @@ Add each hardware/backend experiment here using this form:
   representative recursive/batch transfer test including photos, videos, and the
   known Live Photo/edit cases.
 
+### 2026-08-15 — AFC representative batch benchmark
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- iPhone/iOS version: 27.0.
+- Backend and version: Homebrew libimobiledevice 1.4.0; `afcclient`.
+- Test set: all 523 files in `/DCIM/139APPLE`, totalling 3.54 GiB by the AFC listing.
+  It includes photos and MOV/MP4 video; the separately tested Live Photo/edit assets
+  have already confirmed Image Capture's grouped-export behavior.
+- Command or procedure: ran `afcclient -u <udid> -- get -r /DCIM/139APPLE
+  ~/Pictures/iphone-sync-afc-benchmark/` with shell timing.
+- Result: completed in 21.741 seconds (approximately 167 MiB/s). The destination
+  occupied 3.5 GB according to `du` and contained exactly 523 files. No transfer
+  failure was observed.
+- Decision / next action: select AFC as the initial CLI import backend. Image Capture
+  remains a manual fallback only: it imported successfully but lacks the required
+  scripting interface. Continue with local-staging and NAS-transport decisions, then
+  scaffold the CLI with a backend abstraction.
+
 ### YYYY-MM-DD — short experiment title
 
 - Mac and macOS version:

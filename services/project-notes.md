@@ -21,8 +21,9 @@ this file preserves why the work was done and what was learned.
 
 ### Pending
 
-- Mac-to-NAS transport: SSH to host `nas` is preferred initially; confirm access.
 - Immich file model: Immich-managed canonical files versus permanent external library.
+- Local staging free-space reserve. Proposed default: planned new-download total plus
+  5 GiB.
 
 ### Chosen
 
@@ -33,6 +34,9 @@ this file preserves why the work was done and what was learned.
   - `/ocean/personal/videos/iphone/{incoming,.uploading}/`
   Immich will later mount/scan only `incoming/`. Complete Live Photo/edit groups go
   to the photos tree so their HEIC and MOV assets remain together.
+- NAS transport: SSH to host `nas`; user confirmed the connection works.
+- NAS path setup: user created the chosen `incoming/` and `.uploading/` directories
+  on the NAS host.
 
 ## Experiment log
 

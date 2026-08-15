@@ -21,16 +21,17 @@ of truth for the iPhone, NAS transport, and Immich integration.
 ## Stage 0 — Decisions and device discovery
 
 - [x] Choose the local staging location on each Mac: `~/Pictures/iphone-sync`.
-  - Needs you: choose the exact free-space margin the CLI should reserve before its
-        first import.
-- [ ] Choose an initial NAS transport: SSH to host `nas` is the preferred first
-      option; confirm access and document the Samba fallback only if SSH is unsuitable.
+- [ ] Choose the exact free-space margin the CLI should reserve before its first
+      import. Proposed default: the planned new-download total plus 5 GiB.
+- [x] Choose the initial NAS transport: SSH to host `nas`. Connection confirmed;
+      document the Samba fallback only if SSH becomes unsuitable.
 - [x] Choose host-side NAS paths, with the Immich container mounts to be configured
       when Immich is set up:
   - Photos: `/ocean/personal/photos/iphone/{incoming,.uploading}/`
   - Videos: `/ocean/personal/videos/iphone/{incoming,.uploading}/`
   - Immich will mount and scan only each `incoming/` directory; `.uploading/` remains
         outside its scan roots.
+  - Confirmed: the paths have been created on the NAS host.
 - [x] Prototype iPhone enumeration and download with both candidate backends
       (`afcclient`/libimobiledevice and Image Capture). Image Capture worked manually
       but has no usable scripting interface; AFC successfully enumerated and copied

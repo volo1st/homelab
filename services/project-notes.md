@@ -108,8 +108,12 @@ Add each hardware/backend experiment here using this form:
 - Follow-up: `/DCIM/139APPLE` contains 523 entries. Its listing includes MOV and MP4
   files of at least 166,911,116 bytes. The long-listing byte size is field 5; use
   `sort -k5,5nr` (not `sort -k4`) when ranking the output by size.
-- Decision / next action: list a DCIM subdirectory and perform a one-file read-only
-  download test.
+- Follow-up: downloaded `/DCIM/139APPLE/IMG_9662.MOV` to local Mac staging using
+  `afcclient ... -- get`. The 166,911,116-byte source file arrived as a 159 MB local
+  file; afcclient reported 189.5 MB/s and the shell reported 0.998 seconds elapsed.
+- Decision / next action: AFC is the initial import-backend choice, subject to one
+  representative recursive/batch transfer test including photos, videos, and the
+  known Live Photo/edit cases.
 
 ### YYYY-MM-DD — short experiment title
 

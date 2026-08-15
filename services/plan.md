@@ -20,11 +20,17 @@ of truth for the iPhone, NAS transport, and Immich integration.
 
 ## Stage 0 — Decisions and device discovery
 
-- [ ] Choose the local staging location and minimum free-space policy on each Mac.
-- [ ] Choose an initial NAS transport: SSH is the preferred first option; document
-      the Samba fallback only if SSH is unsuitable.
-- [ ] Confirm the NAS path mounted into the Immich service and choose a temporary
-      landing path such as `/volume/photos/_incoming/`.
+- [x] Choose the local staging location on each Mac: `~/Pictures/iphone-sync`.
+  - Needs you: choose the exact free-space margin the CLI should reserve before its
+        first import.
+- [ ] Choose an initial NAS transport: SSH to host `nas` is the preferred first
+      option; confirm access and document the Samba fallback only if SSH is unsuitable.
+- [x] Choose host-side NAS paths, with the Immich container mounts to be configured
+      when Immich is set up:
+  - Photos: `/ocean/personal/photos/iphone/{incoming,.uploading}/`
+  - Videos: `/ocean/personal/videos/iphone/{incoming,.uploading}/`
+  - Immich will mount and scan only each `incoming/` directory; `.uploading/` remains
+        outside its scan roots.
 - [x] Prototype iPhone enumeration and download with both candidate backends
       (`afcclient`/libimobiledevice and Image Capture). Image Capture worked manually
       but has no usable scripting interface; AFC successfully enumerated and copied
@@ -61,7 +67,8 @@ in Immich. No automatic deletion from the iPhone or local staging cleanup.
 - [ ] Implement `iphone-sync push` to copy completed staging files to the NAS.
 - [ ] Upload first to a unique, non-Immich-scanned temporary NAS location, then
       atomically rename the completed file into the landing directory. Never expose
-      a partial upload to Immich.
+      a partial upload to Immich. On mergerfs, treat an `EXDEV` rename failure as a
+      failed push rather than falling back to a visible copy.
 - [ ] Use a deterministic NAS directory convention, with a documented fallback when
       capture-date metadata is unavailable and collision-safe destination names.
 - [ ] Make unreachable NAS behavior non-destructive and easy to retry.

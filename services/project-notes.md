@@ -21,9 +21,18 @@ this file preserves why the work was done and what was learned.
 
 ### Pending
 
-- Import backend: `afcclient`/libimobiledevice versus Image Capture.
-- Mac-to-NAS transport: SSH preferred initially; confirm availability and target path.
+- Mac-to-NAS transport: SSH to host `nas` is preferred initially; confirm access.
 - Immich file model: Immich-managed canonical files versus permanent external library.
+
+### Chosen
+
+- Local Mac staging: `~/Pictures/iphone-sync` on each Mac. Exact free-space reserve
+  policy remains to be chosen.
+- NAS landing layout:
+  - `/ocean/personal/photos/iphone/{incoming,.uploading}/`
+  - `/ocean/personal/videos/iphone/{incoming,.uploading}/`
+  Immich will later mount/scan only `incoming/`. Complete Live Photo/edit groups go
+  to the photos tree so their HEIC and MOV assets remain together.
 
 ## Experiment log
 

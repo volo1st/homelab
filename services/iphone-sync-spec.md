@@ -18,7 +18,7 @@ ML pipeline (faces, CLIP smart search, object/scene tags, dedup) covers that req
 | MacBook Air M4 | Portable import host | Wi-Fi, intermittent |
 | Mac Studio M1 Max | Desktop import host | 2.5GbE switch (possible future 10GbE direct link) |
 | iPhone 16 Pro | Source | USB-C, direct to whichever Mac |
-| NAS (Ubuntu 24.04) | Destination + Immich host | Samba share, SSH available |
+| NAS (Ubuntu 24.04, host `nas`) | Destination + Immich host | Samba share, SSH available |
 
 Import must work identically on **either** Mac. The tool doesn't get to assume it's
 always near the NAS — sync-to-NAS is a separable step that may run immediately
@@ -38,11 +38,11 @@ iPhone 16 Pro
                                                              │
                                     rsync/rclone over Samba or SSH
                                                              ▼
-                                          NAS: /volume/photos/_incoming/<date>/
+                   NAS: /ocean/personal/{photos,videos}/iphone/incoming/<date>/
                                                              │
-                                          Immich external library watch
+                                      Immich external-library scan roots only
                                                              ▼
-                                     Categorized, searchable, deduped library
+                                          Categorized, searchable, deduped library
 ```
 
 Two components, as you originally sketched — but Component B is now "point Immich at
@@ -80,7 +80,8 @@ make sure whatever import mechanism you pick doesn't split the pair across separ
 import batches (relevant mainly if you ever paginate/batch the pull). Do not identify
 the pair solely by exported filenames: Image Capture can use different filename forms
 for edits. An edit may be delivered as an `IMG_E...` rendered pair rather than an
-`.AAE` sidecar.
+`.AAE` sidecar. Route the full group to the photos tree even though it includes a MOV;
+ordinary standalone videos go to the videos tree.
 
 **Safety invariants:**
 1. Never delete from iPhone during `import`; clear only complete Live Photo/edit-sidecar
@@ -123,20 +124,29 @@ cable alone fixes speed; the benchmark will tell you where the real ceiling is.
 - `rsync -av` (or `rclone` if you want richer retry/logging) over Samba, or direct SSH
   if enabled on the NAS — SSH avoids Samba's per-file overhead and is
   likely faster for large batches.
-- Landing path convention: `/volume/photos/_incoming/<YYYY-MM-DD>/` (date = capture
-  date, not import date, so Immich's timeline stays sane regardless of when you
-  actually ran the sync).
-- Copy to a unique path such as `/volume/photos/.iphone-uploading/<uuid>.part` first.
-  After the transfer succeeds, atomically rename it into `_incoming` on the same NAS
-  filesystem. Configure Immich to scan only `_incoming`, never `.iphone-uploading`.
+- Landing path convention:
+  `/ocean/personal/photos/iphone/incoming/<YYYY-MM-DD>/` for photos and complete
+  Live Photo/edit groups; `/ocean/personal/videos/iphone/incoming/<YYYY-MM-DD>/` for
+  standalone videos. The date is the capture date, not the import date, so Immich's
+  timeline stays sane regardless of when sync occurs.
+- Copy to a unique path under the matching sibling `.uploading/` directory first, for
+  example `/ocean/personal/photos/iphone/.uploading/<uuid>.part`. After transfer,
+  atomically rename it into that tree's `incoming/` path. Configure Immich to scan
+  only the two `incoming/` directories, never either `.uploading/` directory.
+- Mergerfs requirement: create each `.../iphone/` base directory once through the
+  mergerfs mount, then create its `incoming/` and `.uploading/` children there. With
+  the configured `epmfs` policy this should keep the sibling paths on the same branch;
+  validate it with a small host-side publish test before enabling Immich. Treat a
+  cross-device (`EXDEV`) rename error as a failed push, never as permission to copy a
+  partial file into a scanned path.
 - MacBook Air case: `push` simply fails/skips gracefully if the NAS isn't reachable
   (Wi-Fi-only, off the home network) and retries next time `iphone-sync push` runs.
 
 ## 7. Component B — NAS / Immich
 
-- No custom code. Configure Immich to watch `/volume/photos/_incoming/` as an
-  external library (or have it actively ingest + you archive the original
-  `_incoming` copy separately, depending on whether you want Immich managing the
+- No custom code. Configure Immich to watch the two `incoming/` directories above as
+  external libraries (or have it actively ingest + you archive the original incoming
+  copy separately, depending on whether you want Immich managing the
   canonical copy or just indexing a copy you control).
 - Decision to make later, not now: does Immich *own* the files (moves/manages them
   into its own storage structure), or does it *index* files you keep organized

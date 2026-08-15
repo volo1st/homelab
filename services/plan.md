@@ -1,9 +1,10 @@
 # iPhone Sync Plan
 
 This plan optimizes for reaching a safe, usable manual workflow quickly, then
-hardens it from real-world use. Automated unit tests are intentionally deferred
-until the 1.0.0 milestone; each stage should instead be exercised manually on a
-real iPhone and both Macs where applicable.
+hardens it from real-world use. Unit tests should cover deterministic code we
+own—especially SQLite manifest transitions and destructive-command eligibility—as
+soon as that code exists. Real-device and real-service testing remains the source
+of truth for the iPhone, NAS transport, and Immich integration.
 
 ## How this plan is maintained
 
@@ -32,6 +33,9 @@ real iPhone and both Macs where applicable.
 - [ ] Run the defined benchmark on a representative set that includes photos,
       large videos, and Live Photos; record throughput and failure behavior.
 - [ ] Pick the initial import backend, while keeping the CLI independent of it.
+- [ ] Confirm the clearing policy: Stage 1 never clears the phone; subsequent
+      manual `clear` operations require a successfully published NAS copy, but do
+      not require a mandatory end-to-end checksum comparison.
 
 ## Stage 1 — MVP: usable manual import and NAS copy
 
@@ -44,38 +48,47 @@ in Immich. No automatic deletion from the iPhone or local staging cleanup.
 - [ ] Download to a temporary file, then atomically rename only after the transfer
       completes successfully.
 - [ ] Create a simple local SQLite manifest with source identifier, filename, size,
-      local path, capture date, import time, and local content hash.
+      local path, capture date, and import time. A local content hash may be stored
+      when available as a stable identity or diagnostic, but is not a required gate.
 - [ ] Make repeated imports skip media already recorded in that Mac's manifest.
 - [ ] Preserve related assets together where supported, especially HEIC/MOV Live
-      Photo pairs and `.AAE` edit sidecars.
+      Photo pairs and `.AAE` edit sidecars; record and operate on them as one asset
+      group where deletion is concerned.
 - [ ] Implement `iphone-sync push` to copy completed staging files to the NAS.
+- [ ] Upload first to a unique, non-Immich-scanned temporary NAS location, then
+      atomically rename the completed file into the landing directory. Never expose
+      a partial upload to Immich.
 - [ ] Use a deterministic NAS directory convention, with a documented fallback when
-      capture-date metadata is unavailable.
+      capture-date metadata is unavailable and collision-safe destination names.
 - [ ] Make unreachable NAS behavior non-destructive and easy to retry.
 - [ ] Manually test: ordinary photos, Live Photos, a large 4K/ProRes video, an
       interrupted import, an interrupted push, and rerunning each command.
 - [ ] Configure Immich to scan/index the landing directory; verify imported media
-      appears with sensible dates and that the files remain intact on both source
-      locations.
+      appears with sensible dates. Ensure it does not scan the temporary upload
+      location.
+- [ ] Add unit tests for manifest creation/transitions, idempotent import decisions,
+      asset grouping, path/date handling, and non-destructive command construction.
 
 ## Stage 2 — Daily-use safety and recovery
 
 Goal: make retrying, verification, and reclaiming iPhone storage trustworthy.
 
-- [ ] Model manifest state explicitly: discovered, copied locally, locally verified,
-      pushed, NAS verified, and eligible to clear.
-- [ ] Verify the local hash while streaming the initial download; avoid an automatic
-      second read of the iPhone solely for checksumming.
-- [ ] Verify the NAS copy by size and content hash before marking it NAS verified.
+- [ ] Model manifest state explicitly: discovered, copied locally, NAS published,
+      eligible to clear, and cleared. Keep optional verification results separate
+      from the normal state machine.
 - [ ] Implement `iphone-sync status` to show counts, failures, and pending work.
-- [ ] Implement `iphone-sync verify` for local/NAS reconciliation and recovery.
+- [ ] Implement `iphone-sync verify` as an on-demand local/NAS reconciliation and
+      recovery tool; use size and/or content hash when the user wants that assurance.
 - [ ] Implement `iphone-sync clear` as an explicit, interactive command that only
-      deletes items verified on the NAS by default.
+      deletes complete asset groups that have been successfully published to the NAS
+      by default.
 - [ ] Optionally add `clear --local-only` for urgent phone-space recovery, with a
       prominent warning that the Mac remains the sole verified copy.
 - [ ] Confirm deletion behavior and source identifiers against real iPhone media.
 - [ ] Manually test crashes or Ctrl-C at every state transition and confirm retries
       do not duplicate, lose, or falsely mark media as complete.
+- [ ] Add unit tests for clear eligibility, grouped deletion decisions, interrupted
+      state recovery, and retry idempotency.
 - [ ] Test the same workflow independently on the MacBook Air and Mac Studio.
 
 ## Stage 3 — Operational polish
@@ -102,10 +115,8 @@ Goal: make retrying, verification, and reclaiming iPhone storage trustworthy.
       transfer performance warrants it.
 - [ ] Consider packaging as a signed macOS app or a single distributable binary.
 
-## 1.0.0 — Test and release hardening
+## 1.0.0 — Release hardening
 
-- [ ] Add unit tests for manifest transitions, idempotency, path/date handling, and
-      command construction.
 - [ ] Add backend fakes or fixtures for import and deletion failure cases.
 - [ ] Add integration tests for an interrupted transfer and NAS verification.
 - [ ] Review the destructive-command UX and recovery documentation.

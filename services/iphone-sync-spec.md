@@ -2,8 +2,9 @@
 
 ## 1. Goal
 
-Automatically pull new photos/videos off an iPhone 16 Pro, land them on the NAS, and let
-Immich handle categorization. No custom categorization component — Immich's existing
+Manually pull new photos/videos off an iPhone 16 Pro, land them on the NAS, and let
+Immich handle categorization. Automation is a later option after the manual workflow
+has proved reliable. No custom categorization component — Immich's existing
 ML pipeline (faces, CLIP smart search, object/scene tags, dedup) covers that requirement.
 
 **In scope:** import from iPhone, integrity verification, space reclamation on iPhone, sync to NAS.
@@ -29,11 +30,11 @@ always near the NAS — sync-to-NAS is a separable step that may run immediately
 iPhone 16 Pro
    │  USB-C (afcclient or Image Capture — TBD, see §5)
    ▼
-[Mac] Local staging dir  ──(A: import + verify + dedup)──┐
+[Mac] Local staging dir  ──(A: import + staging + dedup)─┐
    │                                                       │
-   │  iPhone files deleted only after verified copy        │
+   │  iPhone files deleted only after NAS publication      │
    ▼                                                       ▼
-[Mac] manifest (sqlite/log, tracks imported hashes)   ready-to-sync queue
+[Mac] manifest (sqlite/log, tracks imported assets)   ready-to-sync queue
                                                              │
                                     rsync/rclone over Samba or SSH
                                                              ▼
@@ -53,36 +54,42 @@ a folder," not custom code.
 
 ```
 iphone-sync import    # pull new files from connected iPhone into local staging
-iphone-sync verify    # checksum staging files against device (or re-verify last import)
-iphone-sync clear     # delete verified-imported files from iPhone
+iphone-sync verify    # optional local/NAS reconciliation and diagnostics
+iphone-sync clear     # delete successfully published asset groups from iPhone
 iphone-sync push      # rsync staging -> NAS
 iphone-sync status    # show pending/staged/pushed counts
 ```
 
-`import` should default to import+verify, with `clear` as a separate explicit step
-(safety: never auto-delete from iPhone without a human able to `Ctrl-C` between verify
-and clear, at least until you trust it).
+`import` should not delete from the phone. `clear` remains a separate explicit,
+interactive step, so a human can review the result and stop before deletion.
 
 **State/manifest:**
-- A local manifest (sqlite is easiest — one row per file: filename, hash, size, capture
-  date, import timestamp, pushed-to-NAS timestamp) lives alongside the staging dir on
-  *each* Mac. Since both Macs import independently, the manifest is per-Mac, not shared —
-  dedup across Macs happens at the NAS landing dir (by content hash) or is handled by
-  Immich's own dedup on ingest.
+- A local manifest (sqlite is easiest — one row per file: source identifier, filename,
+  size, capture date, import timestamp, published-to-NAS timestamp) lives alongside
+  the staging dir on *each* Mac. Since both Macs import independently, the manifest
+  is per-Mac, not shared —
+  Stage 1 can therefore re-import a still-present phone asset on the other Mac. Once
+  the normal explicit clear workflow is used, the phone no longer presents that asset;
+  Immich also provides a backstop for duplicates on ingest.
 - Re-running `import` should be a no-op for files already in the manifest (dedup by
-  iPhone-side file identifier + hash, not just filename — Live Photos and burst shots
-  can collide on naming).
+  iPhone-side file identifier where the backend supplies one, not just filename —
+  Live Photos and burst shots can collide on naming).
 
 **Live Photos:** each Live Photo is a HEIC + MOV pair sharing a content identifier —
 make sure whatever import mechanism you pick doesn't split the pair across separate
 import batches (relevant mainly if you ever paginate/batch the pull).
 
 **Safety invariants:**
-1. Never delete from iPhone before checksum-verifying the local copy.
-2. `push` (Mac → NAS) should also be checksum-verified before considering staging
-   files safe to prune locally.
+1. Never delete from iPhone during `import`; clear only complete Live Photo/edit-sidecar
+   asset groups after a successful NAS publication.
+2. Upload to a unique temporary NAS path outside Immich's scan root, then atomically
+   publish the complete file into `_incoming`. A failed upload is never visible to Immich.
 3. All steps idempotent — re-running any subcommand after a crash/interrupt should
    converge to the same end state, not duplicate or corrupt data.
+
+Checksums are optional diagnostics and useful stable identities, not required transfer
+gates. Re-reading iPhone files solely to obtain an independent source hash is not part
+of the normal workflow.
 
 ## 5. Import mechanism — decision pending your benchmark
 
@@ -110,12 +117,15 @@ cable alone fixes speed; the benchmark will tell you where the real ceiling is.
 
 ## 6. Transport — Mac → NAS
 
-- `rsync -av --checksum` (or `rclone` if you want richer retry/logging) over Samba,
-  or direct SSH if enabled on the NAS — SSH avoids Samba's per-file overhead and is
+- `rsync -av` (or `rclone` if you want richer retry/logging) over Samba, or direct SSH
+  if enabled on the NAS — SSH avoids Samba's per-file overhead and is
   likely faster for large batches.
 - Landing path convention: `/volume/photos/_incoming/<YYYY-MM-DD>/` (date = capture
   date, not import date, so Immich's timeline stays sane regardless of when you
   actually ran the sync).
+- Copy to a unique path such as `/volume/photos/.iphone-uploading/<uuid>.part` first.
+  After the transfer succeeds, atomically rename it into `_incoming` on the same NAS
+  filesystem. Configure Immich to scan only `_incoming`, never `.iphone-uploading`.
 - MacBook Air case: `push` simply fails/skips gracefully if the NAS isn't reachable
   (Wi-Fi-only, off the home network) and retries next time `iphone-sync push` runs.
 
@@ -162,8 +172,10 @@ only if you specifically want a single static binary across both Macs.
 ## 10. Suggested build order
 
 1. Prototype both import backends against the benchmark test set → pick one.
-2. Build `import` + `verify` + manifest (this is the highest-risk, most novel part).
+2. Build `import` + manifest and its unit tests (this is the highest-risk, most
+   novel part).
 3. Build `push` (rsync wrapper) — comparatively boilerplate.
-4. Build `clear` last, once you trust verify/push (this is the only destructive step).
+4. Build `clear` last, once you trust push and the grouped-asset eligibility tests
+   (this is the only destructive step).
 5. Point Immich at `_incoming/`, observe categorization quality, then decide on §7's
    ownership question.

@@ -87,6 +87,18 @@ Add each hardware/backend experiment here using this form:
 - Decision / next action: do not use fragile GUI automation as the CLI backend;
   install and evaluate libimobiledevice/AFC.
 
+### 2026-08-15 — libimobiledevice/AFC availability
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- iPhone/iOS version: 27.0.
+- Backend and version: Homebrew libimobiledevice 1.4.0; `afcclient` is installed.
+- Command or procedure: installed libimobiledevice, then ran `idevice_id -l`,
+  `ideviceinfo -k ProductVersion`, and listed the formula executables.
+- Result: the connected device was enumerated successfully and reported iOS 27.0.
+  The formula includes both `ideviceinfo` and `afcclient`.
+- Decision / next action: inspect `afcclient` usage and perform a read-only DCIM
+  enumeration before testing a download.
+
 ### YYYY-MM-DD — short experiment title
 
 - Mac and macOS version:

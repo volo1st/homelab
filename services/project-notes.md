@@ -105,6 +105,9 @@ Add each hardware/backend experiment here using this form:
   media directories. When a subcommand contains an option such as `ls -l`, pass `--`
   before the subcommand (`afcclient -u <udid> -- ls -l /PATH`) so it is not parsed as
   an `afcclient` option.
+- Follow-up: `/DCIM/139APPLE` contains 523 entries. Its listing includes MOV and MP4
+  files of at least 166,911,116 bytes. The long-listing byte size is field 5; use
+  `sort -k5,5nr` (not `sort -k4`) when ranking the output by size.
 - Decision / next action: list a DCIM subdirectory and perform a one-file read-only
   download test.
 

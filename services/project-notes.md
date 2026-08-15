@@ -100,8 +100,13 @@ Add each hardware/backend experiment here using this form:
   `-u/--udid`, and optional app-container access. The supported in-session commands
   include `ls`, `info`, and `get`; its command-line mode also accepts a command after
   the options.
-- Decision / next action: perform a read-only DCIM enumeration before testing a
-  download.
+- Follow-up: `afcclient -u <udid> ls /` successfully listed the AFC root, including
+  `DCIM`; `afcclient -u <udid> ls /DCIM` successfully listed the numbered `APPLE`
+  media directories. When a subcommand contains an option such as `ls -l`, pass `--`
+  before the subcommand (`afcclient -u <udid> -- ls -l /PATH`) so it is not parsed as
+  an `afcclient` option.
+- Decision / next action: list a DCIM subdirectory and perform a one-file read-only
+  download test.
 
 ### YYYY-MM-DD — short experiment title
 

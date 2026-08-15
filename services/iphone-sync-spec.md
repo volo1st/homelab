@@ -77,7 +77,10 @@ interactive step, so a human can review the result and stop before deletion.
 
 **Live Photos:** each Live Photo is a HEIC + MOV pair sharing a content identifier —
 make sure whatever import mechanism you pick doesn't split the pair across separate
-import batches (relevant mainly if you ever paginate/batch the pull).
+import batches (relevant mainly if you ever paginate/batch the pull). Do not identify
+the pair solely by exported filenames: Image Capture can use different filename forms
+for edits. An edit may be delivered as an `IMG_E...` rendered pair rather than an
+`.AAE` sidecar.
 
 **Safety invariants:**
 1. Never delete from iPhone during `import`; clear only complete Live Photo/edit-sidecar

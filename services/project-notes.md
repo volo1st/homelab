@@ -56,9 +56,23 @@ Add each hardware/backend experiment here using this form:
   control; all selected sample media imported successfully. The 1.83 GB MOV appeared
   to complete in only a few seconds over a 20 Gbps-rated USB-C cable. This is a
   qualitative observation, not yet a timed throughput benchmark.
-- Decision / next action: create or locate a Live Photo for a paired-asset test, then
-  run a timed representative Image Capture benchmark. Install libimobiledevice via
-  Homebrew only when ready to compare the AFC backend.
+- Decision / next action: run a timed representative Image Capture benchmark. Install
+  libimobiledevice via Homebrew only when ready to compare the AFC backend.
+
+### 2026-08-15 — Image Capture Live Photo and edit behavior
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- iPhone/iOS version: not yet recorded.
+- Backend and version: built-in Image Capture.
+- Test set: one newly taken Live Photo, followed by the same Live Photo after an edit.
+- Command or procedure: imported each version through Image Capture and inspected the
+  exported file names and sidecars.
+- Result: the original imported as `IMG_9780.HEIC` and `IMG_9708.MOV`; the edited
+  version imported as `IMG_E9780.HEIC` and `IMG_E9780.MOV`. No `.AAE` sidecar was
+  produced.
+- Decision / next action: treat source/backend relationship data or an import batch as
+  authoritative for grouping; never infer a Live Photo relationship solely from the
+  exported basename. Support the edited rendered pair even when no `.AAE` exists.
 
 ### YYYY-MM-DD — short experiment title
 

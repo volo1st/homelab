@@ -53,7 +53,8 @@ in Immich. No automatic deletion from the iPhone or local staging cleanup.
 - [ ] Make repeated imports skip media already recorded in that Mac's manifest.
 - [ ] Preserve related assets together where supported, especially HEIC/MOV Live
       Photo pairs and `.AAE` edit sidecars; record and operate on them as one asset
-      group where deletion is concerned.
+      group where deletion is concerned. Do not infer a group solely from exported
+      filenames: Image Capture may change names for edited variants.
 - [ ] Implement `iphone-sync push` to copy completed staging files to the NAS.
 - [ ] Upload first to a unique, non-Immich-scanned temporary NAS location, then
       atomically rename the completed file into the landing directory. Never expose

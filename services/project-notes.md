@@ -42,6 +42,24 @@ Add each hardware/backend experiment here using this form:
   separately determine whether Homebrew/libimobiledevice should be installed for the
   AFC benchmark.
 
+### 2026-08-15 — MacBook Air Image Capture smoke test
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- iPhone/iOS version: not yet recorded.
+- Backend and version: built-in Image Capture; Homebrew 6.0.16 is available for a
+  later libimobiledevice/AFC comparison.
+- Test set: a photo, a short video, and a 1.83 GB MOV. No existing Live Photo was
+  available for this smoke test.
+- Command or procedure: connected and unlocked the iPhone, used Image Capture to
+  import the sample to local storage without enabling deletion.
+- Result: the phone appeared in Image Capture, including a `Delete after import`
+  control; all selected sample media imported successfully. The 1.83 GB MOV appeared
+  to complete in only a few seconds over a 20 Gbps-rated USB-C cable. This is a
+  qualitative observation, not yet a timed throughput benchmark.
+- Decision / next action: create or locate a Live Photo for a paired-asset test, then
+  run a timed representative Image Capture benchmark. Install libimobiledevice via
+  Homebrew only when ready to compare the AFC backend.
+
 ### YYYY-MM-DD — short experiment title
 
 - Mac and macOS version:

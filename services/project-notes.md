@@ -29,6 +29,19 @@ this file preserves why the work was done and what was learned.
 
 Add each hardware/backend experiment here using this form:
 
+### 2026-08-15 — MacBook Air import-backend availability
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- iPhone/iOS version: not yet recorded.
+- Backend and version: neither `afcclient` nor `ideviceinfo` is installed or on `PATH`.
+- Command or procedure: ran `command -v afcclient`, `command -v ideviceinfo`, and
+  `ideviceinfo -k ProductVersion`.
+- Result: both discovery commands returned no path; the `ideviceinfo` invocation
+  returned `zsh: command not found`.
+- Decision / next action: test Image Capture with the connected unlocked iPhone;
+  separately determine whether Homebrew/libimobiledevice should be installed for the
+  AFC benchmark.
+
 ### YYYY-MM-DD — short experiment title
 
 - Mac and macOS version:

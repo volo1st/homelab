@@ -74,6 +74,19 @@ Add each hardware/backend experiment here using this form:
   authoritative for grouping; never infer a Live Photo relationship solely from the
   exported basename. Support the edited rendered pair even when no `.AAE` exists.
 
+### 2026-08-15 — Image Capture scripting availability
+
+- Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).
+- Backend and version: built-in Image Capture.
+- Command or procedure: with the iPhone connected, ran `osascript -e 'tell application
+  "Image Capture" to get name of every device'` and `sdef "/System/Applications/Image
+  Capture.app"`.
+- Result: the AppleScript command failed with `Expected class name but found
+  identifier` (error -2741); `sdef` failed with error -192. Image Capture does not
+  expose the required scripting dictionary/interface for this approach.
+- Decision / next action: do not use fragile GUI automation as the CLI backend;
+  install and evaluate libimobiledevice/AFC.
+
 ### YYYY-MM-DD — short experiment title
 
 - Mac and macOS version:

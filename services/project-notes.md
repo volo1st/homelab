@@ -96,8 +96,12 @@ Add each hardware/backend experiment here using this form:
   `ideviceinfo -k ProductVersion`, and listed the formula executables.
 - Result: the connected device was enumerated successfully and reported iOS 27.0.
   The formula includes both `ideviceinfo` and `afcclient`.
-- Decision / next action: inspect `afcclient` usage and perform a read-only DCIM
-  enumeration before testing a download.
+- Follow-up: `afcclient --help` confirms the plain AFC service, USB targeting with
+  `-u/--udid`, and optional app-container access. The supported in-session commands
+  include `ls`, `info`, and `get`; its command-line mode also accepts a command after
+  the options.
+- Decision / next action: perform a read-only DCIM enumeration before testing a
+  download.
 
 ### YYYY-MM-DD — short experiment title
 

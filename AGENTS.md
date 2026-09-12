@@ -48,6 +48,10 @@ available at `/host` as a read-only mount.
 
 ## Change procedure
 
+Work on one complete work package at a time. Do not start another package until the
+active package is complete or explicitly blocked. If it is blocked, record the cause
+and the required next action in the project plan.
+
 1. Read the applicable documents and current configuration.
 2. Confirm the execution environment.
 3. Make the change in the repository.

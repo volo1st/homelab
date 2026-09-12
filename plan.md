@@ -1,5 +1,11 @@
 # Homelab Repo Plan
 
+## Current work
+
+Open [`intial-plan-after-audit.md`](intial-plan-after-audit.md#current-status). Its
+Current status section identifies the active package, blocker, resume steps, and next
+available focus.
+
 This document records standing principles and collaboration rules. Actionable work
 arising from the 2026-09-12 repository audit is tracked only in
 [`intial-plan-after-audit.md`](intial-plan-after-audit.md).

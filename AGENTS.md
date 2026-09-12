@@ -103,6 +103,9 @@ Run checks that are proportional to the change.
 
 ## Plan maintenance
 
+- Update the project plan's Current status section before a planned stop.
+- State the active or blocked package in the Current status section.
+- State the exact resume action and next available focus.
 - Add a new checkbox when the audit reveals new work.
 - Do not silently increase the scope of an existing checkbox.
 - Mark a checkbox complete only after implementation and validation.

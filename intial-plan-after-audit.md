@@ -7,9 +7,37 @@ This document is the single source of truth for audit work. The audit date is
 
 The filename keeps the spelling from the initial request. Do not create a second plan.
 
+## Current status
+
+Last update: 2026-09-12
+
+Current package: **Work package 1: fail-closed NAS storage**
+
+State: **Blocked**
+
+Blocker: Other NAS work prevents a normal reboot test.
+
+Resume work package 1 after the other NAS work finishes:
+
+1. Reboot the NAS host during an approved maintenance period.
+2. Run `./host/storage/check.sh` from a host shell.
+3. Run `./host/storage/check-generated.sh` from a host shell.
+4. Confirm that Samba is active.
+5. Confirm that one representative client reconnects.
+6. Record the results in work package 1.
+7. Mark work package 1 complete.
+
+Accepted limitation: Do not remove a production SSD only to test a missing branch.
+The generated dependency graph provides the accepted evidence for this failure path.
+
+Next available focus: **Work package 2: Samba access paths and permissions**
+
 ## Work rule
 
 Complete one work package before you start the next work package.
+
+Update the Current status section before each planned stop. Include the active or
+blocked package, the exact resume action, and the next available focus.
 
 Use this cycle for each package:
 

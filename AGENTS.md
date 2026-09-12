@@ -62,6 +62,14 @@ available at `/host` as a read-only mount.
 
 ## Repository rules
 
+- Compare each design with current engineering best practice for its purpose.
+- Use authoritative primary sources for this comparison when they are available.
+- Check safety, reliability, recovery, security, and operation before performance.
+- State important tradeoffs before implementation.
+- Do not apply a general best practice without checking the actual workload and
+  failure model.
+- Prefer a safe and clear failure state to an apparently available but incomplete
+  service.
 - Prefer executable configuration and scripts to long instructions.
 - Keep host configuration below `host/`.
 - Keep service configuration below `services/`.

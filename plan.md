@@ -58,6 +58,10 @@ Optimize decisions in this order:
 
 Practical implications:
 
+- Compare each design with current engineering best practice for its purpose.
+- Use authoritative sources when they are available.
+- Evaluate the actual workload and failure model before implementation.
+- Record important tradeoffs and accepted risks.
 - Prefer boring, proven components.
 - Avoid unnecessary orchestration layers.
 - Keep service boundaries explicit.

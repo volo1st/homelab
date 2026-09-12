@@ -42,10 +42,10 @@ From the current host:
 Directory ownership:
 
 ```text
-drwxrws--- vincent smbshareusers /media/1
-drwxrws--- vincent smbshareusers /media/2
-drwxrws--- vincent smbshareusers /media/3
-drwxrws--- vincent smbshareusers /media/4
+drwxrws--- vincent smbshareusers /mnt/disks/ssd1
+drwxrws--- vincent smbshareusers /mnt/disks/ssd2
+drwxrws--- vincent smbshareusers /mnt/disks/ssd3
+drwxrws--- vincent smbshareusers /mnt/disks/ssd4
 drwxrws--- vincent smbshareusers /ocean
 ```
 
@@ -67,7 +67,8 @@ Mergerfs can work well with Samba access control when the model stays POSIX-frie
 
 - Samba should authenticate users and apply share-level rules.
 - The mergerfs pool should expose normal Unix ownership, groups, modes, and xattrs from the branch filesystems.
-- Branch directories under `/media/1` through `/media/4` should keep consistent ownership and permissions.
+- Branch directories under `/mnt/disks/ssd1` through `/mnt/disks/ssd4` must have
+  consistent ownership and permissions.
 - `allow_other` and `default_permissions` are appropriate for letting Samba access the FUSE mount while still enforcing Unix permissions.
 - Avoid relying on per-branch special cases; permissions should make sense at the pool path and on every branch.
 

@@ -83,27 +83,48 @@ NAS as a healthy service.
 
 ### Repository changes
 
-- [ ] Make mergerfs require all four branch mounts.
-- [ ] Make mergerfs start after all four branch mounts.
-- [ ] Prevent mergerfs from using an unmounted directory on the root filesystem.
-- [ ] Review `nofail` for the host and branch mount entries.
-- [ ] Define the Samba dependency on healthy storage.
-- [ ] Add checks for UUIDs, mounts, filesystem types, mergerfs, and free space.
-- [ ] Document normal boot, disk-failure, recovery, and rollback behavior.
-- [ ] Make the storage README match the current paths, UUIDs, `epmfs`, and 50 GiB
+- [x] Make mergerfs require all four branch mounts.
+  - Evidence: A systemd 255 generator test produced `RequiresMountsFor=` for all four
+    branch paths.
+- [x] Make mergerfs start after all four branch mounts.
+  - Evidence: `RequiresMountsFor=` adds requirement and ordering dependencies.
+- [x] Prevent mergerfs from using an unmounted directory on the root filesystem.
+  - Evidence: `/ocean` now requires each branch mount unit to start successfully.
+- [x] Review `nofail` for the host and branch mount entries.
+  - Decision: Keep `nofail` so Ubuntu remains available for recovery.
+- [x] Define the Samba dependency on healthy storage.
+  - Evidence: `host/samba/smbd.service.d/storage.conf` requires `/ocean`.
+- [x] Add checks for UUIDs, mounts, filesystem types, mergerfs, and free space.
+  - Evidence: `host/storage/check.sh` passed all identity checks against `/host`.
+  - Evidence: The check reported that `ssd2` has less than 50 GiB available.
+- [x] Track and check the expected generated mount unit.
+  - Evidence: `host/storage/expected/ocean.mount` contains the golden test fixture.
+  - Evidence: `host/storage/check-generated.sh` compares the live generated unit with
+    the fixture.
+- [x] Document normal boot, disk-failure, recovery, and rollback behavior.
+- [x] Make the storage README match the current paths, UUIDs, `epmfs`, and 50 GiB
   limit.
-- [ ] Remove obsolete storage paths from applicable documents.
+- [x] Remove obsolete storage paths from remaining applicable documents.
+  - Evidence: The Samba README now uses `/mnt/disks/ssd1` through `ssd4`.
 
 ### Completion gates
 
-- [ ] Static validation passes.
+- [x] Static validation passes.
+  - Evidence: Bash syntax, ShellCheck, `git diff --check`, the storage-state check, and
+    the generated-unit comparison passed.
 - [ ] A safe test verifies each missing-branch condition.
 - [ ] Ubuntu remains available during the test.
 - [ ] The normal `/ocean` pool remains unavailable during the test.
 - [ ] Samba remains unavailable during the test.
 - [ ] The test does not write to a branch directory on the root filesystem.
-- [ ] Host application has explicit approval.
+- [x] Host application has explicit approval.
+  - Evidence: The user approved and ran `sudo ./apply.sh --install` on 2026-09-12.
 - [ ] Host verification evidence is recorded.
+  - Partial evidence: The installed files match the repository.
+  - Partial evidence: The generated `ocean.mount` unit requires all four branches.
+  - Partial evidence: `/ocean` remained mounted and Samba remained active after the
+    installation.
+  - Required evidence: Activation and missing-branch tests are not complete.
 - [ ] The complete package is committed.
 
 ## Work package 2: Samba access paths and permissions

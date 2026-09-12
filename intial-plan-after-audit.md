@@ -65,7 +65,11 @@ State: **Complete**
 
 ## Work package 1: fail-closed NAS storage
 
-State: **Active**
+State: **Blocked**
+
+Blocker: Other NAS work prevents a normal reboot test. Complete the reboot test after
+that work finishes. Use a disposable virtual machine or loop-backed test environment
+for the missing-branch test. Do not remove a production SSD only for this test.
 
 Goal: Keep Ubuntu available after a data-disk failure. Do not provide an incomplete
 NAS as a healthy service.
@@ -112,7 +116,7 @@ NAS as a healthy service.
 - [x] Static validation passes.
   - Evidence: Bash syntax, ShellCheck, `git diff --check`, the storage-state check, and
     the generated-unit comparison passed.
-- [ ] A safe test verifies each missing-branch condition.
+- [ ] A safe simulated test verifies each missing-branch condition.
 - [ ] Ubuntu remains available during the test.
 - [ ] The normal `/ocean` pool remains unavailable during the test.
 - [ ] Samba remains unavailable during the test.

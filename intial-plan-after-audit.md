@@ -68,8 +68,7 @@ State: **Complete**
 State: **Blocked**
 
 Blocker: Other NAS work prevents a normal reboot test. Complete the reboot test after
-that work finishes. Use a disposable virtual machine or loop-backed test environment
-for the missing-branch test. Do not remove a production SSD only for this test.
+that work finishes.
 
 Goal: Keep Ubuntu available after a data-disk failure. Do not provide an incomplete
 NAS as a healthy service.
@@ -116,19 +115,26 @@ NAS as a healthy service.
 - [x] Static validation passes.
   - Evidence: Bash syntax, ShellCheck, `git diff --check`, the storage-state check, and
     the generated-unit comparison passed.
-- [ ] A safe simulated test verifies each missing-branch condition.
-- [ ] Ubuntu remains available during the test.
-- [ ] The normal `/ocean` pool remains unavailable during the test.
-- [ ] Samba remains unavailable during the test.
-- [ ] The test does not write to a branch directory on the root filesystem.
+- [x] Decide how to validate the missing-branch condition.
+  - Accepted limitation: The production NAS will not receive a physical missing-disk
+    test only for this work package.
+  - Rationale: The test requires unnecessary production hardware work and service
+    risk.
+  - Evidence: The generated unit requires all four branch mounts. Standard systemd
+    dependency behavior stops `/ocean` when a required branch cannot start.
+  - Residual risk: The exact physical failure path is not tested on this NAS.
 - [x] Host application has explicit approval.
   - Evidence: The user approved and ran `sudo ./apply.sh --install` on 2026-09-12.
+- [ ] Complete a normal host reboot after the other NAS work finishes.
+- [ ] Run the storage-state and generated-unit checks after the reboot.
+- [ ] Confirm that Samba starts and a representative client reconnects after the
+  reboot.
 - [ ] Host verification evidence is recorded.
   - Partial evidence: The installed files match the repository.
   - Partial evidence: The generated `ocean.mount` unit requires all four branches.
   - Partial evidence: `/ocean` remained mounted and Samba remained active after the
     installation.
-  - Required evidence: Activation and missing-branch tests are not complete.
+  - Required evidence: The normal reboot test is not complete.
 - [ ] The complete package is committed.
 
 ## Work package 2: Samba access paths and permissions

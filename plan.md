@@ -1,5 +1,13 @@
 # Homelab Repo Plan
 
+This document records standing principles and collaboration rules. Actionable work
+arising from the 2026-09-12 repository audit is tracked only in
+[`intial-plan-after-audit.md`](intial-plan-after-audit.md).
+
+Development runs in a Docker container on the NAS. Follow
+[`working-with-host.md`](working-with-host.md) whenever work inspects or changes host
+state.
+
 ## Purpose
 
 This repository is the source of truth for recreating the homelab setup.

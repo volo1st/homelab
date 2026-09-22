@@ -9,26 +9,20 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-09-12
+Last update: 2026-09-22
 
 Current package: **Work package 1: fail-closed NAS storage**
 
-State: **Blocked**
+State: **Complete**
 
-Blocker: Other NAS work prevents a normal reboot test.
+The normal reboot verification passed on 2026-09-22. The storage and generated-unit
+checks succeeded. `ocean.mount` and `smbd` were active. A MacBook Air M4 opened a
+Samba share and showed the expected files.
 
-Resume work package 1 after the other NAS work finishes:
+Resume work with work package 2:
 
-1. Reboot the NAS host during an approved maintenance period.
-2. Run `./host/storage/check.sh` from a host shell.
-3. Run `./host/storage/check-generated.sh` from a host shell.
-4. Confirm that Samba is active.
-5. Confirm that one representative client reconnects.
-6. Record the results in work package 1.
-7. Mark work package 1 complete.
-
-Accepted limitation: Do not remove a production SSD only to test a missing branch.
-The generated dependency graph provides the accepted evidence for this failure path.
+1. Inspect the live Public path, share paths, users, groups, owners, and modes.
+2. Confirm the purpose, requirements, and failure model for the Samba access model.
 
 Next available focus: **Work package 2: Samba access paths and permissions**
 
@@ -93,10 +87,7 @@ State: **Complete**
 
 ## Work package 1: fail-closed NAS storage
 
-State: **Blocked**
-
-Blocker: Other NAS work prevents a normal reboot test. Complete the reboot test after
-that work finishes.
+State: **Complete**
 
 Goal: Keep Ubuntu available after a data-disk failure. Do not provide an incomplete
 NAS as a healthy service.
@@ -153,17 +144,22 @@ NAS as a healthy service.
   - Residual risk: The exact physical failure path is not tested on this NAS.
 - [x] Host application has explicit approval.
   - Evidence: The user approved and ran `sudo ./apply.sh --install` on 2026-09-12.
-- [ ] Complete a normal host reboot after the other NAS work finishes.
-- [ ] Run the storage-state and generated-unit checks after the reboot.
-- [ ] Confirm that Samba starts and a representative client reconnects after the
+- [x] Complete a normal host reboot after the other NAS work finishes.
+  - Evidence: The user completed a normal NAS reboot on 2026-09-22.
+- [x] Run the storage-state and generated-unit checks after the reboot.
+  - Evidence: `./host/storage/check.sh` and
+    `./host/storage/check-generated.sh` succeeded after the reboot.
+- [x] Confirm that Samba starts and a representative client reconnects after the
   reboot.
-- [ ] Host verification evidence is recorded.
-  - Partial evidence: The installed files match the repository.
-  - Partial evidence: The generated `ocean.mount` unit requires all four branches.
-  - Partial evidence: `/ocean` remained mounted and Samba remained active after the
-    installation.
-  - Required evidence: The normal reboot test is not complete.
-- [ ] The complete package is committed.
+  - Evidence: `ocean.mount` and `smbd` were active after the reboot.
+  - Evidence: A MacBook Air M4 opened a Samba share and showed the expected files.
+- [x] Host verification evidence is recorded.
+  - Evidence: The installed files match the repository.
+  - Evidence: The generated `ocean.mount` unit requires all four branches.
+  - Evidence: The storage checks, services, and representative client passed after a
+    normal reboot.
+- [x] The complete package is committed.
+  - Evidence: This plan update completes the package commit.
 
 ## Work package 2: Samba access paths and permissions
 

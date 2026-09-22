@@ -13,22 +13,21 @@ Last update: 2026-09-22
 
 Current package: **Work package 7: backup and disaster recovery**
 
-State: **Active**
+State: **Complete**
 
 The user approved a minimal recovery policy. The repository does not back up the
 mergerfs pool, local development data, or mutable service state. Important documents
 already have multiple cloud copies outside this repository. The upstream Git remote
-is the off-host copy of committed configuration. The recovery check currently fails
-because this worktree is active and seven completed commits have not been pushed. No
-host change has been made.
+is the off-host copy of committed configuration. The non-production restore test and
+recovery-readiness check passed. No host change was required.
 
-Resume work with work package 7:
+Resume work with work package 8:
 
-1. Stage and run the non-production recovery test.
-2. Commit the minimal recovery package.
-3. Push all local commits and rerun the recovery-readiness check.
+1. Select the free-space reserve and phone-clearing policy.
+2. Select the Immich file-ownership model.
+3. Reconcile the iPhone sync specification with the approved design.
 
-Next available focus: **Work package 7: backup and disaster recovery**
+Next available focus: **Work package 8: iPhone sync**
 
 ## Work rule
 
@@ -413,7 +412,7 @@ Goal: Make the host configuration reproducible and easy to inspect.
 
 ## Work package 7: backup and disaster recovery
 
-State: **Active**
+State: **Complete**
 
 Goal: Restore important data and configuration after a failure.
 
@@ -455,7 +454,11 @@ Goal: Restore important data and configuration after a failure.
 - [x] Record and repeat restore tests.
   - Evidence: `scripts/test-recovery.sh` provides the repeatable test. Work package
     11 owns the complete clean-clone recovery test.
-- [ ] Record evidence and commit the complete package.
+- [x] Record evidence and commit the complete package.
+  - Evidence: Commit `511d1fb` contains the recovery policy, readiness check, and
+    repeatable restore test. It was pushed to the off-host upstream.
+  - Evidence: The clean-worktree, upstream, off-host remote, pushed-commit, and secret
+    checks passed after the push.
 
 ## Work package 8: iPhone sync
 

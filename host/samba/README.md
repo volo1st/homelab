@@ -2,24 +2,26 @@
 
 Samba exposes the mergerfs NAS pool at `/ocean` as `NasShare`.
 
-## Primary Clients
+## Primary clients
 
-- Mac Studio over a local Layer 2 2.5GbE switch. This is the heaviest client and the main performance target.
+- Mac Studio over a local Layer 2 2.5GbE switch. This is the heaviest client and the
+  main performance target.
 - Apple TV over Wi-Fi, mainly for streaming.
 - iPhone and iPad over Wi-Fi, mainly for general file access.
 
 
-## Target Access Model
+## Target access model
 
 The share should support tiered access by account/group:
 
 - Personal or privileged users get full read/write access.
 - TV/media users get read-only access.
-- Guest or public users should only see a limited public area.
+- Low-privilege users should only see the limited public area.
 
-Current symptom after recent group changes: clients can discover and mount the NAS, but browsing into a directory closes/fails. This points toward an authorization or filesystem permission mismatch after mount, not basic network discovery.
-
-For direct Mac Studio work, the share should prioritize stable editing from the share for DAW projects and occasional video editing up to about 4k60. This makes predictable locking, metadata behavior, and permission mapping more important than maximum synthetic throughput.
+For direct Mac Studio work, the share must support stable editing from the share for
+digital audio workstation (DAW) projects and occasional video editing up to 4k60.
+Predictable locking, metadata behavior, and permission mapping are more important
+than maximum synthetic throughput.
 
 ## Shares
 
@@ -27,13 +29,16 @@ For direct Mac Studio work, the share should prioritize stable editing from the 
 | --- | --- | --- | --- |
 | `NasShare` | `/ocean` | `@smbwriters` read/write | Full NAS access for trusted writer accounts |
 | `Media` | `/ocean/Media` | `@smbreaders` read-only, `@smbwriters` read/write | Media-focused access for TV and playback clients |
-| `Public` | `/ocean/Public` | `@smbshareusers` read-only, `@smbwriters` read/write | Limited public area for low-privilege accounts |
+| `Public` | `/ocean/public` | `@smbshareusers` read-only, `@smbwriters` read/write | Limited public area for low-privilege accounts |
 
-`access based share enum = yes` is enabled so accounts should only see shares they are allowed to access.
+`access based share enum = yes` is enabled. An account can only see a share that it
+can access.
 
-## Current Host State
+The `Public` share is authenticated. It does not permit guest access.
 
-From the current host:
+## Host inventory before work package 2
+
+The host inventory on 2026-09-22 reported this mount state:
 
 ```text
 /ocean mergerfs_pool fuse.mergerfs rw,relatime,user_id=0,group_id=0,default_permissions,allow_other
@@ -42,37 +47,44 @@ From the current host:
 Directory ownership:
 
 ```text
-drwxrws--- vincent smbshareusers /mnt/disks/ssd1
-drwxrws--- vincent smbshareusers /mnt/disks/ssd2
-drwxrws--- vincent smbshareusers /mnt/disks/ssd3
-drwxrws--- vincent smbshareusers /mnt/disks/ssd4
-drwxrws--- vincent smbshareusers /ocean
+2770 vincent smbshareusers /mnt/disks/ssd1
+2770 vincent smbshareusers /mnt/disks/ssd2
+2770 vincent smbshareusers /mnt/disks/ssd3
+2770 vincent smbshareusers /mnt/disks/ssd4
+2770 vincent smbshareusers /ocean
+2775 vincent smbshareusers /ocean/Media
+2755 vincent smbshareusers /ocean/public
 ```
 
-`testparm` accepts `smb.conf` on the host running Samba 4.19.5-Ubuntu.
+The host did not contain `/ocean/Public`. The installed Samba configuration used
+`/ocean/public`.
 
-## Verification Notes
+The host contained these accounts:
 
-Current checks from the host:
+- `vincent` was a member of `smbshareusers` and `smbwriters`.
+- `nas` was a member of `smbshareusers` and `smbreaders`.
+- The Samba passdb contained `vincent` and `nas`.
 
-- `testparm /sandbox/vincent/repos/homelab/host/samba/smb.conf` loads successfully.
-- `smbstatus` showed no active sessions or locked files when captured.
-- `getent group nas` returned no group.
-- The backing directories are owned by user `vincent` and group `smbshareusers`.
+## Permission model
 
-
-## Mergerfs And Access Control
-
-Mergerfs can work well with Samba access control when the model stays POSIX-friendly:
+Use Samba access rules with Portable Operating System Interface (POSIX) group
+permissions:
 
 - Samba should authenticate users and apply share-level rules.
-- The mergerfs pool should expose normal Unix ownership, groups, modes, and xattrs from the branch filesystems.
+- The mergerfs pool should expose normal Unix ownership, groups, modes, and extended
+  attributes from the branch filesystems.
 - Branch directories under `/mnt/disks/ssd1` through `/mnt/disks/ssd4` must have
   consistent ownership and permissions.
-- `allow_other` and `default_permissions` are appropriate for letting Samba access the FUSE mount while still enforcing Unix permissions.
-- Avoid relying on per-branch special cases; permissions should make sense at the pool path and on every branch.
+- `allow_other` and `default_permissions` let Samba access the Filesystem in
+  Userspace (FUSE) mount while the kernel enforces Unix permissions.
+- Use mode `2770` for the branch roots, pool root, and share directories.
+- Use mode `0660` for files that Samba creates.
+- Use mode `2770` for directories that Samba creates.
+- Do not give access to other users.
 
-For this setup, prefer Unix groups plus Samba share rules over forcing every session to one user. The current Samba users are `vincent` and `nas`; both are members of `smbshareusers`.
+Use Unix groups and Samba share rules. Do not force each session to one user. The
+current Samba users are `vincent` and `nas`. Both users are members of
+`smbshareusers`.
 
 Expected role groups:
 
@@ -80,7 +92,9 @@ Expected role groups:
 - `smbwriters` - trusted accounts with write access, initially `vincent`.
 - `smbreaders` - read-only media accounts, initially `nas`.
 
-Run `setup-access.sh` on the host to create the groups, apply memberships, and create the expected share directories.
+`setup-access.sh` checks the complete storage state and all required Unix users before
+it makes a change. It creates the groups, applies the memberships, and sets the
+expected owner, group, and mode.
 
 
 ## Operations
@@ -88,6 +102,7 @@ Run `setup-access.sh` on the host to create the groups, apply memberships, and c
 Apply the access model first when setting up a host:
 
 ```bash
+./host/samba/setup-access.sh --check
 ./host/samba/setup-access.sh
 ```
 
@@ -97,22 +112,25 @@ Then install and validate the Samba config:
 ./host/samba/apply.sh
 ```
 
-`apply.sh` validates the repo config with `testparm`, backs up the current `/etc/samba/smb.conf`, installs the repo config, validates the installed config, and restarts `smbd`.
+`apply.sh` validates the repository configuration with `testparm`. It backs up the
+current `/etc/samba/smb.conf`. It installs and validates the repository
+configuration. It then restarts `smbd`.
 
-Run a non-mutating health check with concise default output:
+Run the non-mutating health check as root. Root access lets the script read the Samba
+passdb.
 
 ```bash
-./host/samba/check.sh
+sudo ./host/samba/check.sh
 ```
 
 Print detailed command output when diagnosing:
 
 ```bash
-./host/samba/check.sh --verbose
-DEBUG=1 ./host/samba/check.sh
+sudo ./host/samba/check.sh --verbose
+sudo DEBUG=1 ./host/samba/check.sh
 ```
 
-Samba users must exist both as Unix users and in Samba passdb. Add or update Samba credentials with:
+A Samba user must also exist as a Unix user. Add or update Samba credentials with:
 
 ```bash
 sudo smbpasswd -a vincent
@@ -125,8 +143,39 @@ List Samba users with:
 sudo pdbedit -L
 ```
 
+## Rollback for the access-mode change
+
+Use this rollback only if the group-only mode change causes a client failure:
+
+```bash
+sudo chmod 2775 /ocean/Media
+sudo chmod 2755 /ocean/public
+```
+
+If the Samba configuration also needs rollback, restore the backup path that
+`apply.sh` prints. Then validate and restart Samba:
+
+```bash
+sudo testparm -s /etc/samba/smb.conf
+sudo systemctl restart smbd
+```
+
+Run `sudo ./host/samba/check.sh` after rollback.
+
+## Troubleshooting
+
+- If the storage check fails, do not run `setup-access.sh`.
+- If a required Unix user is missing, create or correct the user before setup.
+- If a share path check fails, compare the installed configuration with `smb.conf`.
+- If a permission check fails, run `stat` on the reported path.
+- If a client cannot write, confirm that its account is in `smbwriters`.
+- If a client has unexpected access, confirm its Unix groups and Samba account.
+
 ## Open Items
 
-- Run `setup-access.sh` on the host, then run `testparm -s /etc/samba/smb.conf` before restarting Samba.
-- Confirm whether `case sensitive = true` is safe for DAW project workflows on macOS. It may improve lookup performance, but some macOS applications expect case-insensitive behavior.
-- Confirm how clients normally connect: hostname, mDNS, static IP, DNS name, or saved SMB URL.
+- Confirm whether `case sensitive = true` is safe for DAW project workflows on
+  macOS. It can improve lookup performance. Some macOS applications expect
+  case-insensitive behavior.
+- Confirm how clients normally connect. Options include a hostname, multicast DNS
+  (mDNS), a static Internet Protocol (IP) address, a Domain Name System (DNS) name,
+  or a saved Server Message Block (SMB) URL.

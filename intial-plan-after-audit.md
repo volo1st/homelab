@@ -11,20 +11,21 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 1: fail-closed NAS storage**
+Current package: **Work package 2: Samba access paths and permissions**
 
 State: **Complete**
 
-The normal reboot verification passed on 2026-09-22. The storage and generated-unit
-checks succeeded. `ocean.mount` and `smbd` were active. A MacBook Air M4 opened a
-Samba share and showed the expected files.
+Work package 2 passed repository, host, and client validation on 2026-09-22. The
+lowercase `/ocean/public` path is now consistent. The host uses group-only modes. All
+host health checks passed. Writer, reader, denied-access, hidden-share, metadata, and
+reconnect tests passed from a MacBook Air M4.
 
-Resume work with work package 2:
+Resume work with work package 3:
 
-1. Inspect the live Public path, share paths, users, groups, owners, and modes.
-2. Confirm the purpose, requirements, and failure model for the Samba access model.
+1. Inspect the installed Samba behavior options and applicable client workloads.
+2. Confirm the signing, locking, and case-behavior requirements.
 
-Next available focus: **Work package 2: Samba access paths and permissions**
+Next available focus: **Work package 3: Samba security and application behavior**
 
 ## Work rule
 
@@ -163,23 +164,50 @@ NAS as a healthy service.
 
 ## Work package 2: Samba access paths and permissions
 
-State: **Pending**
+State: **Complete**
 
 Goal: Make the configured shares agree with host paths and the access model.
 
-- [ ] Inspect the live Public path, share paths, users, groups, owners, and modes.
-- [ ] Select one Public filesystem path.
-- [ ] Use the selected path in configuration, scripts, checks, and documents.
-- [ ] Make `setup-access.sh` verify storage before a change.
-- [ ] Make `setup-access.sh` verify all required users before a change.
-- [ ] Select group-only modes unless other-user access is necessary.
-- [ ] Make `check.sh` verify paths, owners, groups, modes, and branch health.
-- [ ] Validate the Samba configuration with `testparm`.
-- [ ] Test each Samba role with a representative account.
-- [ ] Test denied access and hidden shares.
-- [ ] Test macOS browse, create, rename, metadata, and reconnect behavior.
-- [ ] Update the Samba README and troubleshooting instructions.
-- [ ] Record evidence and commit the complete package.
+- [x] Inspect the live Public path, share paths, users, groups, owners, and modes.
+  - Evidence: The 2026-09-22 host inventory confirmed the mergerfs pool, four ext4
+    branches, two Unix users, three access groups, two Samba users, and current path
+    metadata.
+- [x] Select one Public filesystem path.
+  - Decision: Use `/ocean/public` because it is the installed Samba path and the
+    existing data path. Do not create `/ocean/Public`.
+- [x] Use the selected path in configuration, scripts, checks, and documents.
+- [x] Make `setup-access.sh` verify storage before a change.
+  - Evidence: The script runs the complete storage check before its first change.
+- [x] Make `setup-access.sh` verify all required users before a change.
+  - Evidence: The script checks the owner and all role arrays before its first
+    change.
+- [x] Select group-only modes unless other-user access is necessary.
+  - Decision: Use `0660` for files and `2770` for directories. Samba share rules
+    separate writer and reader access. No current workload requires other-user
+    access.
+- [x] Make `check.sh` verify paths, owners, groups, modes, and branch health.
+  - Evidence: The check validates both configurations, complete storage state, path
+    metadata, Unix roles, and Samba users.
+  - Evidence: All health checks passed on the host after application on 2026-09-22.
+- [x] Validate the Samba configuration with `testparm`.
+  - Evidence: Host Samba accepted the repository configuration on 2026-09-22. It
+    reported `/ocean/public`, file mode `0660`, and directory mode `02770` for the
+    applicable shares.
+  - Evidence: `apply.sh` stored the prior configuration at
+    `/etc/samba/backups/smb.conf.20260922-134119`, installed the repository
+    configuration, validated it, and restarted `smbd` successfully.
+- [x] Test each Samba role with a representative account.
+  - Evidence: The `vincent` writer role and `nas` reader role passed from a MacBook
+    Air M4 on 2026-09-22.
+- [x] Test denied access and hidden shares.
+  - Evidence: The `nas` account could not write to its read-only shares. `NasShare`
+    was hidden and denied to this account.
+- [x] Test macOS browse, create, rename, metadata, and reconnect behavior.
+  - Evidence: Browse, create, rename, Finder tag, and reconnect tests passed from a
+    MacBook Air M4.
+- [x] Update the Samba README and troubleshooting instructions.
+- [x] Record evidence and commit the complete package.
+  - Evidence: This plan update completes the package commit.
 
 ## Work package 3: Samba security and application behavior
 

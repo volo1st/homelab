@@ -21,9 +21,9 @@ The Docker rules permit:
 The final rule drops other new Docker ingress. It does not remove Docker's own
 network rules.
 
-The Apple TV is the current Tailscale subnet router. Tailscale SNAT makes its remote
-client traffic appear from the Apple TV LAN address. Thus, the trusted LAN rule also
-permits daily remote access.
+The Apple TV is the current Tailscale subnet router. Its userspace router opens LAN
+connections from the Apple TV address. Thus, the trusted LAN rule also permits daily
+remote access.
 
 ## Operations
 
@@ -61,6 +61,11 @@ After installation, test all of these paths:
 4. Disable local Wi-Fi on a Tailscale client.
 5. Open Samba and one web service through the Apple TV subnet route.
 6. Confirm outbound network access from `dde-vincent`.
+
+The wireless distribution system (WDS) bridge has a separate known Address Resolution
+Protocol (ARP) discovery problem after the Apple TV address changes. If a remote test
+produces no packet on `enp5s0`, ping the current Apple TV LAN address from the NAS to
+refresh the path. The separate WDS project owns the permanent correction.
 
 ## Emergency rollback
 

@@ -17,13 +17,13 @@ State: **Complete**
 
 The host inventory records Ubuntu 24.04.5 LTS and the installed storage, Samba,
 Docker, discovery, remote-access, and firewall packages. The user approved a trusted
-home-LAN policy for `192.168.88.0/24`. The Apple TV is the Tailscale subnet router and
-uses source network address translation (SNAT). All current LAN and Tailscale clients
-can access the current services. The firewall design preserves container-originated
-and established Docker traffic. The `dde-vincent` development container uses host
-networking and unconfined seccomp and AppArmor settings, but not full privileged mode.
-The host firewall is active. The complete host validation passed. LAN and Tailscale
-client tests passed.
+home-LAN policy for `192.168.88.0/24`. The Apple TV is the Tailscale subnet router.
+Its userspace router opens LAN connections from the Apple TV address. All current LAN
+and Tailscale clients can access the current services. The firewall design preserves
+container-originated and established Docker traffic. The `dde-vincent` development
+container uses host networking and unconfined seccomp and AppArmor settings, but not
+full privileged mode. The host firewall is active. The complete host validation and
+LAN and Tailscale client tests passed.
 
 Resume work with work package 7:
 
@@ -383,6 +383,11 @@ Goal: Make the host configuration reproducible and easy to inspect.
     the Docker ingress filter. `host/firewall/check.sh` passed after installation.
   - Evidence: The rollback backup is
     `/etc/homelab-backups/firewall/firewall.20260922-184141-738159001.Odl0Gy`.
+  - Evidence: Tailscale access passed with and without the Apple TV exit node after
+    the separate WDS ARP discovery path was refreshed.
+  - Evidence: Packet capture and a temporary UFW disable showed that the failed test
+    did not reach the NAS. Pinging the Apple TV's new address from the NAS refreshed
+    the WDS path. Remote access then passed with the firewall enabled.
 - [x] Document network and name-resolution requirements.
   - Evidence: `host/README.md` records the interface, address, subnet, gateway,
     hostname, multicast DNS, Tailscale, and no-port-forward requirements.
@@ -393,8 +398,6 @@ Goal: Make the host configuration reproducible and easy to inspect.
     firewall, service, container, DDE security, and listener checks.
   - Evidence: New SSH, Grafana, Samba, and DDE outbound connections passed after the
     firewall installation.
-  - Evidence: A client outside the home LAN accessed the NAS through the Apple TV
-    Tailscale subnet route.
 - [x] Provide concise output and detailed diagnostics.
   - Evidence: The validation entry point prints one result per check and supports
     `--verbose` or `DEBUG=1` output.

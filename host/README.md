@@ -23,8 +23,8 @@ Use these network values:
 
 Keep `192.168.88.6` stable with a router reservation or a static address. Do not add
 a router port forward to the NAS. Use the Apple TV Tailscale subnet router for remote
-access. Its default source network address translation (SNAT) makes remote traffic
-appear from its trusted LAN address.
+access. Its userspace router opens LAN connections from the Apple TV. Remote traffic
+therefore appears from its trusted LAN address.
 
 The current LAN services use TCP ports `22`, `139`, `445`, `3000`, `5201`, `8096`,
 `9090`, `9100`, and `9115`. Avahi and Jellyfin also use User Datagram Protocol (UDP)

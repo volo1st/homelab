@@ -11,27 +11,27 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 3: Samba security and application behavior**
+Current package: **Work package 4: Samba deployment and recovery**
 
 State: **Complete**
 
-The Mac Studio uses SMB 3.1.1 with AES-128-GMAC signing over one active 2.5 GbE
-channel. The installed policy requires signing. The normal Studio One and CapCut
-workflow has one writer. Other clients can read files, but they do not edit the same
-project. The Mac Studio baseline was 275.7 MB/s write and 226.7 MB/s read. After the
-change, write throughput was unchanged and read throughput was 8.9 percent lower.
-Both results met the predefined acceptance threshold. The case test and the two-Mac
-Vim conflict test passed. The user accepted the omission of a protocol-level SMB2
-byte-range lock test for this single-writer workload. Representative Studio One,
-CapCut, and read-only client tests passed.
+The repository now has a read-only Samba deployment preflight and an explicit
+root-only install operation. The install operation uses a lock, creates unique
+backups, keeps ten backups, restores configuration and service state after failure,
+and runs the complete health check after restart. Local tests cover successful
+installation, concurrent-install rejection, backup retention, and failed health-check
+rollback. The host preflight passed with the known low-free-space warning for
+`/mnt/disks/ssd2`. The guarded host installation then created a unique backup,
+restarted `smbd`, and passed every health check. A representative client reconnect
+and file-open test also passed.
 
-Resume work with work package 4:
+Resume work with work package 5:
 
-1. Inspect the current Samba deployment and rollback scripts.
-2. Test the documented recovery path without changing the host.
-3. Define the remaining host and restart checks.
+1. Inspect current secret names, examples, and ignore rules.
+2. Define the repository secret-file policy.
+3. Add and test the selected controls.
 
-Next available focus: **Work package 4: Samba deployment and recovery**
+Next available focus: **Work package 5: secret controls**
 
 ## Work rule
 
@@ -273,21 +273,51 @@ Goal: Use safe Samba defaults unless a representative test supports an override.
 
 ## Work package 4: Samba deployment and recovery
 
-State: **Pending**
+State: **Complete**
 
 Goal: Make Samba configuration deployment predictable and recoverable.
 
-- [ ] Check Samba health after restart.
-- [ ] Restore prior configuration and service state after failure.
-- [ ] Add an execution lock.
-- [ ] Make backup names unique.
-- [ ] Define and apply a backup retention rule.
-- [ ] Add a preflight or dry-run mode.
-- [ ] Prevent unexpected privilege prompts in unattended checks.
-- [ ] Correct the two ShellCheck messages.
-- [ ] Test successful application and failed-application rollback.
-- [ ] Document manual rollback.
-- [ ] Record evidence and commit the complete package.
+- [x] Check Samba health after restart.
+  - Evidence: The guarded host installation restarted `smbd` and passed every check
+    in `host/samba/check.sh` on 2026-09-22.
+- [x] Restore prior configuration and service state after failure.
+  - Evidence: The local failed-health-check test restored the prior configuration and
+    active `smbd` state.
+- [x] Add an execution lock.
+  - Evidence: The local test rejected a second installation while the lock was held.
+- [x] Make backup names unique.
+  - Evidence: Backups use a nanosecond timestamp and a random `mktemp` suffix. The
+    local test created two distinct backups.
+- [x] Define and apply a backup retention rule.
+  - Decision: Keep the ten newest `smb.conf.*` backups.
+  - Evidence: The local test removed the two oldest files from a set of twelve.
+- [x] Add a preflight or dry-run mode.
+  - Evidence: `--check` is the default and does not request root access or make a
+    change.
+  - Host evidence: The preflight validated the Samba configuration and all required
+    storage on 2026-09-22. It reported only the known low-free-space warning for
+    `/mnt/disks/ssd2`.
+- [x] Prevent unexpected privilege prompts in unattended checks.
+  - Evidence: The script does not call `sudo`. The preflight runs without root. The
+    install operation stops with an instruction when it does not run as root.
+- [x] Correct the two ShellCheck messages.
+  - Evidence: ShellCheck 0.11.0 reports no messages for all Samba shell scripts.
+- [x] Test successful application and failed-application rollback.
+  - Local evidence: The automated test passed the successful installation and failed
+    health-check rollback cases.
+  - Host evidence: The install operation completed successfully and created
+    `/etc/samba/backups/smb.conf.20260922-172610-759754767.KFVeOK`.
+  - Host evidence: The installed configuration matched the repository through the
+    read-only host mount after installation.
+  - Client evidence: A representative Mac reconnected and opened a file after the
+    guarded restart.
+- [x] Document manual rollback.
+  - Evidence: `host/samba/README.md` gives ordered validation, restoration, restart,
+    and health-check steps.
+- [x] Record evidence and commit the complete package.
+  - Evidence: This plan update records the local recovery tests, host preflight,
+    guarded installation, health check, installed-file comparison, and client test
+    for the package commit.
 
 ## Work package 5: secret controls
 

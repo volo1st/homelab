@@ -138,15 +138,33 @@ Apply the access model first when setting up a host:
 ./host/samba/setup-access.sh
 ```
 
-Then install and validate the Samba config:
+Run the read-only deployment preflight:
 
 ```bash
-./host/samba/apply.sh
+./host/samba/apply.sh --check
 ```
 
-`apply.sh` validates the repository configuration with `testparm`. It backs up the
-current `/etc/samba/smb.conf`. It installs and validates the repository
-configuration. It then restarts `smbd`.
+Install the configuration only from a real host shell. The restart interrupts active
+Samba sessions. Clients can reconnect after the health check passes.
+
+```bash
+sudo ./host/samba/apply.sh --install
+```
+
+The install operation uses an execution lock. It creates a unique backup of the
+current `/etc/samba/smb.conf`. It keeps the ten newest Samba configuration backups.
+It installs and validates the repository configuration. It then restarts `smbd` and
+an enabled `nmbd`. It runs the complete Samba health check after the restart.
+
+If validation, restart, or health checks fail, the script restores the prior
+configuration and active or inactive service state. The script prints the backup
+path for manual recovery.
+
+Run the local deployment tests from the development container:
+
+```bash
+./host/samba/test-apply.sh
+```
 
 Run the non-mutating health check as root. Root access lets the script read the Samba
 passdb.
@@ -175,6 +193,29 @@ List Samba users with:
 sudo pdbedit -L
 ```
 
+## Manual rollback
+
+Use manual rollback only if automatic rollback is incomplete or a client problem is
+found after a successful installation.
+
+1. Select the exact backup path that `apply.sh` printed.
+2. Validate the backup.
+3. Restore the backup.
+4. Restart Samba.
+5. Run the health check.
+
+```bash
+backup=/etc/samba/backups/smb.conf.YYYYMMDD-HHMMSS-NNNNNNNNN.XXXXXX
+sudo testparm -s "$backup"
+sudo cp -a --remove-destination "$backup" /etc/samba/smb.conf
+sudo testparm -s /etc/samba/smb.conf
+sudo systemctl restart smbd
+if systemctl is-enabled --quiet nmbd; then sudo systemctl restart nmbd; fi
+sudo ./host/samba/check.sh
+```
+
+Do not continue if backup validation fails. Correct the selected path first.
+
 ## Rollback for the access-mode change
 
 Use this rollback only if the group-only mode change causes a client failure:
@@ -184,15 +225,7 @@ sudo chmod 2775 /ocean/Media
 sudo chmod 2755 /ocean/public
 ```
 
-If the Samba configuration also needs rollback, restore the backup path that
-`apply.sh` prints. Then validate and restart Samba:
-
-```bash
-sudo testparm -s /etc/samba/smb.conf
-sudo systemctl restart smbd
-```
-
-Run `sudo ./host/samba/check.sh` after rollback.
+If the Samba configuration also needs rollback, use the manual rollback procedure.
 
 ## Troubleshooting
 
@@ -202,12 +235,3 @@ Run `sudo ./host/samba/check.sh` after rollback.
 - If a permission check fails, run `stat` on the reported path.
 - If a client cannot write, confirm that its account is in `smbwriters`.
 - If a client has unexpected access, confirm its Unix groups and Samba account.
-
-## Open Items
-
-- Confirm whether `case sensitive = true` is safe for DAW project workflows on
-  macOS. It can improve lookup performance. Some macOS applications expect
-  case-insensitive behavior.
-- Confirm how clients normally connect. Options include a hostname, multicast DNS
-  (mDNS), a static Internet Protocol (IP) address, a Domain Name System (DNS) name,
-  or a saved Server Message Block (SMB) URL.

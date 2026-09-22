@@ -11,21 +11,27 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 2: Samba access paths and permissions**
+Current package: **Work package 3: Samba security and application behavior**
 
 State: **Complete**
 
-Work package 2 passed repository, host, and client validation on 2026-09-22. The
-lowercase `/ocean/public` path is now consistent. The host uses group-only modes. All
-host health checks passed. Writer, reader, denied-access, hidden-share, metadata, and
-reconnect tests passed from a MacBook Air M4.
+The Mac Studio uses SMB 3.1.1 with AES-128-GMAC signing over one active 2.5 GbE
+channel. The installed policy requires signing. The normal Studio One and CapCut
+workflow has one writer. Other clients can read files, but they do not edit the same
+project. The Mac Studio baseline was 275.7 MB/s write and 226.7 MB/s read. After the
+change, write throughput was unchanged and read throughput was 8.9 percent lower.
+Both results met the predefined acceptance threshold. The case test and the two-Mac
+Vim conflict test passed. The user accepted the omission of a protocol-level SMB2
+byte-range lock test for this single-writer workload. Representative Studio One,
+CapCut, and read-only client tests passed.
 
-Resume work with work package 3:
+Resume work with work package 4:
 
-1. Inspect the installed Samba behavior options and applicable client workloads.
-2. Confirm the signing, locking, and case-behavior requirements.
+1. Inspect the current Samba deployment and rollback scripts.
+2. Test the documented recovery path without changing the host.
+3. Define the remaining host and restart checks.
 
-Next available focus: **Work package 3: Samba security and application behavior**
+Next available focus: **Work package 4: Samba deployment and recovery**
 
 ## Work rule
 
@@ -211,17 +217,59 @@ Goal: Make the configured shares agree with host paths and the access model.
 
 ## Work package 3: Samba security and application behavior
 
-State: **Pending**
+State: **Complete**
 
 Goal: Use safe Samba defaults unless a representative test supports an override.
 
-- [ ] Select the server-signing policy.
-- [ ] Select the locking policy for DAW and video work.
-- [ ] Select the case policy for macOS clients.
-- [ ] Test signing, locking, case behavior, and socket options.
-- [ ] Remove each override that has no necessary measured benefit.
-- [ ] Document each decision, tradeoff, test, and accepted risk.
-- [ ] Record evidence and commit the complete package.
+- [x] Select the server-signing policy.
+  - Decision: Require signing. The Mac Studio already uses AES-128-GMAC signing, so
+    this policy enforces its current protected path.
+- [x] Select the locking policy for DAW and video work.
+  - Decision: Use `strict locking = auto`. This is the Samba 4.19 default and balances
+    lock enforcement with opportunistic-lock performance.
+- [x] Select the case policy for macOS clients.
+  - Decision: Use `case sensitive = auto`. This gives macOS case-insensitive and
+    case-preserving behavior.
+- [x] Test signing, locking, case behavior, and socket options.
+  - Baseline evidence: The Mac Studio wrote 8 GiB at 275.7 MB/s and read it at
+    226.7 MB/s over the 2.5 GbE path. The session used SMB 3.1.1 and AES-128-GMAC
+    signing. Compression counters remained zero.
+  - Preflight evidence: Host `testparm` accepted the repository configuration and
+    reported `server signing = required`.
+  - Host evidence: The installed file matched the repository, `smbd` was active, and
+    all health checks passed after application on 2026-09-22.
+  - Rollback backup: `/etc/samba/backups/smb.conf.20260922-144938`.
+  - Performance evidence: Post-change write throughput was 275.75 MB/s. Baseline
+    write throughput was 275.71 MB/s.
+  - Performance evidence: Post-change read throughput was 206.42 MB/s. Baseline read
+    throughput was 226.70 MB/s. The 8.9 percent reduction was within the predefined
+    10 percent limit.
+  - Signing evidence: The new Mac Studio session reported SMB 3.1.1,
+    `SIGNING_REQUIRED TRUE`, `SIGNING_ON TRUE`, and AES-128-GMAC.
+  - Compression evidence: All compression counters remained zero.
+  - Case evidence: A differently capitalized lookup opened the existing file. A
+    differently capitalized create operation did not create a second file.
+  - Multichannel evidence: The new session used multichannel on the active 2.5 GbE
+    Ethernet path after the explicit override was removed.
+  - Test limitation: macOS `smbfs` returned `Errno 45` for a POSIX `lockf` request.
+    This method cannot test SMB locking on this client.
+  - Application evidence: Vim on the Mac Studio and MacBook Air detected a concurrent
+    open through its swap-file protection. The file remained readable after the edit.
+  - Workload evidence: Representative Studio One and CapCut operations passed. Read
+    access from the other Apple clients also passed.
+  - Accepted risk: The user chose not to install `smbtorture` or run a protocol-level
+    SMB2 byte-range lock test. The normal workload has one writer and can have
+    multiple readers. The user does not open one project for editing from two Macs.
+- [x] Remove each override that has no necessary measured benefit.
+  - Evidence: The repository uses Samba defaults for multichannel, leases,
+    asynchronous input/output, socket options, and `use sendfile`. The accepted
+    performance test did not show a necessary benefit from an override.
+- [x] Document each decision, tradeoff, test, and accepted risk.
+  - Evidence: This plan and `host/samba/README.md` contain the policy, workload,
+    measurements, and accepted lock-test limitation.
+- [x] Record evidence and commit the complete package.
+  - Evidence: This plan update records the completed repository, host, performance,
+    case, multichannel, application, and reader checks for the package commit.
 
 ## Work package 4: Samba deployment and recovery
 

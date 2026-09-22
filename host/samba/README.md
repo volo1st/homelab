@@ -96,6 +96,38 @@ Expected role groups:
 it makes a change. It creates the groups, applies the memberships, and sets the
 expected owner, group, and mode.
 
+## Security and application behavior
+
+Use these policies for the current Apple client and editing workloads:
+
+- Require Server Message Block (SMB) signing.
+- Keep the explicit SMB 2.02 minimum protocol.
+- Use automatic strict locking.
+- Use automatic case behavior.
+- Use the Samba defaults for multichannel, leases, asynchronous input/output, and
+  socket options.
+
+The Mac Studio negotiated SMB 3.1.1 and AES-128-GMAC signing before signing became
+mandatory. The mandatory policy enforces the protection that this client already
+uses. Signing protects message integrity and authenticity. It does not encrypt file
+data.
+
+Automatic strict locking checks locks on files that do not have an opportunistic
+lock. It keeps the Samba safety and performance balance. The normal workflow has one
+writer and can have multiple readers. Do not open one Studio One or CapCut project
+for editing from two Macs at the same time.
+
+The two-Mac Vim conflict test passed. macOS did not expose a POSIX `lockf` request on
+the mounted share. The user accepted the omission of a protocol-level SMB2
+byte-range lock test for the single-writer workload.
+
+Automatic case behavior gives macOS case-insensitive and case-preserving names. It
+prevents names that differ only by case from causing application ambiguity.
+
+Samba 4.19 enables multichannel, leases, and asynchronous input/output by default.
+It also enables `TCP_NODELAY` by default. Do not add a performance override without a
+repeatable measurement on the Mac Studio 2.5 GbE path.
+
 
 ## Operations
 

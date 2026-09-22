@@ -1,0 +1,24 @@
+# Local secret files
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.secret
+*.token
+*.key
+*.pem
+*.p12
+credentials.json
+credentials.yaml
+credentials.yml
+id_rsa
+id_ecdsa
+id_ed25519
+secrets/local/
+
+# Generated and temporary files
+.DS_Store
+*.log
+*.tmp
+*.swp
+*~

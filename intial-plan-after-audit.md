@@ -11,27 +11,24 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 4: Samba deployment and recovery**
+Current package: **Work package 5: secret controls**
 
 State: **Complete**
 
-The repository now has a read-only Samba deployment preflight and an explicit
-root-only install operation. The install operation uses a lock, creates unique
-backups, keeps ten backups, restores configuration and service state after failure,
-and runs the complete health check after restart. Local tests cover successful
-installation, concurrent-install rejection, backup retention, and failed health-check
-rollback. The host preflight passed with the known low-free-space warning for
-`/mnt/disks/ssd2`. The guarded host installation then created a unique backup,
-restarted `smbd`, and passed every health check. A representative client reconnect
-and file-open test also passed.
+The user approved a minimal strategy for this private personal repository. The
+repository will ignore standard local secret files, keep `.example` templates
+trackable, and use a dependency-free local scan. It will not add repository
+encryption or continuous integration (CI) for the current workload. No implemented
+service needs a secret template yet. The ignore-rule tests, synthetic leak tests,
+worktree scan, and staged-content scan passed.
 
-Resume work with work package 5:
+Resume work with work package 6:
 
-1. Inspect current secret names, examples, and ignore rules.
-2. Define the repository secret-file policy.
-3. Add and test the selected controls.
+1. Inventory the installed host packages and versions.
+2. Define the reproducible host-build boundary.
+3. Select the validation entry point and firewall policy.
 
-Next available focus: **Work package 5: secret controls**
+Next available focus: **Work package 6: host build and validation**
 
 ## Work rule
 
@@ -321,20 +318,34 @@ Goal: Make Samba configuration deployment predictable and recoverable.
 
 ## Work package 5: secret controls
 
-State: **Pending**
+State: **Complete**
 
 Goal: Prevent common secret files from entering Git.
 
-- [ ] Select secret-file naming rules.
-- [ ] Add a root `.gitignore` for approved secret and generated-file patterns.
-- [ ] Keep example files trackable.
-- [ ] Add secret templates when services need them.
-- [ ] Document secret creation, storage, permissions, rotation, and restore.
-- [ ] Add a local secret scan.
-- [ ] Add a CI secret scan if the repository adopts CI.
-- [ ] Evaluate encryption only when distribution requirements justify it.
-- [ ] Test the ignore rules and secret scan.
-- [ ] Record evidence and commit the complete package.
+- [x] Select secret-file naming rules.
+  - Decision: Use standard `.env` names and explicit secret, token, private-key, and
+    credential suffixes. Append `.example` to a committed template.
+- [x] Add a root `.gitignore` for approved secret and generated-file patterns.
+- [x] Keep example files trackable.
+- [x] Add secret templates when services need them.
+  - Decision: No implemented service needs a template. Add one with the first
+    service that needs a secret.
+- [x] Document secret creation, storage, permissions, rotation, and restore.
+- [x] Add a local secret scan.
+- [x] Add a CI secret scan if the repository adopts CI.
+  - Decision: The repository does not use CI. Reassess this control when CI is added.
+- [x] Evaluate encryption only when distribution requirements justify it.
+  - Decision: Do not add repository encryption for this private personal repository.
+    Reassess it for distribution or one-command rebuild requirements.
+- [x] Test the ignore rules and secret scan.
+  - Evidence: Tests confirmed that local secret and generated files are ignored and
+    `.example` files remain trackable.
+  - Evidence: Synthetic password, provider-token, private-key, and prohibited-name
+    findings were detected without printing matched values.
+  - Evidence: The repository worktree and staged-content scans passed.
+- [x] Record evidence and commit the complete package.
+  - Evidence: Bash syntax, ShellCheck 0.11.0, secret-control tests, both secret scans,
+    and `git diff --cached --check` passed for the package commit.
 
 ## Work package 6: host build and validation
 

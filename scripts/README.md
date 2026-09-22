@@ -30,3 +30,15 @@ Run the complete read-only NAS host validation from a real host shell:
 sudo ./scripts/validate-host.sh
 sudo ./scripts/validate-host.sh --verbose
 ```
+
+Check whether the committed configuration has an off-host Git copy:
+
+```bash
+./scripts/check-recovery-readiness.sh
+```
+
+Test a non-production restoration from the Git index:
+
+```bash
+./scripts/test-recovery.sh
+```

@@ -11,25 +11,22 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 6: host build and validation**
+Current package: **Work package 7: backup and disaster recovery**
 
-State: **Complete**
+State: **Active**
 
-The host inventory records Ubuntu 24.04.5 LTS and the installed storage, Samba,
-Docker, discovery, remote-access, and firewall packages. The user approved a trusted
-home-LAN policy for `192.168.88.0/24`. The Apple TV is the Tailscale subnet router.
-Its userspace router opens LAN connections from the Apple TV address. All current LAN
-and Tailscale clients can access the current services. The firewall design preserves
-container-originated and established Docker traffic. The `dde-vincent` development
-container uses host networking and unconfined seccomp and AppArmor settings, but not
-full privileged mode. The host firewall is active. The complete host validation and
-LAN and Tailscale client tests passed.
+The user approved a minimal recovery policy. The repository does not back up the
+mergerfs pool, local development data, or mutable service state. Important documents
+already have multiple cloud copies outside this repository. The upstream Git remote
+is the off-host copy of committed configuration. The recovery check currently fails
+because this worktree is active and seven completed commits have not been pushed. No
+host change has been made.
 
 Resume work with work package 7:
 
-1. List the data and configuration that need backup.
-2. Define the recovery-point objective and recovery-time objective.
-3. Select off-host and off-site backup destinations.
+1. Stage and run the non-production recovery test.
+2. Commit the minimal recovery package.
+3. Push all local commits and rerun the recovery-readiness check.
 
 Next available focus: **Work package 7: backup and disaster recovery**
 
@@ -416,19 +413,48 @@ Goal: Make the host configuration reproducible and easy to inspect.
 
 ## Work package 7: backup and disaster recovery
 
-State: **Pending**
+State: **Active**
 
 Goal: Restore important data and configuration after a failure.
 
-- [ ] List all data and configuration that need backup.
-- [ ] Define recovery-point and recovery-time objectives.
-- [ ] Select off-host and off-site backup destinations.
-- [ ] Implement backup automation and failure reports.
-- [ ] Document bare-host restoration.
-- [ ] Document disk replacement and mergerfs recovery.
-- [ ] Document backup and restore for each stateful service.
-- [ ] Test a restore with non-production data.
-- [ ] Record and repeat restore tests.
+- [x] List all data and configuration that need backup.
+  - Evidence: The pool uses 3.2 TB of 3.6 TB. The OS disk uses 162 GB of 233 GB,
+    including 123 GB below `/sandbox`.
+  - Evidence: The inventory includes Grafana, Prometheus, Jellyfin, Samba, Docker
+    definitions and volumes, credentials, Git repositories, and host configuration.
+  - Accepted risk: Do not back up NAS-only pool data, local development data,
+    unpushed work, credentials, or mutable service state.
+- [x] Define recovery-point and recovery-time objectives.
+  - Decision: The configuration recovery point is the last commit pushed upstream.
+    Recovery is best effort with no formal time guarantee.
+  - Decision: NAS-only data and mutable service state have no recovery objective.
+- [x] Select off-host and off-site backup destinations.
+  - Decision: Use the existing upstream Git remote for committed configuration. Use
+    the user's existing cloud workflow for important personal documents. Add no new
+    backup destination.
+- [x] Implement backup automation and failure reports.
+  - Decision: Do not automate bulk backup or Git pushes. No repository-managed data
+    set requires scheduled backup.
+  - Evidence: `scripts/check-recovery-readiness.sh` reports a dirty worktree, a
+    missing or local upstream, local-only commits, and repository secret findings.
+- [x] Document bare-host restoration.
+  - Evidence: `host/recovery/README.md` defines the ordered bare-host procedure and
+    identifies the temporary Compose recovery gap owned by work package 9.
+- [x] Document disk replacement and mergerfs recovery.
+  - Evidence: The recovery runbook stops dependent services, preserves the option for
+    read-only recovery, replaces the branch UUID, and states that mergerfs does not
+    reconstruct lost files.
+- [x] Document backup and restore for each stateful service.
+  - Decision: Recreate Grafana, Prometheus, Jellyfin, Samba credentials, and DDE
+    state. Do not restore their mutable state.
+- [x] Test a restore with non-production data.
+  - Evidence: `scripts/test-recovery.sh` restored the staged Git index to a temporary
+    directory and validated all restored shell scripts.
+  - Limitation: `testparm` was unavailable in the development container. Work
+    package 6 validated the same Samba configuration on the NAS host.
+- [x] Record and repeat restore tests.
+  - Evidence: `scripts/test-recovery.sh` provides the repeatable test. Work package
+    11 owns the complete clean-clone recovery test.
 - [ ] Record evidence and commit the complete package.
 
 ## Work package 8: iPhone sync
@@ -460,6 +486,7 @@ Goal: Give each service a consistent and recoverable operating model.
 - [ ] Define one service directory layout.
 - [ ] Define an image-version policy.
 - [ ] Add health, restart, dependency, and resource rules.
+- [ ] Add SMART, filesystem-capacity, mount, and host-validation metrics and alerts.
 - [ ] Keep secrets outside committed Compose files.
 - [ ] Document backup and restore next to each stateful service.
 - [ ] Validate each Compose file before deployment.

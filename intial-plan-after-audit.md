@@ -11,24 +11,27 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 Last update: 2026-09-22
 
-Current package: **Work package 5: secret controls**
+Current package: **Work package 6: host build and validation**
 
 State: **Complete**
 
-The user approved a minimal strategy for this private personal repository. The
-repository will ignore standard local secret files, keep `.example` templates
-trackable, and use a dependency-free local scan. It will not add repository
-encryption or continuous integration (CI) for the current workload. No implemented
-service needs a secret template yet. The ignore-rule tests, synthetic leak tests,
-worktree scan, and staged-content scan passed.
+The host inventory records Ubuntu 24.04.5 LTS and the installed storage, Samba,
+Docker, discovery, remote-access, and firewall packages. The user approved a trusted
+home-LAN policy for `192.168.88.0/24`. The Apple TV is the Tailscale subnet router and
+uses source network address translation (SNAT). All current LAN and Tailscale clients
+can access the current services. The firewall design preserves container-originated
+and established Docker traffic. The `dde-vincent` development container uses host
+networking and unconfined seccomp and AppArmor settings, but not full privileged mode.
+The host firewall is active. The complete host validation passed. LAN and Tailscale
+client tests passed.
 
-Resume work with work package 6:
+Resume work with work package 7:
 
-1. Inventory the installed host packages and versions.
-2. Define the reproducible host-build boundary.
-3. Select the validation entry point and firewall policy.
+1. List the data and configuration that need backup.
+2. Define the recovery-point objective and recovery-time objective.
+3. Select off-host and off-site backup destinations.
 
-Next available focus: **Work package 6: host build and validation**
+Next available focus: **Work package 7: backup and disaster recovery**
 
 ## Work rule
 
@@ -349,23 +352,64 @@ Goal: Prevent common secret files from entering Git.
 
 ## Work package 6: host build and validation
 
-State: **Pending**
+State: **Complete**
 
 Goal: Make the host configuration reproducible and easy to inspect.
 
-- [ ] List required packages and their purposes.
-- [ ] Record tested operating-system and package versions.
-- [ ] Create an idempotent host build script or procedure.
-- [ ] Automate mount-point, group, and non-secret configuration setup.
-- [ ] Document manual user creation.
-- [ ] Define and implement the firewall policy.
-- [ ] Document network and name-resolution requirements.
-- [ ] Add one read-only validation entry point below `scripts`.
-- [ ] Validate storage, Samba, Docker, and each implemented service.
-- [ ] Provide concise output and detailed diagnostics.
-- [ ] Return a nonzero status after validation failure.
-- [ ] Document and test the host build and validation procedures.
-- [ ] Record evidence and commit the complete package.
+- [x] List required packages and their purposes.
+  - Evidence: `host/packages.tsv` lists the host packages and one purpose for each.
+- [x] Record tested operating-system and package versions.
+  - Evidence: The tested host is Ubuntu 24.04.5 LTS. `host/packages.tsv` records the
+    installed versions found through the read-only host mount.
+- [x] Create an idempotent host build script or procedure.
+  - Evidence: `host/README.md` gives an ordered build procedure that uses the existing
+    idempotent storage, Samba, and firewall installers.
+- [x] Automate mount-point, group, and non-secret configuration setup.
+  - Evidence: The build procedure uses `host/storage/apply.sh`,
+    `host/samba/setup-access.sh`, and `host/samba/apply.sh`.
+- [x] Document manual user creation.
+  - Evidence: The host build document separates the interactive administrator,
+    non-interactive media account, Samba credentials, and Docker administrator role.
+- [x] Define and implement the firewall policy.
+  - Decision: Trust the home LAN, Apple TV Tailscale subnet route, IPv6 link-local
+    LAN traffic, and a future direct `tailscale0` interface. Deny other new inbound
+    host and Docker traffic.
+  - Decision: Permit established and bridge-originated Docker traffic for the
+    current containers.
+  - Accepted risk: The required `dde-vincent` development environment uses host
+    networking and unconfined seccomp and AppArmor settings. It does not use Docker's
+    full privileged mode.
+  - Evidence: The preflight passed on the host. The approved install enabled UFW and
+    the Docker ingress filter. `host/firewall/check.sh` passed after installation.
+  - Evidence: The rollback backup is
+    `/etc/homelab-backups/firewall/firewall.20260922-184141-738159001.Odl0Gy`.
+- [x] Document network and name-resolution requirements.
+  - Evidence: `host/README.md` records the interface, address, subnet, gateway,
+    hostname, multicast DNS, Tailscale, and no-port-forward requirements.
+- [x] Add one read-only validation entry point below `scripts`.
+  - Evidence: `scripts/validate-host.sh` runs the host checks without making changes.
+- [x] Validate storage, Samba, Docker, and each implemented service.
+  - Evidence: `sudo ./scripts/validate-host.sh` passed all package, storage, Samba,
+    firewall, service, container, DDE security, and listener checks.
+  - Evidence: New SSH, Grafana, Samba, and DDE outbound connections passed after the
+    firewall installation.
+  - Evidence: A client outside the home LAN accessed the NAS through the Apple TV
+    Tailscale subnet route.
+- [x] Provide concise output and detailed diagnostics.
+  - Evidence: The validation entry point prints one result per check and supports
+    `--verbose` or `DEBUG=1` output.
+- [x] Return a nonzero status after validation failure.
+  - Evidence: The validation entry point counts failures and exits with status 1.
+- [x] Document and test the host build and validation procedures.
+  - Evidence: `host/README.md` documents the build sequence. The host ran each
+    implemented component and the complete validation entry point.
+  - Evidence: The first firewall install found a UFW output-parser error. Automatic
+    rollback restored inactive UFW, the prior Samba rule, and no custom Docker chain.
+    The corrected validator and second installation passed.
+- [x] Record evidence and commit the complete package.
+  - Evidence: Bash syntax, ShellCheck, the secret scan, and `git diff --check` passed.
+    The real host preflight, install checks, complete validation, and client tests
+    passed.
 
 ## Work package 7: backup and disaster recovery
 

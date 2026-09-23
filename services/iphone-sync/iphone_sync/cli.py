@@ -7,6 +7,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from iphone_sync.afc import AfcClient, AfcError
 from iphone_sync.config import ConfigError, load_config
 from iphone_sync.manifest import Manifest
 
@@ -21,6 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("init", help="create local staging and the manifest")
     commands.add_parser("status", help="show local manifest counts")
+    commands.add_parser("discover", help="list iPhone DCIM files without downloading")
     return parser
 
 
@@ -48,7 +50,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"NAS published: {counts.nas_published}")
             print(f"Cleared: {counts.cleared}")
             return 0
-    except (ConfigError, OSError, sqlite3.Error, RuntimeError) as error:
+        if args.command == "discover":
+            files = AfcClient().discover_dcim()
+            total_bytes = sum(item.size_bytes for item in files)
+            print(f"DCIM files: {len(files)}")
+            print(f"DCIM bytes: {total_bytes}")
+            return 0
+    except (AfcError, ConfigError, OSError, sqlite3.Error, RuntimeError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
     return 2

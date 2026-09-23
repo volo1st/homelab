@@ -1,9 +1,11 @@
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
+from iphone_sync.afc import AfcEntry
 from iphone_sync.cli import main
 
 
@@ -43,6 +45,22 @@ class CliTest(unittest.TestCase):
             self.assertEqual(result, 1)
             self.assertFalse(staging.exists())
             self.assertIn("not initialized", error.getvalue())
+
+    @patch("iphone_sync.cli.AfcClient")
+    def test_discover_reports_file_count_and_bytes(self, client_type: object) -> None:
+        client = client_type.return_value
+        client.discover_dcim.return_value = (
+            AfcEntry(PurePosixPath("/DCIM/100APPLE/A.JPG"), "A.JPG", 100, False),
+            AfcEntry(PurePosixPath("/DCIM/100APPLE/B.MOV"), "B.MOV", 250, False),
+        )
+        output = StringIO()
+
+        with redirect_stdout(output):
+            result = main(["discover"])
+
+        self.assertEqual(result, 0)
+        self.assertIn("DCIM files: 2", output.getvalue())
+        self.assertIn("DCIM bytes: 350", output.getvalue())
 
 
 if __name__ == "__main__":

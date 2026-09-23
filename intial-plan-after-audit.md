@@ -22,9 +22,9 @@ repository does not contain an Immich service implementation.
 
 Resume work with these actions:
 
-1. Add AFC discovery behind a tested process boundary.
+1. Run the read-only AFC `discover` command on one Mac.
 2. Add atomic local import.
-3. Run the AFC preflight and device test on one Mac.
+3. Test an interrupted local import with a small device sample.
 
 Next available focus: **Work package 8: iPhone sync**
 
@@ -483,7 +483,8 @@ Goal: Implement a safe import and NAS publication process before phone deletion.
     selected directory names.
 - [ ] Build the command-line interface, manifest, AFC import, and SSH push.
   - Progress: Added the Python package, per-Mac configuration, SQLite schema, `init`,
-    `status`, and eight unit tests. AFC import and SSH publication remain pending.
+    `status`, read-only AFC discovery, and 19 unit tests. AFC download and SSH
+    publication remain pending.
 - [ ] Make local and NAS publication atomic.
 - [ ] Preserve complete asset groups with source data.
 - [ ] Test mergerfs publication before Immich scans files.

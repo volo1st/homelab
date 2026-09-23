@@ -58,9 +58,12 @@ Run these commands from `services/iphone-sync/`:
 python3 -m iphone_sync --help
 python3 -m iphone_sync --config config.example.toml init
 python3 -m iphone_sync --config config.example.toml status
+python3 -m iphone_sync discover
 python3 -m unittest discover -s tests -v
 ```
 
 Copy `config.example.toml` to a per-Mac file before normal use. Do not commit a local
-configuration if it contains a secret. The current commands only create and read the
-local staging directory and manifest. They do not connect to the iPhone or NAS.
+configuration if it contains a secret. The `init` and `status` commands only create
+and read the local staging directory and manifest. The `discover` command reads the
+connected iPhone DCIM listing. It does not download or change a file. No current
+command connects to the NAS.

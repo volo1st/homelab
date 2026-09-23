@@ -74,6 +74,19 @@ Add each hardware/backend experiment here using this form:
 - Decision / next action: add AFC discovery behind a process boundary with test
   fixtures before a real-device test on a Mac.
 
+### 2026-09-24 — Read-only AFC discovery
+
+- Recorded the `afcclient` 1.4.0 long-listing format from the Mac Studio and iPhone.
+- Added an AFC process boundary that does not invoke a shell.
+- Added checks for missing tools, no device, and multiple connected devices.
+- Added strict parsing for directories, file sizes, and filenames.
+- Added `iphone-sync discover` to report the DCIM file count and total bytes without
+  downloading or changing a file.
+- Result: all 19 unit tests, Ruff checks, Python compilation, and `git diff --check`
+  passed in the development container.
+- Decision / next action: run `discover` against the iPhone on one Mac. Use the result
+  as the preflight for atomic local import work.
+
 ### 2026-08-15 — MacBook Air import-backend availability
 
 - Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).

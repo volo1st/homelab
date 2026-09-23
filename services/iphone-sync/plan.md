@@ -58,6 +58,8 @@ media from the iPhone or local staging during this stage.
   - Recorded: [CLI and manifest scaffold](project-notes.md).
 - [ ] Implement `iphone-sync import` to enumerate and download selected/new iPhone
       media into local staging.
+  - Progress: added tested, read-only AFC device preflight and DCIM discovery. The
+        download and local publication steps remain pending.
 - [ ] Download to a temporary file, then atomically rename only after the transfer
       completes successfully.
 - [ ] Create a simple local SQLite manifest with source identifier, filename, size,

@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-09-23
+Last update: 2026-09-24
 
 Current package: **Work package 8: iPhone sync**
 
@@ -22,9 +22,9 @@ repository does not contain an Immich service implementation.
 
 Resume work with these actions:
 
-1. Select the Immich file-ownership model.
-2. Build the command-line interface and manifest.
-3. Add AFC import and SSH publication in safe milestones.
+1. Implement and test manifest operations and state transitions.
+2. Add AFC discovery and import.
+3. Add SSH publication in a separate safe milestone.
 
 Next available focus: **Work package 8: iPhone sync**
 
@@ -472,7 +472,9 @@ Goal: Implement a safe import and NAS publication process before phone deletion.
 - [x] Keep Immich deployment separate from the iPhone-sync implementation.
   - Evidence: The iPhone workflow ends safely at NAS publication. Immich is an
     optional downstream index and is not a phone-deletion requirement.
-- [ ] Select the Immich file-ownership model before automatic cleanup.
+- [x] Select the Immich file-ownership model before automatic cleanup.
+  - Evidence: The NAS archive remains canonical. Immich will index it as an external
+    library and will not own, move, or rename its files.
 - [x] Record AFC and SSH decisions in the specification.
   - Evidence: The specification records AFC as the selected import backend and SSH
     to host `nas` as the selected publication transport.
@@ -480,6 +482,8 @@ Goal: Implement a safe import and NAS publication process before phone deletion.
   - Evidence: The iPhone-sync README, plan, specification, and project notes use the
     selected directory names.
 - [ ] Build the command-line interface, manifest, AFC import, and SSH push.
+  - Progress: Added the Python package, per-Mac configuration, SQLite schema, `init`,
+    `status`, and eight unit tests. AFC import and SSH publication remain pending.
 - [ ] Make local and NAS publication atomic.
 - [ ] Preserve complete asset groups with source data.
 - [ ] Test mergerfs publication before Immich scans files.

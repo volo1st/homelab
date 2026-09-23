@@ -22,3 +22,11 @@ secrets/local/
 *.tmp
 *.swp
 *~
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+services/iphone-sync/build/
+services/iphone-sync/dist/
+*.sqlite
+*.sqlite3

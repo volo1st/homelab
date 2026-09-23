@@ -54,7 +54,8 @@ Goal: manually import media from either Mac and copy it to the NAS. Inspect the
 published files directly or through Immich when Immich is available. Do not delete
 media from the iPhone or local staging during this stage.
 
-- [ ] Scaffold the `iphone-sync` Python CLI and its per-Mac configuration.
+- [x] Scaffold the `iphone-sync` Python CLI and its per-Mac configuration.
+  - Recorded: [CLI and manifest scaffold](project-notes.md).
 - [ ] Implement `iphone-sync import` to enumerate and download selected/new iPhone
       media into local staging.
 - [ ] Download to a temporary file, then atomically rename only after the transfer
@@ -116,9 +117,9 @@ Goal: make retrying, verification, and reclaiming iPhone storage trustworthy.
 - [ ] Document installation, configuration, normal workflow, recovery workflow, and
       how to upgrade the tool on both Macs.
 - [ ] Define retention/pruning rules for local staging after NAS verification.
-- [ ] Decide whether Immich owns canonical files or indexes a permanent external
-      archive before any automated NAS-side cleanup. Implement Immich as a separate
-      service package.
+- [x] Keep the NAS files as the canonical archive. Configure Immich to index them as
+      an external library. Implement Immich as a separate service package. Do not let
+      Immich own, move, or rename the canonical files.
 
 ## Stage 4 — Nice-to-haves
 

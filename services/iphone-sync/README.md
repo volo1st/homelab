@@ -49,3 +49,18 @@ publish an incomplete file.
 - [`plan.md`](plan.md) is the implementation checklist.
 - [`iphone-sync-spec.md`](iphone-sync-spec.md) is the detailed design.
 - [`project-notes.md`](project-notes.md) contains decisions and test evidence.
+
+## Current development commands
+
+Run these commands from `services/iphone-sync/`:
+
+```bash
+python3 -m iphone_sync --help
+python3 -m iphone_sync --config config.example.toml init
+python3 -m iphone_sync --config config.example.toml status
+python3 -m unittest discover -s tests -v
+```
+
+Copy `config.example.toml` to a per-Mac file before normal use. Do not commit a local
+configuration if it contains a secret. The current commands only create and read the
+local staging directory and manifest. They do not connect to the iPhone or NAS.

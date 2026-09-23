@@ -21,7 +21,7 @@ this file preserves why the work was done and what was learned.
 
 ### Pending
 
-- Immich file model: Immich-managed canonical files versus permanent external library.
+- No architecture decision is pending.
 
 ### Chosen
 
@@ -33,6 +33,8 @@ this file preserves why the work was done and what was learned.
 - Immich boundary: implement Immich as a separate service package. The iPhone import
   and NAS publication process must work without Immich. Do not use Immich state as a
   phone-deletion requirement.
+- Immich file model: keep the NAS files as the canonical archive. Configure Immich to
+  index them as an external library. Do not let Immich own, move, or rename them.
 - NAS landing layout:
   - `/ocean/personal/photos/iphone/{incoming,.uploading}/`
   - `/ocean/personal/videos/iphone/{incoming,.uploading}/`
@@ -45,6 +47,18 @@ this file preserves why the work was done and what was learned.
 ## Experiment log
 
 Add each hardware/backend experiment here using this form:
+
+### 2026-09-24 — CLI and manifest scaffold
+
+- Added a Python 3.11 command-line package with no runtime dependencies.
+- Added a per-Mac TOML configuration with documented defaults.
+- Added non-destructive `init` and `status` commands.
+- Added the first SQLite schema for assets, files, and explicit file states.
+- Added eight unit tests for configuration, initialization, schema validation, and
+  read-only status behavior.
+- Result: unit tests, Ruff checks, Python compilation, and `git diff --check` passed.
+- Decision / next action: implement manifest operations and state transitions before
+  the AFC import backend.
 
 ### 2026-08-15 — MacBook Air import-backend availability
 

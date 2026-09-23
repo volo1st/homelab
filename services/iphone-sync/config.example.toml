@@ -1,0 +1,6 @@
+[iphone_sync]
+staging_dir = "~/Pictures/iphone-sync"
+nas_host = "nas"
+photo_root = "/ocean/personal/photos/iphone"
+video_root = "/ocean/personal/videos/iphone"
+reserve_gib = 5

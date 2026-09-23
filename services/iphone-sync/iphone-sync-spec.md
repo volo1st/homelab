@@ -153,11 +153,8 @@ cable alone fixes speed; the benchmark will tell you where the real ceiling is.
   available. Do not configure it to use either `.uploading/` directory.
 - Do not use Immich availability or index state as a requirement for import, NAS
   publication, or phone-deletion eligibility.
-- Decision to make later, not now: does Immich *own* the files (moves/manages them
-  into its own storage structure), or does it *index* files you keep organized
-  yourself? This affects whether `incoming/` is transient or a permanent archive.
-  Worth deciding after you've used Immich for a few weeks and see which model you
-  prefer — doesn't block building Component A.
+- Keep the NAS files as the canonical archive. Configure Immich to index them as an
+  external library. Do not let Immich own, move, or rename the canonical files.
 
 ## 8. Repo structure (suggested)
 
@@ -183,7 +180,7 @@ only if you specifically want a single static binary across both Macs.
 | Decision | Status |
 |---|---|
 | afcclient vs Image Capture | **AFC selected; Image Capture is a manual fallback** |
-| Immich owns files vs indexes files | Deferred, not blocking |
+| Immich file model | **Index the canonical NAS archive as an external library** |
 | Direct 10GbE Mac Studio↔NAS link | Not required for import speed; may still help general NAS throughput — separate from this project |
 | NAS transport | **SSH to host `nas`** |
 
@@ -194,5 +191,5 @@ only if you specifically want a single static binary across both Macs.
 2. Build `push` over SSH.
 3. Build `clear` last, once you trust push and the grouped-asset eligibility tests
    (this is the only destructive step).
-4. When Immich is available, point it at `incoming/`. Observe categorization quality,
-   then decide the ownership question in section 7.
+4. When Immich is available, point its external library at `incoming/`. Verify that
+   it does not scan `.uploading/`.

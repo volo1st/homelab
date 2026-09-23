@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iphone-sync"
+version = "0.1.0"
+description = "Import iPhone media and publish it safely to a NAS"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+iphone-sync = "iphone_sync.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["iphone_sync*"]

@@ -21,8 +21,8 @@ of truth for the iPhone, NAS transport, and Immich integration.
 ## Stage 0 — Decisions and device discovery
 
 - [x] Choose the local staging location on each Mac: `~/Pictures/iphone-sync`.
-- [ ] Choose the exact free-space margin the CLI should reserve before its first
-      import. Proposed default: the planned new-download total plus 5 GiB.
+- [x] Choose the exact free-space margin the CLI should reserve before its first
+      import: the planned new-download total plus 5 GiB.
 - [x] Choose the initial NAS transport: SSH to host `nas`. Connection confirmed;
       document the Samba fallback only if SSH becomes unsuitable.
 - [x] Choose host-side NAS paths, with the Immich container mounts to be configured
@@ -43,14 +43,16 @@ of truth for the iPhone, NAS transport, and Immich integration.
 - [x] Pick the initial import backend, while keeping the CLI independent of it.
   - Decision: use `afcclient`/libimobiledevice first; retain Image Capture only as a
         manual fallback until another scriptable native interface is available.
-- [ ] Confirm the clearing policy: Stage 1 never clears the phone; subsequent
-      manual `clear` operations require a successfully published NAS copy, but do
-      not require a mandatory end-to-end checksum comparison.
+- [x] Confirm the clearing policy: Stage 1 never clears the phone. A subsequent
+      manual and interactive `clear` operation requires a complete local asset group
+      and a successfully published NAS copy. It does not require an end-to-end
+      checksum comparison. Keep the local copy until a separate prune operation.
 
 ## Stage 1 — MVP: usable manual import and NAS copy
 
-Goal: manually import media from either Mac, copy it to the NAS, and inspect it
-in Immich. No automatic deletion from the iPhone or local staging cleanup.
+Goal: manually import media from either Mac and copy it to the NAS. Inspect the
+published files directly or through Immich when Immich is available. Do not delete
+media from the iPhone or local staging during this stage.
 
 - [ ] Scaffold the `iphone-sync` Python CLI and its per-Mac configuration.
 - [ ] Implement `iphone-sync import` to enumerate and download selected/new iPhone
@@ -75,9 +77,9 @@ in Immich. No automatic deletion from the iPhone or local staging cleanup.
 - [ ] Make unreachable NAS behavior non-destructive and easy to retry.
 - [ ] Manually test: ordinary photos, Live Photos, a large 4K/ProRes video, an
       interrupted import, an interrupted push, and rerunning each command.
-- [ ] Configure Immich to scan/index the landing directory; verify imported media
-      appears with sensible dates. Ensure it does not scan the temporary upload
-      location.
+- [ ] When Immich is available, configure it to index the landing directory. Verify
+      that imported media has sensible dates. Do not let Immich scan the temporary
+      upload location. This step does not block import or NAS publication.
 - [ ] Add unit tests for manifest creation/transitions, idempotent import decisions,
       asset grouping, path/date handling, and non-destructive command construction.
 
@@ -115,7 +117,8 @@ Goal: make retrying, verification, and reclaiming iPhone storage trustworthy.
       how to upgrade the tool on both Macs.
 - [ ] Define retention/pruning rules for local staging after NAS verification.
 - [ ] Decide whether Immich owns canonical files or indexes a permanent external
-      archive before any automated NAS-side cleanup.
+      archive before any automated NAS-side cleanup. Implement Immich as a separate
+      service package.
 
 ## Stage 4 — Nice-to-haves
 

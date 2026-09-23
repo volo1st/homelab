@@ -9,23 +9,22 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-09-22
+Last update: 2026-09-23
 
-Current package: **Work package 7: backup and disaster recovery**
+Current package: **Work package 8: iPhone sync**
 
-State: **Complete**
+State: **Active**
 
-The user approved a minimal recovery policy. The repository does not back up the
-mergerfs pool, local development data, or mutable service state. Important documents
-already have multiple cloud copies outside this repository. The upstream Git remote
-is the off-host copy of committed configuration. The non-production restore test and
-recovery-readiness check passed. No host change was required.
+The existing iPhone-sync plan is the canonical source. Old conversation links do not
+contain a required decision that is missing from the plan. The service README now
+describes the complete safety chain. Immich is a planned downstream consumer. The
+repository does not contain an Immich service implementation.
 
-Resume work with work package 8:
+Resume work with these actions:
 
-1. Select the free-space reserve and phone-clearing policy.
-2. Select the Immich file-ownership model.
-3. Reconcile the iPhone sync specification with the approved design.
+1. Select the Immich file-ownership model.
+2. Build the command-line interface and manifest.
+3. Add AFC import and SSH publication in safe milestones.
 
 Next available focus: **Work package 8: iPhone sync**
 
@@ -462,14 +461,24 @@ Goal: Restore important data and configuration after a failure.
 
 ## Work package 8: iPhone sync
 
-State: **Pending**
+State: **Active**
 
 Goal: Implement a safe import and NAS publication process before phone deletion.
 
-- [ ] Select the free-space reserve and phone clearing policy.
+- [x] Select the free-space reserve and phone clearing policy.
+  - Evidence: Reserve the planned import size plus 5 GiB. Require a complete local
+    asset group and successful NAS publication before an explicit and interactive
+    phone clear. Keep the local copy until a separate prune operation.
+- [x] Keep Immich deployment separate from the iPhone-sync implementation.
+  - Evidence: The iPhone workflow ends safely at NAS publication. Immich is an
+    optional downstream index and is not a phone-deletion requirement.
 - [ ] Select the Immich file-ownership model before automatic cleanup.
-- [ ] Record AFC and SSH decisions in the specification.
-- [ ] Use `incoming` and `.uploading` in all documents.
+- [x] Record AFC and SSH decisions in the specification.
+  - Evidence: The specification records AFC as the selected import backend and SSH
+    to host `nas` as the selected publication transport.
+- [x] Use `incoming` and `.uploading` in all documents.
+  - Evidence: The iPhone-sync README, plan, specification, and project notes use the
+    selected directory names.
 - [ ] Build the command-line interface, manifest, AFC import, and SSH push.
 - [ ] Make local and NAS publication atomic.
 - [ ] Preserve complete asset groups with source data.

@@ -2,10 +2,10 @@
 
 ## 1. Goal
 
-Manually pull new photos/videos off an iPhone 16 Pro, land them on the NAS, and let
-Immich handle categorization. Automation is a later option after the manual workflow
-has proved reliable. No custom categorization component — Immich's existing
-ML pipeline (faces, CLIP smart search, object/scene tags, dedup) covers that requirement.
+Manually pull new photos and videos from an iPhone 16 Pro and publish them on the NAS.
+Immich can index and categorize the published media after it is available. The import
+and publication process must work without Immich. Automation is a later option after
+the manual workflow has proved reliable.
 
 **In scope:** import from iPhone, integrity verification, space reclamation on iPhone, sync to NAS.
 **Out of scope:** categorization/tagging logic (delegated to Immich), audio file handling
@@ -28,7 +28,7 @@ always near the NAS — sync-to-NAS is a separable step that may run immediately
 
 ```
 iPhone 16 Pro
-   │  USB-C (afcclient or Image Capture — TBD, see §5)
+   │  USB-C (afcclient, see section 5)
    ▼
 [Mac] Local staging dir  ──(A: import + staging + dedup)─┐
    │                                                       │
@@ -36,17 +36,17 @@ iPhone 16 Pro
    ▼                                                       ▼
 [Mac] manifest (sqlite/log, tracks imported assets)   ready-to-sync queue
                                                              │
-                                    rsync/rclone over Samba or SSH
+                                               SSH
                                                              ▼
                    NAS: /ocean/personal/{photos,videos}/iphone/incoming/<date>/
                                                              │
-                                      Immich external-library scan roots only
+                               optional Immich external-library index
                                                              ▼
                                           Categorized, searchable, deduped library
 ```
 
-Two components, as you originally sketched — but Component B is now "point Immich at
-a folder," not custom code.
+The iPhone-sync component ends at safe NAS publication. Immich is a separate and
+optional downstream service.
 
 ## 4. Component A — Mac importer
 
@@ -55,9 +55,9 @@ a folder," not custom code.
 ```
 iphone-sync import    # pull new files from connected iPhone into local staging
 iphone-sync verify    # optional local/NAS reconciliation and diagnostics
-iphone-sync clear     # delete successfully published asset groups from iPhone
-iphone-sync push      # rsync staging -> NAS
+iphone-sync push      # publish staging files to the NAS through SSH
 iphone-sync status    # show pending/staged/pushed counts
+iphone-sync clear     # delete successfully published asset groups from iPhone
 ```
 
 `import` should not delete from the phone. `clear` remains a separate explicit,
@@ -87,33 +87,39 @@ ordinary standalone videos go to the videos tree.
 1. Never delete from iPhone during `import`; clear only complete Live Photo/edit-sidecar
    asset groups after a successful NAS publication.
 2. Upload to a unique temporary NAS path outside Immich's scan root, then atomically
-   publish the complete file into `_incoming`. A failed upload is never visible to Immich.
+   publish the complete file into `incoming`. A failed upload is never visible to Immich.
 3. All steps idempotent — re-running any subcommand after a crash/interrupt should
    converge to the same end state, not duplicate or corrupt data.
+4. Before import, require enough local free space for the planned download plus 5 GiB.
+5. Permit `clear` only when the complete asset group exists locally and is published
+   on the NAS. Keep the local copy until a separate prune operation removes it.
 
 Checksums are optional diagnostics and useful stable identities, not required transfer
 gates. Re-reading iPhone files solely to obtain an independent source hash is not part
 of the normal workflow.
 
-## 5. Import mechanism — decision pending your benchmark
+## 5. Import mechanism
 
-Two candidates, both worth prototyping before committing:
+The initial backend is `afcclient` from libimobiledevice. A representative AFC test
+copied 523 files and 3.54 GiB in 21.741 seconds. The measured rate was approximately
+167 MiB/s. Image Capture imported test files but does not provide the required
+scripting interface. Keep Image Capture as a manual fallback.
+
+The prototype compared these candidates:
 
 | | `afcclient` (libimobiledevice) | Image Capture via `osascript` |
 |---|---|---|
 | Protocol | AFC — known for chatty per-file overhead, historically bottlenecked well below USB link speed | Apple's native transfer path, generally faster for bulk pulls |
 | CLI-native | Yes, pure CLI | Semi — shell script invoking AppleScript, still git-trackable |
-| Risk | Actual throughput on M-series + 16 Pro unverified — could be fine, could be the bottleneck regardless of your 10GbE cable | Less scriptable control over partial-failure/resume behavior |
+| Result | Selected after a successful 167 MiB/s representative test | Rejected as the CLI backend because it has no usable scripting interface |
 
-**Benchmark methodology** (since you're doing this yourself):
+The benchmark used this method:
 1. Pick a fixed test set — e.g. 500 photos + 20 videos already on the iPhone, note total size.
 2. Time a full cold pull with each method, same USB-C cable, same Mac.
 3. Compute MB/s for each; also note CPU load and whether either method chokes on
    large video files (4K/ProRes) differently than photos.
 4. Re-run once more each (warm) to see if there's a meaningful cold/warm gap.
-5. Whichever wins becomes the `import` subcommand's backend — keep the interface
-   (`iphone-sync import`) stable so you can swap backends later without touching
-   the rest of the pipeline.
+5. Keep the `iphone-sync import` interface independent of the backend.
 
 Note: the 10GbE USB-C cable only helps if the bottleneck is link bandwidth. For AFC-style
 transfer it likely isn't — protocol overhead per file tends to dominate. Don't assume
@@ -121,9 +127,7 @@ cable alone fixes speed; the benchmark will tell you where the real ceiling is.
 
 ## 6. Transport — Mac → NAS
 
-- `rsync -av` (or `rclone` if you want richer retry/logging) over Samba, or direct SSH
-  if enabled on the NAS — SSH avoids Samba's per-file overhead and is
-  likely faster for large batches.
+- Use SSH to host `nas`. Keep the transport behind the `iphone-sync push` interface.
 - Landing path convention:
   `/ocean/personal/photos/iphone/incoming/<YYYY-MM-DD>/` for photos and complete
   Live Photo/edit groups; `/ocean/personal/videos/iphone/incoming/<YYYY-MM-DD>/` for
@@ -142,15 +146,16 @@ cable alone fixes speed; the benchmark will tell you where the real ceiling is.
 - MacBook Air case: `push` simply fails/skips gracefully if the NAS isn't reachable
   (Wi-Fi-only, off the home network) and retries next time `iphone-sync push` runs.
 
-## 7. Component B — NAS / Immich
+## 7. Optional Immich service
 
-- No custom code. Configure Immich to watch the two `incoming/` directories above as
-  external libraries (or have it actively ingest + you archive the original incoming
-  copy separately, depending on whether you want Immich managing the
-  canonical copy or just indexing a copy you control).
+- Implement Immich as a separate service package.
+- Configure Immich to use the two `incoming/` directories after the service is
+  available. Do not configure it to use either `.uploading/` directory.
+- Do not use Immich availability or index state as a requirement for import, NAS
+  publication, or phone-deletion eligibility.
 - Decision to make later, not now: does Immich *own* the files (moves/manages them
   into its own storage structure), or does it *index* files you keep organized
-  yourself? This affects whether `_incoming/` is transient or a permanent archive.
+  yourself? This affects whether `incoming/` is transient or a permanent archive.
   Worth deciding after you've used Immich for a few weeks and see which model you
   prefer — doesn't block building Component A.
 
@@ -164,7 +169,7 @@ iphone-sync/
 │   ├── afc_backend.py       # or image_capture_backend.py — swappable
 │   ├── manifest.py          # sqlite manifest read/write
 │   ├── verify.py            # checksum logic
-│   └── push.py              # rsync/rclone wrapper
+│   └── push.py              # SSH publication
 ├── tests/
 └── .github/ (or just a local pre-commit) for lint/test on push
 ```
@@ -177,18 +182,17 @@ only if you specifically want a single static binary across both Macs.
 
 | Decision | Status |
 |---|---|
-| afcclient vs Image Capture | **Pending — your benchmark** |
+| afcclient vs Image Capture | **AFC selected; Image Capture is a manual fallback** |
 | Immich owns files vs indexes files | Deferred, not blocking |
 | Direct 10GbE Mac Studio↔NAS link | Not required for import speed; may still help general NAS throughput — separate from this project |
-| Rsync over Samba vs SSH | Pick during Component A build, easy to swap |
+| NAS transport | **SSH to host `nas`** |
 
 ## 10. Suggested build order
 
-1. Prototype both import backends against the benchmark test set → pick one.
-2. Build `import` + manifest and its unit tests (this is the highest-risk, most
+1. Build `import` + manifest and its unit tests (this is the highest-risk, most
    novel part).
-3. Build `push` (rsync wrapper) — comparatively boilerplate.
-4. Build `clear` last, once you trust push and the grouped-asset eligibility tests
+2. Build `push` over SSH.
+3. Build `clear` last, once you trust push and the grouped-asset eligibility tests
    (this is the only destructive step).
-5. Point Immich at `_incoming/`, observe categorization quality, then decide on §7's
-   ownership question.
+4. When Immich is available, point it at `incoming/`. Observe categorization quality,
+   then decide the ownership question in section 7.

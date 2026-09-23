@@ -22,13 +22,17 @@ this file preserves why the work was done and what was learned.
 ### Pending
 
 - Immich file model: Immich-managed canonical files versus permanent external library.
-- Local staging free-space reserve. Proposed default: planned new-download total plus
-  5 GiB.
 
 ### Chosen
 
 - Local Mac staging: `~/Pictures/iphone-sync` on each Mac. Exact free-space reserve
-  policy remains to be chosen.
+  is the planned new-download total plus 5 GiB.
+- Phone clearing: use a separate, explicit, interactive command. Permit deletion only
+  when the complete asset group exists locally and is published on the NAS. Do not
+  require a checksum by default. Keep the local copy until a separate prune operation.
+- Immich boundary: implement Immich as a separate service package. The iPhone import
+  and NAS publication process must work without Immich. Do not use Immich state as a
+  phone-deletion requirement.
 - NAS landing layout:
   - `/ocean/personal/photos/iphone/{incoming,.uploading}/`
   - `/ocean/personal/videos/iphone/{incoming,.uploading}/`

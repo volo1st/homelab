@@ -22,9 +22,9 @@ repository does not contain an Immich service implementation.
 
 Resume work with these actions:
 
-1. Implement and test manifest operations and state transitions.
-2. Add AFC discovery and import.
-3. Add SSH publication in a separate safe milestone.
+1. Add AFC discovery behind a tested process boundary.
+2. Add atomic local import.
+3. Run the AFC preflight and device test on one Mac.
 
 Next available focus: **Work package 8: iPhone sync**
 
@@ -489,6 +489,8 @@ Goal: Implement a safe import and NAS publication process before phone deletion.
 - [ ] Test mergerfs publication before Immich scans files.
 - [ ] Add unit and device tests before phone deletion.
 - [ ] Add explicit states, status, verification, and recovery.
+  - Progress: Added manifest state transitions, grouped clear eligibility, status
+    counts, and state-transition tests. Verification and recovery remain pending.
 - [ ] Require confirmation and NAS publication before deletion.
 - [ ] Document installation, operation, and recovery on both Macs.
 - [ ] Record evidence and commit each safe implementation milestone.

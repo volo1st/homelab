@@ -50,7 +50,7 @@ Add each hardware/backend experiment here using this form:
 
 ### 2026-09-24 — CLI and manifest scaffold
 
-- Added a Python 3.11 command-line package with no runtime dependencies.
+- Added a Python 3.11-or-newer command-line package with no runtime dependencies.
 - Added a per-Mac TOML configuration with documented defaults.
 - Added non-destructive `init` and `status` commands.
 - Added the first SQLite schema for assets, files, and explicit file states.
@@ -59,6 +59,20 @@ Add each hardware/backend experiment here using this form:
 - Result: unit tests, Ruff checks, Python compilation, and `git diff --check` passed.
 - Decision / next action: implement manifest operations and state transitions before
   the AFC import backend.
+
+### 2026-09-24 — Manifest state machine
+
+- Added idempotent asset-group and source-file discovery.
+- Added guarded transitions from discovered to local complete, NAS published, and
+  cleared.
+- Made clearing eligible only when every file in the asset group has a recorded local
+  copy and a published NAS copy.
+- Kept the real local-file existence check as a requirement for the future clear
+  command. A database path alone does not prove that the file exists.
+- Added conflict checks for changed source metadata and repeated transitions.
+- Result: all 12 unit tests and Ruff checks passed.
+- Decision / next action: add AFC discovery behind a process boundary with test
+  fixtures before a real-device test on a Mac.
 
 ### 2026-08-15 — MacBook Air import-backend availability
 

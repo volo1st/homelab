@@ -88,9 +88,10 @@ media from the iPhone or local staging during this stage.
 
 Goal: make retrying, verification, and reclaiming iPhone storage trustworthy.
 
-- [ ] Model manifest state explicitly: discovered, copied locally, NAS published,
+- [x] Model manifest state explicitly: discovered, copied locally, NAS published,
       eligible to clear, and cleared. Keep optional verification results separate
       from the normal state machine.
+  - Recorded: [Manifest state machine](project-notes.md).
 - [ ] Implement `iphone-sync status` to show counts, failures, and pending work.
 - [ ] Implement `iphone-sync verify` as an on-demand local/NAS reconciliation and
       recovery tool; use size and/or content hash when the user wants that assurance.

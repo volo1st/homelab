@@ -22,8 +22,8 @@ repository does not contain an Immich service implementation.
 
 Resume work with these actions:
 
-1. Run the read-only AFC `discover` command on one Mac.
-2. Add atomic local import.
+1. Add atomic local import for an explicitly selected source file.
+2. Test one small import on the Mac Studio.
 3. Test an interrupted local import with a small device sample.
 
 Next available focus: **Work package 8: iPhone sync**
@@ -485,6 +485,8 @@ Goal: Implement a safe import and NAS publication process before phone deletion.
   - Progress: Added the Python package, per-Mac configuration, SQLite schema, `init`,
     `status`, read-only AFC discovery, and 19 unit tests. AFC download and SSH
     publication remain pending.
+  - Evidence: Mac Studio discovery found 8,157 files and 27,021,035,750 bytes on the
+    paired iPhone without downloading or changing a file.
 - [ ] Make local and NAS publication atomic.
 - [ ] Preserve complete asset groups with source data.
 - [ ] Test mergerfs publication before Immich scans files.

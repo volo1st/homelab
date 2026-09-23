@@ -87,6 +87,20 @@ Add each hardware/backend experiment here using this form:
 - Decision / next action: run `discover` against the iPhone on one Mac. Use the result
   as the preflight for atomic local import work.
 
+### 2026-09-24 — Mac Studio AFC discovery validation
+
+- Mac and Python version: Mac Studio; Python 3.14.7.
+- iPhone/iOS version: iPhone 16 Pro; iOS 27.0.
+- Backend and version: Homebrew libimobiledevice 1.4.0.
+- Command or procedure: ran `python3 -m iphone_sync discover` with the paired and
+  unlocked iPhone connected.
+- Result: discovered 8,157 DCIM files with a total size of 27,021,035,750 bytes. The
+  command did not download or change a file.
+- Capacity result: a full import requires approximately 30.17 GiB free when the
+  approved 5 GiB reserve is included.
+- Decision / next action: implement atomic local download and test it with a small,
+  explicitly selected device file before a full import.
+
 ### 2026-08-15 — MacBook Air import-backend availability
 
 - Mac and macOS version: MacBook Air M4; macOS 26.6.1 (build 25G76).

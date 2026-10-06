@@ -1,178 +1,88 @@
-# WDS Wireless Bridge — Studio Backhaul
+# Studio WDS backhaul
 
-Goal: give the studio (no cable run) a solid network link, so wax202 can
-act as a wired switch for MacBook Air, NAS, and Mac Studio in that room.
+The AXT1800 is the WDS access point on the main LAN. The WAX202 is the
+four-address WDS station in the studio. The bridge extends `192.168.88.0/24`
+to the studio switch. The MikroTik remains the router and DHCP server.
 
-## Devices
+## Current design
 
-| Device | Role | Chipset / driver |
+| Property | AXT1800 | WAX202 |
 |---|---|---|
-| GL-MT6000 (Flint 2) | Main house AP, central room | MediaTek, closed driver |
-| GL-AXT1800 (Slate AX) | WDS AP, upstairs above studio | Qualcomm, open `hostapd`/mac80211 |
-| Netgear wax202 | WDS client, in studio | OpenWrt stock, mac80211 |
-| GL-MT1300 (Beryl) | Spare (tested, not used) | MediaTek MT7615E, open `hostapd` |
+| WDS role | Access point | Station |
+| Management address | `192.168.88.115/24` | `192.168.88.4/24` |
+| Firmware | Official OpenWrt 25.12.5 | OpenWrt 25.12.2 at recorded baseline |
+| Bridge | `br-lan` | `br-lan` |
+| Ethernet path | `wan` in the acceptance capture | `lan1` |
+| Wireless data path | Dynamic `phy0-ap0.sta1`, type `AP/VLAN` | `phy1-sta0` |
+| Wireless configuration | 5-GHz AP with WDS enabled | 5-GHz station with WDS enabled |
 
-## Critical findings
+The dedicated backhaul SSID is `Secret Cow Level`. The WAX202 pins the AXT1800
+BSSID `5e:81:e0:ee:07:05`. The link uses channel 153 at 5765 MHz and HE80.
+The recorded security mode is WPA2-PSK with CCMP. Keep the wireless key in
+private recovery storage.
 
-1. **GL-MT6000 cannot do WDS.** Its wifi is run by a closed-source
-   MediaTek driver/daemon, not standard `hostapd`. Stations fully
-   associate and complete the WPA 4-way handshake, but no WDS frames are
-   ever forwarded — confirmed by a live kernel log capture during
-   reconnect (no WDS-related log lines at all) and no exposed WDS
-   controls (`wappd_cli` missing, no WDS state files anywhere).
-   Matches reports on the GL.iNet community forum for this hardware.
+The official OpenWrt bootstrap bridges AXT1800 `lan1`, `lan2`, and `wan`.
+It disables local DHCP service and disables the unused radio.
+The recorded baseline disables spanning tree, VLAN filtering, and multicast
+snooping on the WDS bridge. Capture current device configuration before treating
+these settings as a complete restore specification.
 
-2. **GL-MT1300 does support WDS** (real `hostapd` process), but its
-   MT7615E chipset is Wi-Fi 5 (AC) only, 2×2 MIMO — capped throughput
-   around 300 Mbps even with a strong signal. Too slow for the studio's
-   needs (NAS + Mac Studio + MacBook Air).
+## Failure and fix
 
-3. **GL-AXT1800 supports WDS and is fast enough.** Wi-Fi 6 (HE80), real
-   `hostapd`. WDS backhaul tested at 690–780 Mbps over iperf3, one floor
-   apart from wax202. This is the device now used for the backhaul link.
+On GL.iNet 4.8.3 with kernel 5.4.164, the AXT1800 received a broadcast ARP
+request and changed its destination during wireless transmission. Four-address
+WDS distinguishes the wireless receiver from the final Ethernet destination.
+The receiver must be the WAX202 station MAC address. Address 3 must keep the
+final destination, which is `ff:ff:ff:ff:ff:ff` for a broadcast ARP request.
 
-4. **The original DUP! problem (stock wax202 bridge firmware) is a
-   separate issue from everything above** — not yet deliberately
-   reproduced, but not seen either during sustained iperf3 load. Worth
-   continued casual monitoring, not urgent.
+The old stack put the WAX202 station MAC in address 3. The WAX202 received an
+Ethernet frame addressed to itself and did not flood it to `lan1`. Studio hosts
+therefore did not receive the ARP request. Valid forwarding database entries
+and working unicast traffic did not prevent this failure.
 
-5. **Same SSID across multiple APs caused real problems.** Early on, the
-   wax202 silently roamed to a much weaker back-of-house AP because it
-   shared the same SSID as the main one — this caused most of the
-   original "intermittent connection" symptoms. Fixed by giving the
-   backhaul its own dedicated, hidden SSID.
+Replacing the AXT1800 stack with official OpenWrt 25.12.5 preserved the
+broadcast destination. The controlled test on 2026-10-06 verified the complete
+ARP request and reply path. The Air then received all three ping replies.
 
-6. **A wifi client bottleneck was initially mistaken for a WDS
-   problem.** Air's iperf3 numbers over its own wifi to MT6000 (120–175
-   Mbps, heavy retries) looked bad, but plugging Air in by cable to
-   either AP showed the WDS backhaul itself is fine (690–780 Mbps). The
-   real bottleneck is Air's own wifi link to MT6000 — a separate,
-   ordinary client-wifi problem to debug another day.
+| Observation | Old GL.iNet stack | Official OpenWrt 25.12.5 |
+|---|---|---|
+| ARP request at AXT1800 Ethernet and WDS ports | Broadcast | Broadcast |
+| Raw four-address destination, address 3 | WAX202 station MAC | Broadcast |
+| Request at WAX202 wireless port | Station-addressed | Broadcast |
+| Request at WAX202 Ethernet port | Absent | Broadcast |
+| NAS ARP reply and Air ping | Failed | Passed |
 
-## Key decisions
+This confirms the failure location and the observed improvement. It does not
+identify whether the old defect came from GL.iNet changes, inherited upstream
+code, or a missing backport. The exact defective component remains unconfirmed.
+The long-duration checks in [README.md](README.md) remain open.
 
-- **Use AXT1800, not MT6000, as the WDS AP.** MT6000's driver can't do
-  it; not fixable from config.
-- **Relocate MT6000 to a central room.** It no longer needs to be near
-  the studio for backhaul, so move it to serve the whole house better.
-  AXT1800 takes its old spot (front of house, above the studio).
-- **Dedicated, hidden backhaul SSID** (`Secret Cow Level`), separate
-  from client-facing SSIDs. Removes the roaming ambiguity that caused
-  the original bug.
-- **iperf3 over cable, not wifi speedtest, for real diagnosis.**
-  Speedtests are short bursts and miss sustained retransmit/congestion
-  patterns. Isolate the wireless hop under test by temporarily wiring
-  the client directly into each AP in the chain.
-- **Disable DHCP server on wax202.** OpenWrt ships DHCP on by default;
-  left on, it randomly raced the real router and caused devices to get
-  wax202 as their gateway instead of the router.
+## Rebuild and recovery
 
-## Final config (uci)
+Use the investigation [firmware runbook](https://github.com/volo1st/wds-arp-discovery-debug/blob/master/firmware-test.md)
+and [staged bootstrap script](https://github.com/volo1st/wds-arp-discovery-debug/blob/master/scripts/bootstrap-axt-openwrt.sh).
+The verified test image is
+`openwrt-25.12.5-qualcommax-ipq60xx-glinet_gl-axt1800-squashfs-factory.ubi`.
+Its SHA-256 is `6703e3f714c4da46ea24c10d2d826298b8549369f2ecd806ead96ae3e0fbd12d`.
+The rollback image and private pre-upgrade archive remain required recovery
+artifacts. Do not restore the GL.iNet archive into official OpenWrt.
 
-### wax202 (studio, WDS client)
+The current device exports are pending. Follow
+[configuration-backup.md](configuration-backup.md) to capture the working state
+and derive the checked-in configuration templates.
 
-```sh
-# Network
-uci set network.lan.ipaddr='192.168.88.4'
-uci set network.lan.netmask='255.255.255.0'
-uci set network.lan.gateway='192.168.88.1'
-uci set network.lan.dns='192.168.88.1'
-uci commit network
+## Evidence and earlier experience
 
-# Wireless — 5GHz WDS client only, 2.4GHz off
-uci set wireless.radio0.disabled='1'
-uci set wireless.radio1.channel='153'
-uci set wireless.radio1.htmode='HE80'
-uci set wireless.default_radio1.disabled='1'
-uci set wireless.wdssta=wifi-iface
-uci set wireless.wdssta.device='radio1'
-uci set wireless.wdssta.mode='sta'
-uci set wireless.wdssta.network='lan'
-uci set wireless.wdssta.ssid='Secret Cow Level'
-uci set wireless.wdssta.encryption='psk2'
-uci set wireless.wdssta.key='<key>'
-uci set wireless.wdssta.wds='1'
-uci set wireless.wdssta.bssid='<AXT1800 5GHz BSSID>'
-uci commit wireless
-wifi
+- [Old transmit failure](https://github.com/volo1st/wds-arp-discovery-debug/tree/master/evidence/20260925T113535Z-axt-monitor-nas)
+- [Passing broadcast test and monitor cleanup](https://github.com/volo1st/wds-arp-discovery-debug/tree/master/evidence/20261006T081915Z-openwrt-25.12.5-monitor-nas)
+- [Capture and probe tools](https://github.com/volo1st/wds-arp-discovery-debug/blob/master/automation.md)
 
-# DHCP — must be off, or wax202 fights the real router for gateway duty
-uci set dhcp.lan.ignore='1'
-uci set dhcp.lan.dhcpv6='disabled'
-uci set dhcp.lan.ra='disabled'
-uci commit dhcp
-/etc/init.d/dnsmasq restart
-```
+Earlier tests reported 690–780 Mbit/s through the backhaul with wired clients.
+This is historical performance, not a benchmark of the new firmware.
+The dedicated SSID and pinned BSSID remove station-roaming ambiguity.
+Separate client Wi-Fi performance from backhaul performance when measuring load.
 
-### AXT1800 (near MT6000, WDS AP)
-
-Must first be switched from factory router mode to AP mode (GL.iNet
-LuCI: Internet/Network settings → AP mode). Once in AP mode its `lan`
-DHCP is auto-disabled by GL.iNet's own logic — confirm with
-`uci show dhcp` (`dhcp.lan.ignore='1'` should already be there).
-
-```sh
-uci set wireless.default_radio0.ssid='Secret Cow Level'
-uci set wireless.default_radio0.hidden='1'
-uci set wireless.default_radio0.key='<key>'
-uci set wireless.default_radio0.wds='1'
-uci set wireless.radio0.channel='153'
-uci set wireless.radio1.disabled='1'         # 2.4GHz off
-uci set wireless.guest5g.disabled='1'
-uci commit wireless
-wifi
-```
-
-### MT6000 (central main AP — cleanup only)
-
-WDS flags left over from testing should be removed; nothing else
-needs to change.
-
-```sh
-uci set wireless.wifi5g.wds='0'
-uci set wireless.wifi2g.wds='0'
-uci set wireless.mt798612.channel='auto'   # let it pick a clean channel
-uci commit wireless
-wifi
-```
-
-> Note: extra improvement on unstable ping (unverified)
-
-This one's less concerning and likely unrelated to WDS — since Air connects to MT6000 directly, this is purely a normal wifi-client-to-AP phenomenon. The "every ~5 packets, 40-80ms spike" pattern is a classic signature of one of:
-
-802.11k neighbor report polling — MT6000's config has ieee80211k='1' enabled, which periodically asks clients to scan and report on neighboring APs for roaming optimization. That scan briefly interrupts normal data flow.
-Power-save/PS-poll behavior — if Air's wifi radio cycles into a light power-saving state between bursts, waking up adds latency to the next packet.
-Periodic background wifi scanning by macOS — looking for better APs/networks, independent of anything on MT6000's side.
-
-None of these are wrong or broken — they're standard, expected background wifi management behavior, and 40-80ms every 5th packet is mild. If you want to rule out 802.11k as the specific cause, you could test-disable it temporarily:
-
-```sh
-uci set wireless.wifi5g.ieee80211k='0'
-uci set wireless.wifi5g.bss_transition='0'
-uci commit wireless
-wifi
-```
-
-## Testing notes
-
-- **iperf3 for throughput**, wired between real devices — not router-
-  to-router (routers are low-power and can mask the true wireless
-  ceiling either way; test what you actually use).
-- Isolate a specific hop by temporarily wiring the client straight into
-  one AP, bypassing other hops.
-- CPU was checked (`top`) on both APs during a loaded test — stayed
-  under 1%, ruling out router CPU as a bottleneck.
-- A brief burst of high ping right after replugging an Ethernet cable
-  is normal (bridge MAC relearning + ARP refresh) — not a fault.
-
-## Open items / worth future attention
-
-- MT6000's `guest` and `iot` networks are inert (disabled) but still
-  have firewall forwarding rules pointing at its unused `wan` zone —
-  harmless today, but would need re-checking before ever enabling them.
-- Air's own wifi link to MT6000 underperforms under sustained load
-  (retries, throughput collapse) — separate problem from this backhaul
-  project, not yet investigated.
-- DUP! was never deliberately reproduced under the new setup. No sign
-  of it during heavy sustained iperf3 testing so far.
-- GL-MT1300 is now free for reuse elsewhere.
+The earlier MT6000 WDS limitation was observed on its tested vendor build.
+It is not evidence that every firmware for this hardware lacks WDS support.
+The earlier MT1300 throughput test was a rejected backhaul option. The user
+confirmed its current role as kitchen and work-from-home / TV access point.

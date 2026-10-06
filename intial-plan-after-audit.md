@@ -9,24 +9,30 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-09-24
+Last update: 2026-10-06
 
-Current package: **Work package 8: iPhone sync**
+Current package: **Work package 12: network documentation and recovery**
 
 State: **Active**
 
-The existing iPhone-sync plan is the canonical source. Old conversation links do not
-contain a required decision that is missing from the plan. The service README now
-describes the complete safety chain. Immich is a planned downstream consumer. The
-repository does not contain an Immich service implementation.
+The user confirmed that iPhone sync is paused. The WDS fault had blocked reliable
+NAS and Mac Studio access. The controlled OpenWrt 25.12.5 forwarding test now
+passes. The user is running several days of observation and stress tests.
+
+The network documentation is consolidated. The remaining work in package 12 is
+configuration capture, reviewed templates, and recovery verification. Device
+exports have not yet been collected. The existing iPhone-sync plan remains its
+canonical source and its implementation checklist is unchanged.
 
 Resume work with these actions:
 
-1. Add atomic local import for an explicitly selected source file.
-2. Test one small import on the Mac Studio.
-3. Test an interrupted local import with a small device sample.
+1. Run `scripts/capture-network-config.sh --run` from the Air.
+2. Review the private device exports and confirm management addresses and versions.
+3. Derive native templates, dependencies, and restore instructions from the exports.
+4. Complete private recovery copies and representative recovery verification.
 
-Next available focus: **Work package 8: iPhone sync**
+Next available focus: **Work package 12: configuration capture and recovery**.
+Resume iPhone sync after this package, at atomic local import and small-device tests.
 
 ## Work rule
 
@@ -63,6 +69,7 @@ Use one state for each package:
 - **Pending:** Work did not start.
 - **Active:** This is the only active package.
 - **Blocked:** A named dependency prevents work.
+- **Paused:** The user explicitly deferred this package. Keep its resume steps.
 - **Complete:** All completion gates passed.
 
 ## Global completion criteria
@@ -461,7 +468,12 @@ Goal: Restore important data and configuration after a failure.
 
 ## Work package 8: iPhone sync
 
-State: **Active**
+State: **Paused**
+
+The user confirmed the pause on 2026-10-06. The WDS fault caused the access
+blocker. The forwarding test now passes, but the user selected network
+consolidation while the new setup completes its soak test. Resume at atomic local
+import, a small Mac Studio import, and an interrupted import test.
 
 Goal: Implement a safe import and NAS publication process before phone deletion.
 
@@ -544,3 +556,41 @@ State: **Pending**
 - [ ] Resolve each audit finding or record its accepted risk.
 - [ ] Write the final audit summary.
 - [ ] Archive or replace this plan.
+
+## Work package 12: network documentation and recovery
+
+State: **Active**
+
+Goal: Record the current network, distil the WDS troubleshooting workflow, and
+make the network-device configuration recoverable.
+
+- [x] Consolidate the current design and focused topology diagrams.
+  - Evidence: `networking/README.md` and `networking/topology.md` identify the
+    source inventory and the management fields that still need confirmation.
+- [x] Replace the old WDS setup instructions with the verified firmware result.
+  - Evidence: `networking/wds-backhaul-setup.md` links the old failed capture and
+    the passing 2026-10-06 four-address broadcast capture.
+- [x] Distil the investigation into a reusable workflow and tool lessons.
+  - Evidence: `networking/troubleshooting.md` records interface discovery,
+    cached ARP, observer effects, capture cleanup, and failed-test preservation.
+- [x] Define configuration and private recovery-copy requirements.
+  - Evidence: `networking/configuration-backup.md` follows the existing secret
+    policy and separates collection from verified reproducibility.
+- [x] Prepare the private Air-side configuration collector.
+  - Evidence: `scripts/capture-network-config.sh` passed Bash syntax, ShellCheck,
+    and mocked full collection and interrupted SSH checks. It retains partial
+    files and records missing MikroTik binary-backup coverage. Live execution
+    remains part of the next collection step.
+- [x] Confirm the Air aliases and the MT1300 client coverage.
+  - Evidence: User confirmation on 2026-10-06; `networking/topology.md` records
+    `mt6000`, `mt1300`, `wax202`, `axt1800`, and `mikrotik`.
+- [ ] Confirm management addresses, firmware versions, and exact cable ports.
+- [ ] Collect current OpenWrt and MikroTik exports and private recovery copies.
+- [ ] Add reviewed native configuration templates under `networking/devices/`.
+- [ ] Record firmware checksums, packages, custom files, and secret dependencies.
+- [ ] Run a representative restore verification with physical recovery available.
+- [ ] Record soak, idle reachability, discovery, sustained-load, and printer results.
+- [x] Review documentation links and run the repository secret scan.
+  - Evidence: The local Markdown links resolve and `scripts/check-secrets.sh`
+    passed. The new files contain documentation and synthetic-tested code only.
+- [ ] Record evidence and commit the complete package.

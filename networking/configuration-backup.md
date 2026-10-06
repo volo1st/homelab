@@ -2,9 +2,11 @@
 
 Capture the working network while the new WDS setup completes its soak test.
 Start with the AXT1800 and WAX202. Then capture the MikroTik, MT6000, and MT1300.
-Run collection from the Air with confirmed SSH aliases and host keys.
+Run collection from the Air or the Linux development container with confirmed
+SSH aliases and host keys. Configuration collection can run from either side
+of a working bridge. Use the Air for independent cross-bridge reachability tests.
 
-From the Air homelab clone, run:
+From the homelab clone, run:
 
 ```sh
 bash scripts/capture-network-config.sh --run
@@ -12,7 +14,7 @@ bash scripts/capture-network-config.sh --run
 
 The collector uses `axt1800`, `wax202`, `mt6000`, `mt1300`, and `mikrotik`.
 It stores private files under ignored `secrets/local/network/<UTC timestamp>/`.
-It captures OpenWrt board identity, UCI exports, package versions, backup file
+It captures OpenWrt board identity, UCI exports, live IPv4 state, package versions, backup file
 lists, and native configuration archives. It captures the MikroTik identity and
 text export. It validates archive readability and local SHA-256 checksums.
 It retains partial files on failure. It does not publish raw exports to Git.
@@ -88,11 +90,18 @@ Source: [MikroTik configuration export and import](https://help.mikrotik.com/doc
 
 ## Current coverage
 
-The device aliases and MT1300 role are confirmed. No live configuration collection
-was performed during the documentation pass. Current exports, reviewed templates,
-private recovery copies, and restore verification remain pending.
+The capture on 2026-10-06 completed from the Linux development container.
+Its private files are in `secrets/local/network/20261006T103815Z/`.
+All four OpenWrt configuration archives passed the tar check. All recorded
+checksums passed. The MikroTik text export contains 28 menu sections.
+The capture directories have mode `0700`; the files have mode `0600`.
+Git ignores the complete capture. No raw configuration was committed.
+
+Reviewed templates, an off-host private recovery copy, the MikroTik encrypted
+binary backup, and restore verification remain pending. A local ignored backup
+does not protect against loss of the NAS that hosts this container.
 
 The collector passed Bash syntax, ShellCheck, and mocked success and interrupted
-SSH tests. These tests do not prove compatibility with the five live devices.
+SSH tests. It also completed live collection on all five devices from Linux.
 Track completion only in
 [work package 12](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery).

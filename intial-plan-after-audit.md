@@ -20,16 +20,17 @@ NAS and Mac Studio access. The controlled OpenWrt 25.12.5 forwarding test now
 passes. The user is running several days of observation and stress tests.
 
 The network documentation is consolidated. The remaining work in package 12 is
-configuration capture, reviewed templates, and recovery verification. Device
-exports have not yet been collected. The existing iPhone-sync plan remains its
+reviewed templates and recovery verification. Device exports, four OpenWrt
+archives, and a MikroTik text export were collected from Linux on 2026-10-06.
+The existing iPhone-sync plan remains its
 canonical source and its implementation checklist is unchanged.
 
 Resume work with these actions:
 
-1. Run `scripts/capture-network-config.sh --run` from the Air.
-2. Review the private device exports and confirm management addresses and versions.
-3. Derive native templates, dependencies, and restore instructions from the exports.
-4. Complete private recovery copies and representative recovery verification.
+1. Review the private capture at `secrets/local/network/20261006T103815Z/`.
+2. Derive native templates, dependencies, and restore instructions from the exports.
+3. Record vendor firmware release identifiers and exact cable ports.
+4. Complete off-host private recovery copies, MikroTik binary backup, and restore verification.
 
 Next available focus: **Work package 12: configuration capture and recovery**.
 Resume iPhone sync after this package, at atomic local import and small-device tests.
@@ -576,16 +577,22 @@ make the network-device configuration recoverable.
 - [x] Define configuration and private recovery-copy requirements.
   - Evidence: `networking/configuration-backup.md` follows the existing secret
     policy and separates collection from verified reproducibility.
-- [x] Prepare the private Air-side configuration collector.
+- [x] Prepare the private macOS and Linux configuration collector.
   - Evidence: `scripts/capture-network-config.sh` passed Bash syntax, ShellCheck,
     and mocked full collection and interrupted SSH checks. It retains partial
-    files and records missing MikroTik binary-backup coverage. Live execution
-    remains part of the next collection step.
+    files and records missing MikroTik binary-backup coverage. Live collection
+    completed on all five devices from Linux on 2026-10-06.
 - [x] Confirm the Air aliases and the MT1300 client coverage.
   - Evidence: User confirmation on 2026-10-06; `networking/topology.md` records
     `mt6000`, `mt1300`, `wax202`, `axt1800`, and `mikrotik`.
-- [ ] Confirm management addresses, firmware versions, and exact cable ports.
-- [ ] Collect current OpenWrt and MikroTik exports and private recovery copies.
+- [x] Confirm management addresses and OpenWrt/RouterOS versions.
+  - Evidence: Private board identity, MikroTik identity, and live IPv4 state in
+    `secrets/local/network/20261006T103815Z/`; `networking/topology.md` records them.
+- [ ] Confirm vendor firmware release identifiers and exact cable ports.
+- [x] Collect current OpenWrt exports, configuration archives, and MikroTik text export.
+  - Evidence: Private capture `20261006T103815Z`; four tar checks and all SHA-256
+    checks passed. Directories are `0700`, files are `0600`, and Git ignores them.
+- [ ] Complete the MikroTik encrypted binary backup and off-host private recovery copies.
 - [ ] Add reviewed native configuration templates under `networking/devices/`.
 - [ ] Record firmware checksums, packages, custom files, and secret dependencies.
 - [ ] Run a representative restore verification with physical recovery available.

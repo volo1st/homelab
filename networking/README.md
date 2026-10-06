@@ -20,13 +20,15 @@ The private [WDS investigation repository](https://github.com/volo1st/wds-arp-di
 owns the detailed incident history, raw evidence, and investigation tools.
 Keep the evidence there. Link to the relevant session from these documents.
 
-Current configuration exports for the network devices have not yet been collected
-into this directory. The topology uses the investigation inventory. Confirm the
-remaining management addresses, firmware versions, and cable ports
-during the configuration-capture step.
+Current configurations were collected from all five network devices on 2026-10-06
+from the Linux development container. The private capture is under ignored
+`secrets/local/network/20261006T103815Z/`. The topology now includes verified
+OpenWrt management addresses and software base versions. Reviewed native
+templates, exact cable ports, and restore verification remain pending.
 
 The user confirmed the current AP locations, MT1300 coverage, and the five Air
-SSH aliases. Use `scripts/capture-network-config.sh` for the next capture.
+SSH aliases. Use `scripts/capture-network-config.sh` for later captures from
+macOS or Linux.
 
 ## Acceptance still required
 

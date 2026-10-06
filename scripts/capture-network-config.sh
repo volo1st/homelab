@@ -5,7 +5,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 usage() {
     printf '%s\n' 'Usage: bash scripts/capture-network-config.sh --run'
-    printf '%s\n' 'Run on the Air. Collect private backups through existing SSH aliases.'
+    printf '%s\n' 'Run on macOS or Linux. Collect private backups through existing SSH aliases.'
     printf '%s\n' 'Output: secrets/local/network/<UTC timestamp>/'
 }
 
@@ -17,10 +17,11 @@ if [[ $# -ne 1 || "$1" != '--run' ]]; then
     usage >&2
     exit 2
 fi
-[[ "$(uname -s)" == Darwin ]] || {
-    printf '%s\n' 'Run from the Air on the main LAN.' >&2
-    exit 2
-}
+collector_platform="$(uname -s)"
+case "$collector_platform" in
+    Darwin|Linux) ;;
+    *) printf 'Unsupported collector platform: %s\n' "$collector_platform" >&2; exit 2 ;;
+esac
 for command_name in ssh tar shasum git; do
     command -v "$command_name" >/dev/null 2>&1 || {
         printf 'Required command is absent: %s\n' "$command_name" >&2
@@ -42,6 +43,8 @@ output_dir="${repo_root}/secrets/local/network/${timestamp}"
 mkdir -p "$output_dir"
 chmod 700 "$output_dir"
 printf 'started_utc=%s\n' "$timestamp" >"${output_dir}/manifest.txt"
+printf 'collector_host=%s\ncollector_platform=%s\n' \
+    "$(hostname)" "$collector_platform" >>"${output_dir}/manifest.txt"
 printf 'Output contains private configuration: %s\n' "$output_dir"
 
 finish() {
@@ -64,6 +67,8 @@ for host in axt1800 wax202 mt6000 mt1300; do
         >"${device_dir}/board.json" 2>"${device_dir}/board.stderr"
     ssh "${ssh_options[@]}" "$host" 'uci export' \
         >"${device_dir}/config.uci" 2>"${device_dir}/config.stderr"
+    ssh "${ssh_options[@]}" "$host" 'ip -4 addr show && ip -4 route show' \
+        >"${device_dir}/network-state.txt" 2>"${device_dir}/network-state.stderr"
     ssh "${ssh_options[@]}" "$host" 'sysupgrade -l' \
         >"${device_dir}/backup-files.txt" 2>"${device_dir}/backup-list.stderr"
     ssh "${ssh_options[@]}" "$host" \
@@ -77,7 +82,7 @@ for host in axt1800 wax202 mt6000 mt1300; do
     [[ -s "${device_dir}/archive-files.txt" ]]
     (
         cd "$device_dir"
-        shasum -a 256 board.json config.uci backup-files.txt packages.txt config.tar.gz archive-files.txt \
+        shasum -a 256 board.json config.uci network-state.txt backup-files.txt packages.txt config.tar.gz archive-files.txt \
             >SHA256SUMS
         shasum -a 256 -c SHA256SUMS >checksum-check.txt
     )

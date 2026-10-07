@@ -8,6 +8,7 @@ several days and will apply sustained load. Long-duration acceptance remains ope
 - [Studio WDS backhaul](wds-backhaul-setup.md)
 - [Troubleshooting workflow](troubleshooting.md)
 - [Configuration capture and recovery](configuration-backup.md)
+- [Source reconciliation](source-reconciliation.md)
 
 The MikroTik RB760iGS is the main router. The AXT1800 is the wireless
 distribution system (WDS) access point. The WAX202 is the WDS station in the

@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-06
+Last update: 2026-10-07
 
 Current package: **Work package 12: network documentation and recovery**
 
@@ -18,6 +18,11 @@ State: **Active**
 The user confirmed that iPhone sync is paused. The WDS fault had blocked reliable
 NAS and Mac Studio access. The controlled OpenWrt 25.12.5 forwarding test now
 passes. The user is running several days of observation and stress tests.
+
+A source reconciliation on 2026-10-07 found no additional current network
+configuration in the reviewed Todoist and Confluence material. See
+`networking/source-reconciliation.md`. The backhaul runbook now records that
+device exports were collected. No acceptance or recovery gate changed.
 
 The network documentation is consolidated. The remaining work in package 12 is
 reviewed templates and recovery verification. Device exports, four OpenWrt

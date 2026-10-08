@@ -55,7 +55,9 @@ ARP request and reply path. The Air then received all three ping replies.
 This confirms the failure location and the observed improvement. It does not
 identify whether the old defect came from GL.iNet changes, inherited upstream
 code, or a missing backport. The exact defective component remains unconfirmed.
-The long-duration checks in [README.md](README.md) remain open.
+On 2026-10-09, the user reported several days without an issue under idle access
+and demanding transfers. The operational fault is closed. See the
+[retrospective](wds-retrospective.md) for evidence and remaining verification.
 
 ## Rebuild and recovery
 

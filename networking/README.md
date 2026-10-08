@@ -1,12 +1,14 @@
 # Home network
 
 This directory records the current network and the files needed to rebuild it.
-The WDS forwarding test passed on 2026-10-06. The user is running the setup for
-several days and will apply sustained load. Long-duration acceptance remains open.
+The WDS forwarding test passed on 2026-10-06. On 2026-10-09, the user reported
+several days without an issue during idle access and demanding transfers.
+The operational WDS fault is closed. Recovery verification remains open.
 
 - [Topology and device inventory](topology.md)
 - [Studio WDS backhaul](wds-backhaul-setup.md)
 - [Troubleshooting workflow](troubleshooting.md)
+- [WDS retrospective and operational acceptance](wds-retrospective.md)
 - [Configuration capture and recovery](configuration-backup.md)
 - [Source reconciliation](source-reconciliation.md)
 
@@ -31,12 +33,17 @@ The user confirmed the current AP locations, MT1300 coverage, and the five Air
 SSH aliases. Use `scripts/capture-network-config.sh` for later captures from
 macOS or Linux.
 
-## Acceptance still required
+## Operational acceptance and remaining verification
+
+See [the retrospective](wds-retrospective.md) for the reported workloads and
+evidence limits. Idle access, sustained downloads, NAS file access, and a large
+transfer passed in user-reported operation. The following checks remain unverified;
+they do not reopen the resolved forwarding fault.
 
 - Observe AXT1800 memory use and WDS reassociations for at least 24 hours.
 - Verify NAS and Mac Studio reachability after an idle period.
 - Verify name resolution, multicast Domain Name System (mDNS), and file-service discovery.
-- Complete a large transfer across the bridge. Record loss and link errors.
+- Record packet loss and link errors during a measured transfer.
 - Confirm that the printer does not resume its periodic wake behaviour.
 - Verify the saved recovery files and a representative restore procedure.
 

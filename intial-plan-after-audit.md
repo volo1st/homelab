@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-08
+Last update: 2026-10-09
 
 Current package: **Work package 12: network documentation and recovery**
 
@@ -17,7 +17,10 @@ State: **Active**
 
 The user confirmed that iPhone sync is paused. The WDS fault had blocked reliable
 NAS and Mac Studio access. The controlled OpenWrt 25.12.5 forwarding test now
-passes. The user is running several days of observation and stress tests.
+passes. On 2026-10-09, the user reported several days without an issue under
+idle access and demanding transfers. The operational WDS fault is closed.
+`networking/wds-retrospective.md` records evidence, failed approaches, tool
+ownership, and improvements. Recovery verification remains open.
 
 A source reconciliation on 2026-10-07 found no additional current network
 configuration in the reviewed Todoist and Confluence material. See
@@ -618,7 +621,17 @@ make the network-device configuration recoverable.
 - [ ] Add reviewed native configuration templates under `networking/devices/`.
 - [ ] Record firmware checksums, packages, custom files, and secret dependencies.
 - [ ] Run a representative restore verification with physical recovery available.
-- [ ] Record soak, idle reachability, discovery, sustained-load, and printer results.
+- [x] Record the WDS retrospective and reported operational acceptance.
+  - Evidence: `networking/wds-retrospective.md`; the user reported several days
+    without an issue on 2026-10-09, including idle access and demanding transfers.
+    The controlled 2026-10-06 capture verified correct broadcast ARP forwarding.
+- [ ] Harden capture cleanup before promoting the investigation runner as a shared tool.
+  - Scope: Expose stop failures; verify process identity and artifact ownership;
+    mock startup, PID-file, interruption, retrieval, and stop failures. Keep the
+    maintained implementation in the investigation repo until this is verified.
+- [ ] Record explicit discovery and printer results, workaround state, and measured link counters.
+  - Scope: These checks remain unverified. They do not block closure of the
+    operational forwarding fault. Record units and test intervals for future tests.
 - [x] Review documentation links and run the repository secret scan.
   - Evidence: The local Markdown links resolve and `scripts/check-secrets.sh`
     passed. The new files contain documentation and synthetic-tested code only.

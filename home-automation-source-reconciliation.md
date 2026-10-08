@@ -130,3 +130,19 @@ The original targets remain above. No corrected target was fetched.
 | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/5933/24892281)` | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/5933/24892281` |
 | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/5405/21283808)` | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/5405/21283808` |
 | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/4885/13694670)` | `https://www.digikey.com.au/en/products/detail/adafruit-industries-llc/4885/13694670` |
+
+## Personal setup report — 2026-08-01
+
+Additional source: `todoist/6g2v2MVVP2FJwj8w`, refreshed on 2026-10-08.
+This is the owner’s historical report, separate from the adviser examples above.
+
+The comment marked an Apple TV hub and an office sensor as set up. It reported
+duplicate sensor entries that appeared resolved after manual removal. Exact
+device models, protocol, software versions and later test results are absent.
+This record does not establish current installed state or reliable recovery.
+
+Downstairs signal coverage remained unresolved. An additional powered “TR”
+was a possibility; the abbreviation and required device role are not confirmed.
+Spare smart plugs were to be checked for support. Neither proposal is a selected
+network change or purchase. The maintainable-baseline task and the separate
+Matter-control-centre decision remain open in Todoist. No platform is chosen.

@@ -43,6 +43,10 @@ approved a bounded sequencing exception and explicit image/content exclusions.
 No automation architecture, service deployment or recovery acceptance is added.
 Package 12 and the following resume actions remain active.
 
+The same documentation reconciliation now includes the owner’s dated Todoist
+setup report, with current-state and protocol gaps explicit. No new work
+package, implementation decision or host change is introduced.
+
 Resume work with these actions:
 
 1. Review the private capture at `secrets/local/network/20261006T103815Z/`.

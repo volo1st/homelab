@@ -17,6 +17,11 @@ The repo favors executable configuration and scripts over long-form documentatio
 - `audit-results.md` - Point-in-time findings from the 2026-09-12 repository audit.
 - `intial-plan-after-audit.md` - SSOT checklist for work arising from that audit.
 
+## Historical source context
+
+- [Home-lab research source record](research-source-reconciliation.md) — unbuilt
+  ideas and original reference leads, separate from current configuration.
+
 ## Priorities
 
 Optimize decisions in this order:

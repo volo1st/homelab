@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-07
+Last update: 2026-10-08
 
 Current package: **Work package 12: network documentation and recovery**
 
@@ -29,6 +29,13 @@ reviewed templates and recovery verification. Device exports, four OpenWrt
 archives, and a MikroTik text export were collected from Linux on 2026-10-06.
 The existing iPhone-sync plan remains its
 canonical source and its implementation checklist is unchanged.
+
+A documentation-only NAS/source reconciliation on 2026-10-08 has a user-approved
+sequencing exception. Historical measurements are labelled in
+`networking/source-reconciliation.md`; unbuilt ideas and original URLs are in
+`research-source-reconciliation.md`. No host/service changes, new work package,
+implementation checklist or recovery acceptance claim is added. Package 12 and
+its resume actions remain active.
 
 Resume work with these actions:
 

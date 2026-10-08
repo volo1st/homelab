@@ -40,3 +40,32 @@ Website previews are incidental metadata.
 No source task or Confluence page was changed by this reconciliation.
 Private source snapshots and detailed migration evidence remain in the
 migration project's ignored workbench.
+
+## NAS source reconciliation — 2026-10-08
+
+Reviewed `confluence/235208708`, version 4, and the research parent
+`confluence/30277635`, version 5. Both live versions and empty attachment lists
+match the migration inventory. The NAS page is the research page's only child.
+This documentation reconciliation has a user-approved exception to package
+sequencing. Work package 12 remains active; no recovery gate is closed.
+
+The source's four-NVMe Ubuntu machine, host Samba, container-service preference
+and Mac Studio workload are already covered by [standing architecture](../plan.md),
+[storage](../host/storage/README.md) and [Samba](../host/samba/README.md).
+The old description of four Ethernet ports and two used links is source history,
+not a replacement for the [current topology](topology.md).
+
+| Source statement | Reconciled treatment |
+| --- | --- |
+| TP-Link TL-SG105S-M2; both clients negotiated 2500 Mb/s | Historical model/link report. Current topology records an unmanaged 2.5-Gbit/s switch; exact hardware and port evidence remains separate. |
+| Green LEDs mean 2.5G, amber means 1G | Unverified source interpretation. Confirm the exact model manual before using LEDs as a diagnostic rule. |
+| Mac/NAS → switch → Wi-Fi bridge → router; 192.168.88.x | Broadly covered by the newer topology. Keep its device roles and captured addresses authoritative. |
+| Local ping below 1 ms; iperf3 2.36 Gbps | Historical source-reported measurements. No raw output, test date, endpoint/version or command parameters supplied. Not a new performance acceptance test. |
+| Ethernet first in macOS service order, Wi-Fi fallback | Source-described client preference, not a fresh routing observation or verified universal selection rule. |
+| SMB 3.1.1, vfs_fruit and AES_128_GMAC | Samba configuration includes fruit; its README already distinguishes observed Mac negotiation from the signing policy. Do not infer a universal macOS algorithm requirement from the old summary. |
+| Bonjour/mDNS; nmbd permanently disabled to prevent timeouts | Source explanation, not a newly verified daemon state or causal diagnosis. Existing Samba deployment/check procedures remain authoritative. |
+
+No live host state was inspected for this reconciliation. Quieter hardware,
+10 GbE and broader service ideas are retained in the
+[research source record](../research-source-reconciliation.md).
+No host, service or executable configuration changed.

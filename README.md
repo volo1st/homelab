@@ -22,6 +22,9 @@ The repo favors executable configuration and scripts over long-form documentatio
 - [Home-lab research source record](research-source-reconciliation.md) — unbuilt
   ideas and original reference leads, separate from current configuration.
 
+- [Home-automation source record](home-automation-source-reconciliation.md) — historical
+  adviser examples and untested leads.
+
 ## Priorities
 
 Optimize decisions in this order:

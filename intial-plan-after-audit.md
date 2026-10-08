@@ -37,6 +37,12 @@ sequencing exception. Historical measurements are labelled in
 implementation checklist or recovery acceptance claim is added. Package 12 and
 its resume actions remain active.
 
+A documentation-only home-automation reconciliation preserves historical adviser
+examples and source leads in `home-automation-source-reconciliation.md`. The user
+approved a bounded sequencing exception and explicit image/content exclusions.
+No automation architecture, service deployment or recovery acceptance is added.
+Package 12 and the following resume actions remain active.
+
 Resume work with these actions:
 
 1. Review the private capture at `secrets/local/network/20261006T103815Z/`.

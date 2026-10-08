@@ -25,7 +25,7 @@ bounded documentation reconciliation while package 12 remains active.
 | Quieter NAS or 10 GbE | Future questions from the NAS page. No purchase or performance requirement. |
 | AirPlay, music and video streaming | Service leads. This record does not establish what is installed or require a new deployment. |
 | Photo backup with indexing | Existing [iPhone-sync specification](services/iphone-sync/iphone-sync-spec.md) owns safe publication and the optional Immich external-library boundary. It remains incomplete; indexing is not proof of backup or safe deletion. |
-| Thread/Matter and home automation | Unbuilt exploration leads, not an approved automation architecture. |
+| Thread/Matter and home automation | Unbuilt exploration leads, not an approved automation architecture. See the [historical adviser source record](home-automation-source-reconciliation.md). |
 | Mixed ARM/x86, virtual-machine/bare-metal nodes, old and new hardware | Historical architecture ideas. No Kubernetes or cluster design selected. |
 | End-to-end coding ecosystem, public website/server and private-cloud access | Broad outcomes without a specified implementation. Keep existing security and service decisions authoritative. |
 

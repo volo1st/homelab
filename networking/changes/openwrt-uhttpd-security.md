@@ -1,6 +1,6 @@
 # OpenWrt uHTTPd security update
 
-Prepared: 2026-10-17. State: **WAX202 applied and accepted; 24-hour observation open; AXT1800 prepared**.
+Prepared: 2026-10-17. State: **WAX202 observation passed; AXT1800 prepared, installation approval pending**.
 This procedure covers AXT1800 and WAX202 only. It excludes the GL.iNet
 vendor builds. It does not authorize a device connection or installation.
 The source assessment is in the [firmware review](../firmware-review-2026-10-11.md#current-review--2026-10-17-sydney).
@@ -274,3 +274,53 @@ device had no `diff` tool; and a hash check initially included the new
 inactive `.apk-new` file. Corrected local checks passed. No installation command
 was repeated. No NAS or Mac Studio connection, network configuration change,
 or exploit test ran.
+
+## WAX202 observation and AXT1800 preparation — 2026-10-19 Sydney
+
+The owner reports no network issues over the last day. Fresh WAX202 state at
+`2026-10-18T13:10:05Z` (00:10 Sydney) is about 26 hours after the verified
+web-service activation. The device boot ID and uHTTPd PID 11198 are unchanged.
+The running executable matches the updated binary. WDS association start
+time, packages, and accepted post-OX configuration are unchanged. OX's AP
+remains enabled. Retained logs contain no crash or out-of-memory match.
+The logs are ring buffers, not a complete 24-hour recording. These results
+and the owner report pass WAX202's web-service observation gate. They do not
+close the final observation after later changes or the actual-restore gate.
+
+AXT1800 preparation passed at `2026-10-18T14:13:45Z` (01:13 Sydney).
+The existing key verified the signed index. Native fetch hashes match the
+recorded candidates. The world-preserving simulation selects only uHTTPd and
+its ubus module, from `2026.06.16~7b1bec45-r1` to
+`2026.08.24~373145f7-r1`. Installed packages, configuration, package world,
+and the running web-service process still match the earlier inventory.
+Overlay space is 83,500 KiB free. The fresh backup has 35 members and the
+required configuration files. The copied backup hash matches the device.
+The original 25.12.5 sysupgrade image matches its recorded official checksum
+and passes native `sysupgrade -T` again.
+
+The first AXT1800 check stopped on missing `bridge` (exit 127). The successful
+retry used bridge membership from sysfs. Both attempts remain private evidence.
+No utility was installed. No package or service change ran.
+
+AXT1800's original sysupgrade and factory images, fresh configuration, package
+state, and current inventory are in a private bundle on WAX202:
+`/tmp/uhttpd-preflight-20261017T023118Z/axt1800-recovery-bundle.tar`.
+Its native hash matches the local bundle. Recovery can use the studio-side
+WAX202 path if the AXT1800 link fails. Physical access and Air SSH were
+previously confirmed by the owner. Actual firmware recovery is untested.
+Package-only rollback remains unprepared because the old APK files were
+unavailable. Retain the firmware/configuration recovery fallback.
+
+Next transaction: use the world-preserving installation command above on
+AXT1800 only. Verify the running executable after package scripts. Restart
+only uHTTPd if the old process remains. Recheck staged files and simulation
+immediately before installation. Stop if the selected packages change.
+Obtain explicit approval for AXT1800's installation, web-service activation,
+and firmware/configuration recovery if needed. The earlier WAX202 approval
+does not cover this transaction. No AXT1800 installation has run.
+
+Private evidence roots in the investigation workspace:
+`backups/network-next/20261018T131005Z/` and
+`backups/network-next/20261018T141345Z/`. The first holds WAX202 observation
+and the partial AXT1800 check. The second holds the successful AXT1800
+preflight, fresh backup, and peer recovery bundle. These files stay out of Git.

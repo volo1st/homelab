@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-17
+Last update: 2026-10-19
 
 Current package: **Work package 12: network documentation and recovery**
 
@@ -78,21 +78,34 @@ OX connection and app control passed by owner report.
 This radio change does not close the web-service observation gate. See
 `networking/changes/wax202-ox-wifi.md`.
 
+WAX202's web-service observation passed on 2026-10-19 Sydney, about
+26 hours after activation. The owner reports no network issues. Fresh state
+confirms the same process, boot ID, continuous WDS association, and accepted
+post-OX configuration. Retained logs have no crash/out-of-memory match.
+This does not close the final observation after later changes.
+
+AXT1800's refreshed technical preparation passed. The signed release index,
+candidate hashes, exact two-package simulation, storage, fresh private backup,
+and original firmware compatibility checks pass. Its recovery bundle is also
+verified on WAX202. No AXT1800 package or service change ran.
+
 Resume work with these actions:
 
-1. Review the WAX202 application checkpoint. The owner confirmed fresh Air
-   SSH, authenticated browser, and off-LAN Tailscale access. See
-   `networking/changes/openwrt-uhttpd-security.md`.
-2. Review 24 hours of WAX202 normal use no earlier than 2026-10-18 22:11
-   Sydney. Keep the original recovery records. After acceptance, prepare a
-   separate AXT1800 transaction and approval. Recheck its files and simulation.
-3. Resolve GL.iNet upstream patch coverage from model-specific release/source
-   evidence. Keep later stability and Stage 6 recovery gates open.
+1. Review the current checkpoint in
+   `networking/changes/openwrt-uhttpd-security.md`. Obtain explicit approval
+   for AXT1800's two-package installation, web-service activation, and the
+   firmware/configuration recovery fallback. Physical/Air access was confirmed.
+2. Recheck the staged files and simulation before an approved AXT1800 update.
+   Stop on any changed selection. Preserve APK world. Verify the running
+   executable, client access, WDS, and a separate observation period afterward.
+3. Resolve GL.iNet upstream patch coverage. Keep actual restore, final-state
+   capture, tool hardening, and final regression gates open.
 
-Next available focus: **Work package 12, Stage 5: WAX202 normal-use
-observation**. No AXT1800 installation is authorized by the WAX202 change.
-Temporary files remain under the recorded AP `/tmp` directory. Revalidate
-them on resume. Repository changes remain uncommitted.
+Next available focus: **Work package 12, Stage 5: AXT1800 installation
+approval**. The earlier WAX202 approval does not authorize this installation.
+Reviewed network records were committed on 2026-10-18. This checkpoint is
+committed with the continuation. Private evidence and recovery files remain
+local and ignored. Revalidate temporary AP files on resume.
 
 The approved 2026-10-07/08 source reconciliations remain in
 `networking/source-reconciliation.md`, `research-source-reconciliation.md`,
@@ -1100,9 +1113,11 @@ The earlier documentation closeout did not perform this source review.
     checks, fresh SSH, the new running executable, LuCI login challenge,
     configuration/world hashes, and WDS state passed on 2026-10-17.
     The owner confirmed fresh Air SSH, browser login, and off-LAN Tailscale.
-    Review 24 hours of normal use no earlier than 2026-10-18 22:11 Sydney.
-    AXT1800 remains on the older pair. Prepare its separate approved update
-    after WAX202 acceptance. Keep this gate open. No exploit test is authorized.
+    WAX202 observation passed after about 26 hours on 2026-10-19 Sydney.
+    AXT1800 remains on the older pair. Its refreshed technical preparation
+    passed, with a verified recovery bundle on WAX202. Obtain its separate
+    installation and recovery approval. Keep this gate open until both devices
+    pass. No exploit test is authorized.
 
 - [ ] Resolve exact GL.iNet upstream patch coverage before security closeout.
   - Start with MT6000 uHTTPd/ubus and the current upstream advisory comparison.

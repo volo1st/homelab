@@ -1,0 +1,11 @@
+--- sysntpd.before
++++ sysntpd
+@@ -70,6 +70,8 @@
+ 		procd_append_param command -p $peer
+ 	done
+ 	procd_set_param respawn
++	# Rebuild the jail when a network-event reload sees new resolver content.
++	procd_set_param file /etc/resolv.conf
+ 	[ -x /sbin/ujail -a -e /etc/capabilities/ntpd.json ] && {
+ 		procd_add_jail ntpd ubus
+ 		procd_add_jail_mount "$HOTPLUG_SCRIPT"

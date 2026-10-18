@@ -1,53 +1,92 @@
 # Home network
 
-This directory records the current network and the files needed to rebuild it.
-The WDS forwarding test passed on 2026-10-06. On 2026-10-09, the user reported
-several days without an issue during idle access and demanding transfers.
-The operational WDS fault is closed. Recovery verification remains open.
+Updated: 2026-10-18 (Australia/Sydney).
+This directory owns the current network design and recovery instructions.
+The original wireless distribution system (WDS) reachability fault is closed.
+On 2026-10-17, the owner also accepted the swapped access point (AP) layout
+as sufficient for normal use.
+Retain MT6000 in the kitchen, MT1300 in the study, and the AXT1800–WAX202 WDS pair.
+Hardware purchases and further Wi-Fi tuning are deferred.
+Firmware-review and recovery gates remain open in work package 12.
 
-- [Topology and device inventory](topology.md)
+- [Topology, addressing, naming, and accepted limits](topology.md)
 - [Studio WDS backhaul](wds-backhaul-setup.md)
+- [Studio OX Wi-Fi: Moo Moo Farm](changes/wax202-ox-wifi.md)
 - [Troubleshooting workflow](troubleshooting.md)
 - [WDS retrospective and operational acceptance](wds-retrospective.md)
+- [Network configuration audit, 2026-10-09](configuration-audit-2026-10-09.md)
+- [Network runtime audit, 2026-10-09](runtime-audit-2026-10-09.md)
+- [Firmware and advisory review, current checkpoint](firmware-review-2026-10-11.md#current-review--2026-10-17-sydney)
+- [OpenWrt web-service security update and results](changes/openwrt-uhttpd-security.md)
+- [Network improvement stages](../intial-plan-after-audit.md#network-improvement-stages)
 - [Configuration capture and recovery](configuration-backup.md)
 - [Source reconciliation](source-reconciliation.md)
 
-The MikroTik RB760iGS is the main router. The AXT1800 is the wireless
-distribution system (WDS) access point. The WAX202 is the WDS station in the
-studio. These two devices bridge one Layer 2 local area network (LAN).
-
 ## Sources of truth
 
-This directory owns the current network design and recovery instructions.
-The private [WDS investigation repository](https://github.com/volo1st/wds-arp-discovery-debug)
-owns the detailed incident history, raw evidence, and investigation tools.
-Keep the evidence there. Link to the relevant session from these documents.
+Use this directory for the retained topology and routine operating notes.
+Use [work package 12](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery)
+as the only network-audit implementation checklist.
+The private [investigation repository](https://github.com/volo1st/wds-arp-discovery-debug)
+owns raw WDS evidence, performance logs, hardware research, and investigation tools.
+Its local workspace is `/sandbox/vincent/workspace/wds-arp-discovery-debug`.
+The 2026-10-16 results and 2026-10-17 owner acceptance are in its local `note.md`
+and `plan.md`. Some updates and logs are not yet committed.
 
-Current configurations were collected from all five network devices on 2026-10-06
-from the Linux development container. The private capture is under ignored
-`secrets/local/network/20261006T103815Z/`. The topology now includes verified
-OpenWrt management addresses and software base versions. Reviewed native
-templates, exact cable ports, and restore verification remain pending.
+The static and runtime audits describe their dated captures. They are not the
+current inventory after later changes. Use [topology.md](topology.md) for the
+latest recorded software, addresses, and placement. Exact cable ports and
+reviewed reproducible templates remain unverified.
 
-The user confirmed the current AP locations, MT1300 coverage, and the five Air
-SSH aliases. Use `scripts/capture-network-config.sh` for later captures from
-macOS or Linux.
+## Routine operating baseline
 
-## Operational acceptance and remaining verification
+MikroTik provides the gateway, DHCP, and the five explicit `.lan` device records.
+Keep the working DNS-based Air and workspace SSH aliases. The `home.arpa`
+migration is deferred. It is not an existing configuration fact.
 
-See [the retrospective](wds-retrospective.md) for the reported workloads and
-evidence limits. Idle access, sustained downloads, NAS file access, and a large
-transfer passed in user-reported operation. The following checks remain unverified;
-they do not reopen the resolved forwarding fault.
+Retain key-based SSH and browser recovery access. The OpenWrt-based APs have
+SSH password login disabled. MikroTik has stronger SSH crypto and SSH/HTTP
+source restrictions. HTTP browser management remains accepted for now.
+HTTPS migration is deferred. Applied controls and verification limits are in
+[management hardening](changes/management-hardening.md),
+[SSH authentication](changes/openwrt-ssh-auth.md), and
+[management sources](changes/management-sources.md).
 
-- Observe AXT1800 memory use and WDS reassociations for at least 24 hours.
-- Verify NAS and Mac Studio reachability after an idle period.
-- Verify name resolution, multicast Domain Name System (mDNS), and file-service discovery.
-- Record packet loss and link errors during a measured transfer.
-- Confirm that the printer does not resume its periodic wake behaviour.
-- Verify the saved recovery files and a representative restore procedure.
+Retain the working Tailscale remote-access path through Apple TV. The owner
+verified off-LAN SSH, browser access, and DNS during the audit. GL.iNet cloud
+access is not required. A separate directly managed WireGuard deployment is
+deferred. Tailnet enrollment, access-rule review, and remaining remote-path
+checks remain in work package 12. Functional access does not prove a complete
+access-policy audit.
 
-Record the date, test source, duration, workload, and evidence for each result.
-The original failure interval is not known. Record the actual idle interval used.
-The captures show background NAS and Mac Studio traffic. Account for keepalive
-workarounds when interpreting an idle test.
+Preserve AU radio settings and the working WDS channel 153 / 80 MHz.
+Review the MT1300 local NTP patch after a firmware upgrade.
+Check a device's exact release, packages, backup, and rollback path before an
+approved change. Upgrade the two WDS endpoints separately.
+Use [the troubleshooting workflow](troubleshooting.md) if symptoms return.
+It requires failed-state evidence before traffic refreshes an idle target.
+
+Pi-hole is reference material. Its deployment, local-domain migration,
+Bilibili playback investigation, and new AP purchases are deferred optional
+follow-up. They are not baseline closure gates. Resume them when the owner
+requests the improvement or a new requirement warrants it.
+
+## Acceptance and recovery limits
+
+The 2026-10-06 packet capture verified broadcast ARP forwarding after the
+AXT1800 software replacement. On 2026-10-09, the owner reported several days
+of successful idle access, demanding transfers, and NAS file access.
+The 2026-10-16 Internet tests and 2026-10-17 acceptance support keeping the
+current AP placement. See [the retrospective](wds-retrospective.md) and
+[the accepted limits](topology.md#accepted-performance-and-review-trigger).
+
+These reports do not complete later upgrade telemetry, a quantitative loss
+test, printer-wake checks, service discovery, or every idle-client path.
+Keep each untested acceptance gate explicit in work package 12.
+Do not reopen the resolved ARP fault solely because a separate check is pending.
+
+The encrypted NAS-local recovery bundle passed integrity, decryption, and
+retrieval checks. The owner accepts that NAS loss also loses that copy.
+It is not off-host protection or an actual restore test.
+Reviewed templates, a representative restore, and a verified final-state
+recovery capture remain open. See [recovery coverage](configuration-backup.md#current-coverage).

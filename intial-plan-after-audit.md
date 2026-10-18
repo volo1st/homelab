@@ -9,56 +9,97 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-09
+Last update: 2026-10-17
 
 Current package: **Work package 12: network documentation and recovery**
 
 State: **Active**
 
-The user confirmed that iPhone sync is paused. The WDS fault had blocked reliable
-NAS and Mac Studio access. The controlled OpenWrt 25.12.5 forwarding test now
-passes. On 2026-10-09, the user reported several days without an issue under
-idle access and demanding transfers. The operational WDS fault is closed.
-`networking/wds-retrospective.md` records evidence, failed approaches, tool
-ownership, and improvements. Recovery verification remains open.
+The operational WDS fault is closed. The 2026-10-06 packet evidence and
+2026-10-09 owner report support that conclusion. See
+`networking/wds-retrospective.md` for failed results and acceptance limits.
+On 2026-10-17, the owner also accepted the swapped AP layout as sufficient.
+Keep MT6000 in the kitchen and MT1300 in the study. Preserve AXT1800–WAX202
+WDS on channel 153 / 80 MHz. Further coverage work and purchases are deferred.
+The reported 2026-10-16 results and acceptance are in the investigation
+workspace's `note.md` and `plan.md`.
 
-A source reconciliation on 2026-10-07 found no additional current network
-configuration in the reviewed Todoist and Confluence material. See
-`networking/source-reconciliation.md`. The backhaul runbook now records that
-device exports were collected. No acceptance or recovery gate changed.
+Applied corrections include AXT1800 static `.5` and DNS-based aliases,
+OpenWrt SSH authentication hardening, MikroTik service/source restrictions,
+AU radio settings on MT6000 and WAX202, and the persistent MT1300 NTP repair.
+MT1300 automatic time recovery passed a second controlled reboot.
+MikroTik RouterOS and RouterBOOT are 7.23.8 long-term. WAX202 is on OpenWrt
+25.12.5. Immediate MikroTik and WAX202 owner checks passed, including required
+Tailscale access. Their later upgrade-specific stability gates remain open.
+MT6000 AU runtime and reboot persistence passed. The owner's later everyday
+Wi-Fi use is accepted; no new dedicated post-reboot Tailscale test was claimed.
 
-The network documentation is consolidated. The remaining work in package 12 is
-reviewed templates and recovery verification. Device exports, four OpenWrt
-archives, and a MikroTik text export were collected from Linux on 2026-10-06.
-The existing iPhone-sync plan remains its
-canonical source and its implementation checklist is unchanged.
+Documentation closeout reconciled `networking/README.md`, `topology.md`,
+`configuration-backup.md`, and `source-reconciliation.md` with these records.
+The retained baseline uses `.lan` names and the working Tailscale path.
+Pi-hole deployment, `home.arpa` migration, Bilibili playback investigation,
+new hardware, and radio tuning are deferred optional follow-up.
+This closes the current operational-documentation outcome. It does not close
+the full firmware review, physical port map, templates, restore verification,
+tool hardening, final regression coverage, or finding dispositions.
 
-A documentation-only NAS/source reconciliation on 2026-10-08 has a user-approved
-sequencing exception. Historical measurements are labelled in
-`networking/source-reconciliation.md`; unbuilt ideas and original URLs are in
-`research-source-reconciliation.md`. No host/service changes, new work package,
-implementation checklist or recovery acceptance claim is added. Package 12 and
-its resume actions remain active.
+The encrypted NAS-local recovery bundle passed integrity, decryption, and
+retrieval checks. The owner accepts that NAS loss also loses that copy.
+An off-host copy is deferred under that accepted risk. Actual restore and a
+complete final-state capture remain unverified. HTTP management remains
+accepted; HTTPS work is deferred. Tailnet access-policy review is incomplete.
 
-A documentation-only home-automation reconciliation preserves historical adviser
-examples and source leads in `home-automation-source-reconciliation.md`. The user
-approved a bounded sequencing exception and explicit image/content exclusions.
-No automation architecture, service deployment or recovery acceptance is added.
-Package 12 and the following resume actions remain active.
+The 2026-10-17 firmware source comparison covers all five recorded builds.
+It found later uHTTPd defects in the 25.12.5 web-service revision. The current
+official feeds contain corrected packages. A separate targeted-update
+procedure is prepared. WAX202 was subsequently updated as recorded below.
+AXT1800 remains prepared only. MT6000 stable 4.11.0 is newer than
+the status-table entry, but its notes do not establish the required parser
+fixes. Vendor patch mapping remains unresolved. Keep these security gates
+open. Existing HTTP acceptance does not accept the newly identified defects.
 
-The same documentation reconciliation now includes the owner’s dated Todoist
-setup report, with current-state and protocol gaps explicit. No new work
-package, implementation decision or host change is introduced.
+The owner approved the WAX202 uHTTPd/module update. It was applied on
+2026-10-17. Both packages are now `2026.08.24~373145f7-r1`. Fresh native
+trust, simulation, backup, and original-image checks passed before application.
+Only those two installed packages changed. The web service required one
+explicit restart to load the new executable. Fresh SSH, executable hashes,
+the LuCI login challenge, and WDS state passed. Existing configuration and
+APK world hashes are unchanged. No device reboot or network change occurred.
+
+The owner confirmed Air SSH and physical access before installation and
+accepted original-firmware recovery if needed. That recovery remains untested.
+Exact old APKs are unavailable. WAX202 recovery files are also on AXT1800,
+so they do not depend on NAS access through WAX202. AXT1800 is not updated.
+
+On 2026-10-18, the owner approved the separate studio OX Wi-Fi addition.
+WAX202 now provides `Moo Moo Farm` on its 2.4 GHz radio. Native AP/security
+checks passed. The WDS configuration and association stayed unchanged.
+OX connection and app control passed by owner report.
+This radio change does not close the web-service observation gate. See
+`networking/changes/wax202-ox-wifi.md`.
 
 Resume work with these actions:
 
-1. Review the private capture at `secrets/local/network/20261006T103815Z/`.
-2. Derive native templates, dependencies, and restore instructions from the exports.
-3. Record vendor firmware release identifiers and exact cable ports.
-4. Complete off-host private recovery copies, MikroTik binary backup, and restore verification.
+1. Review the WAX202 application checkpoint. The owner confirmed fresh Air
+   SSH, authenticated browser, and off-LAN Tailscale access. See
+   `networking/changes/openwrt-uhttpd-security.md`.
+2. Review 24 hours of WAX202 normal use no earlier than 2026-10-18 22:11
+   Sydney. Keep the original recovery records. After acceptance, prepare a
+   separate AXT1800 transaction and approval. Recheck its files and simulation.
+3. Resolve GL.iNet upstream patch coverage from model-specific release/source
+   evidence. Keep later stability and Stage 6 recovery gates open.
 
-Next available focus: **Work package 12: configuration capture and recovery**.
-Resume iPhone sync after this package, at atomic local import and small-device tests.
+Next available focus: **Work package 12, Stage 5: WAX202 normal-use
+observation**. No AXT1800 installation is authorized by the WAX202 change.
+Temporary files remain under the recorded AP `/tmp` directory. Revalidate
+them on resume. Repository changes remain uncommitted.
+
+The approved 2026-10-07/08 source reconciliations remain in
+`networking/source-reconciliation.md`, `research-source-reconciliation.md`,
+and `home-automation-source-reconciliation.md`. Their bounded documentation
+exceptions did not deploy a service or close recovery gates.
+iPhone sync remains paused. Resume it after package 12 at the already planned
+atomic local import and small-device tests. Its own plan remains canonical.
 
 ## Work rule
 
@@ -587,8 +628,12 @@ State: **Pending**
 
 State: **Active**
 
-Goal: Record the current network, distil the WDS troubleshooting workflow, and
-make the network-device configuration recoverable.
+Goal: Preserve the working network, implement approved audit corrections, and
+make device configuration recoverable. The user requested the complete improvement
+plan on 2026-10-09. This expands the existing package explicitly. Optional
+architecture changes remain separate decisions within its stages.
+
+### Completed baseline
 
 - [x] Consolidate the current design and focused topology diagrams.
   - Evidence: `networking/README.md` and `networking/topology.md` identify the
@@ -613,26 +658,553 @@ make the network-device configuration recoverable.
 - [x] Confirm management addresses and OpenWrt/RouterOS versions.
   - Evidence: Private board identity, MikroTik identity, and live IPv4 state in
     `secrets/local/network/20261006T103815Z/`; `networking/topology.md` records them.
-- [ ] Confirm vendor firmware release identifiers and exact cable ports.
+- [x] Audit the five saved network-device configurations without device contact.
+  - Evidence: `networking/configuration-audit-2026-10-09.md`; all five checksum
+    manifests were recalculated and matched; all four archives were readable and
+    contained every captured backup-list entry. Findings separate saved settings,
+    inferred risks, and unverified runtime state. No network change occurred.
+- [x] Collect and review authorized read-only runtime state from all five devices.
+  - Evidence: Private `secrets/local/network-runtime/20261009T004414Z/`;
+    `networking/runtime-audit-2026-10-09.md`. All 18 initial SSH transports passed;
+    section failures and follow-up limits remain explicit. Output hashes and
+    private permissions passed verification. No active probe or network change ran.
+- [x] Add a private runtime collector with explicit execution and evidence retention.
+  - Evidence: `scripts/capture-network-runtime.py`; Python and remote shell syntax,
+    isolated mocked success and connection failure, partial retention, continued
+    collection, private permissions, and default-help behavior passed. Live evidence
+    exposed missing tools; the final collector adds fallbacks and explicit checks.
 - [x] Collect current OpenWrt exports, configuration archives, and MikroTik text export.
   - Evidence: Private capture `20261006T103815Z`; four tar checks and all SHA-256
     checks passed. Directories are `0700`, files are `0600`, and Git ignores them.
-- [ ] Complete the MikroTik encrypted binary backup and off-host private recovery copies.
-- [ ] Add reviewed native configuration templates under `networking/devices/`.
-- [ ] Record firmware checksums, packages, custom files, and secret dependencies.
-- [ ] Run a representative restore verification with physical recovery available.
 - [x] Record the WDS retrospective and reported operational acceptance.
   - Evidence: `networking/wds-retrospective.md`; the user reported several days
     without an issue on 2026-10-09, including idle access and demanding transfers.
     The controlled 2026-10-06 capture verified correct broadcast ARP forwarding.
-- [ ] Harden capture cleanup before promoting the investigation runner as a shared tool.
-  - Scope: Expose stop failures; verify process identity and artifact ownership;
-    mock startup, PID-file, interruption, retrieval, and stop failures. Keep the
-    maintained implementation in the investigation repo until this is verified.
-- [ ] Record explicit discovery and printer results, workaround state, and measured link counters.
-  - Scope: These checks remain unverified. They do not block closure of the
-    operational forwarding fault. Record units and test intervals for future tests.
 - [x] Review documentation links and run the repository secret scan.
   - Evidence: The local Markdown links resolve and `scripts/check-secrets.sh`
     passed. The new files contain documentation and synthetic-tested code only.
-- [ ] Record evidence and commit the complete package.
+
+### Documentation closeout — 2026-10-17
+
+- [x] Reconcile the retained topology, current software, addressing, naming, and operating notes.
+  - Evidence: `networking/README.md`, `networking/topology.md`,
+    `networking/configuration-backup.md`, and `networking/source-reconciliation.md`.
+    Sources include the owner's 2026-10-16 performance report and explicit
+    2026-10-17 acceptance, plus applied-change records. No new runtime evidence
+    or device configuration was claimed. Exact ports and recovery stay open.
+- [x] Record accepted limits and deferred optional improvements.
+  - Evidence: owner acceptance in the investigation `note.md` and `plan.md`;
+    current topology and README retain MT6000 kitchen, MT1300 study, `.lan`,
+    and the working WDS/Tailscale paths. Additional Wi-Fi work and purchases
+    are deferred. Optional DNS, Pi-hole, and playback work are not closure gates.
+
+### Network improvement stages
+
+This is the only implementation checklist for the network audit. The reports in
+`networking/` retain the evidence and findings. The user requested this plan on
+2026-10-09. Stages 1 and 2 have completion evidence. Management hardening and
+AU country corrections have passed the bounded checks recorded below. HTTPS
+remains deferred. Stage 5 firmware review is the next focus. Stages 6–8 remain
+open. Dated earlier results below are history, not instructions to repeat a change.
+
+Complete one stage before the next. Apply one bounded change to one device at a
+time. Record each result here with its date and private evidence path. A finding
+can close as corrected and verified, retained with an accepted risk, or not
+applicable with evidence. An optional idea does not require implementation.
+A deferred required fix keeps its finding open.
+
+| Stage | Outcome | Findings |
+|---|---|---|
+| 0 | Verified recovery artifacts and a concrete first change proposal | N07; all change prerequisites |
+| 1 | AXT1800 address protected from dynamic allocation | N01 |
+| 2 | MT1300 clock synchronized and its failure explained | N13 |
+| 3 | Required management access retained; unused access removed | N04, N05, N06 |
+| 4 | Australian radio settings verified with working clients and WDS | N02 |
+| 5 | Deliberate update policy and reviewed firmware decisions | N03, N08 |
+| 6 | Reproducible configuration and a verified recovery procedure | N07, N09 |
+| 7 | Evidence-based decisions on isolation, IPv6, radio tuning, and latency | N10, N11, N12; remaining runtime gaps |
+| 8 | Reliable tools, final regression evidence, and recorded dispositions | Retrospective actions; all findings |
+
+#### Stage 0: prepare recovery and the first change
+
+- [x] Review the two audit reports and identify state that must be refreshed before a change.
+  - Inputs: `networking/configuration-audit-2026-10-09.md` and
+    `networking/runtime-audit-2026-10-09.md`. Use collector timestamps for MT1300
+    until its clock is corrected. Keep the WDS operational fix accepted.
+- [x] Verify the approved NAS-local encrypted recovery copy.
+  - Evidence: `/sandbox/vincent/home_network_backup/20261009T085347Z/manifest.json`.
+    AES256 outer archive decrypts and matches the original plaintext hash.
+    User explicitly accepts that NAS loss also loses these backups.
+    This is a smaller recovery baseline, not off-host protection.
+  - Use the existing approved private backup method. Record the destination,
+    encryption method, integrity check, and access procedure without secret values.
+    Do not treat a second directory on the NAS as off-host protection.
+    Recovery helper: `scripts/prepare-network-recovery.py`.
+    Use `--run --resume 20261009T085347Z` only to finish this existing attempt.
+    The initial outer encryption failed before verification. A shorter temporary
+    GPG home corrected the failure. The same router backup was reused.
+    No router restore or certificate/key recovery test was performed.
+- [x] Create and verify an encrypted MikroTik binary backup under an approved procedure.
+  - Evidence: the same recovery manifest records two matching SFTP downloads,
+    byte size, SHA256, and explicit AES-SHA256 password encryption.
+    Private passphrases remain in ignored `secrets/local/network-recovery-keys/`.
+    SSH keys are inventoried; restore remains untested. The fresh Stage 3 certificate
+    listing contains no certificate objects. The earlier certificate count included
+    a flag legend and was incorrect.
+  - Inventory certificate and SSH-key dependencies separately. Store the backup
+    password through the existing private secret method. Do not put it in command
+    history, the repository, or chat. Verify readability and hashes after retrieval.
+- [x] Confirm the recovery path and required SSH and web management.
+  - Evidence: user confirms physical access and the Air on the main LAN.
+    Preserve SSH and web interfaces on all devices.
+    FTP/API, Winbox, cloud, and remote-management dependencies remain unconfirmed;
+    review them before disabling services in Stage 3.
+  - Record the Air's main-LAN path, the container's WDS dependency, required SSH
+    and Winbox access, intended browser access, integrations using FTP/API, remote
+    management through Tailscale or vendor cloud, and access if a radio fails.
+- [x] Prepare the exact Stage 1 proposal, preflight, verification, and rollback for review.
+  - Evidence: `networking/changes/protect-axt-address.md`.
+    Fresh read-only capture confirms the static AP address, pool, and empty `.115` state.
+    At proposal time, application had not run. Stage 1 below records the later
+    applied migration and verification. Do not repeat the original proposal.
+  - Include the current pool and leases, intended change, expected interruption,
+    change source, and original values. Request approval only when this result is
+    concrete. Prepare scripts or native configuration in the repo before application.
+
+Stage gate: the user accepted NAS-local recovery on 2026-10-09.
+Private artifacts have passed integrity and decrypt checks. No off-host copy exists.
+The first change has a reviewed rollback. If a recovery item cannot be completed,
+record the reason and obtain explicit acceptance before using a smaller recovery
+baseline. Do not claim restore verification at this stage.
+
+#### Stage 1: protect the AXT1800 address
+
+The user replaced the pool split with static `.5`, hostname `axt1800`,
+MikroTik comment `WDS-AP`, and DNS-based SSH on 2026-10-09.
+
+- [x] Refresh the AP identity and check `.5` for a known conflict.
+  - Evidence: private `network-stage0/20261009T091612Z`; no `.5` lease or ARP
+    entry. Three ARP probes received no reply. Offline use remains unprovable.
+- [x] Apply static `.5`, hostname `axt1800`, and the MikroTik inventory reservation.
+  - Evidence: `networking/changes/protect-axt-address.md`; final private
+    `network-migration/20261009T093238Z`. The pool remains `.100-.199`.
+    Saved config, kernel address, and netifd agree. AP SSH and HTTP pass.
+- [x] Add explicit DNS records for all five network devices and migrate workspace SSH.
+  - Evidence: private `network-migration/20261009T092829Z`; all five short names
+    and qualified names resolve. SSH passes with trusted keys. User/key rules remain.
+- [x] Verify gateway, DNS, Internet, AP SSH/web, and network-device access from the Air.
+  - Evidence: user terminal output confirms `.5` DNS, 3/3 gateway replies, and
+    Internet HTTP 200. User confirms AP web, hostname read, and all five SSH tests.
+    This verifies WAX202 management access, not a new file-transfer stress test.
+- [x] Update the Air's separate SSH config after its DNS checks pass.
+  - Evidence: user reports all five SSH checks pass after the documented edits.
+    The Air retains IP-valued HostKeyAlias only for trusted-key lookup.
+    HostName now selects DNS; usernames and keys remain.
+
+The initial migration interrupted IPv4 management. Secondary-address deletion and
+an absent `nohup` caused the failure. IPv6 SSH recovered access. A netifd reload
+reconciled state. Native RouterOS multiline parsing also reported an error;
+independent checks confirmed the intended entries. Keep these failed results.
+The migration record contains recovery steps and evidence. A reboot persistence
+test remains unperformed. N01 allocator protection and Air client acceptance are verified. Stage 1 is complete
+for this bounded migration; reboot persistence remains untested. The old recovery archive is a pre-change baseline.
+
+#### Stage 2: correct MT1300 time synchronization
+
+Initial diagnosis: the active NTP jail has a zero-byte resolver file. Host DNS
+and query-only NTP work. The clock offset is about +1711687.74 seconds.
+Evidence: private `network-time/20261009T100429Z` and `20261009T100608Z`.
+See `networking/changes/mt1300-time.md`. The empty resolver is observed; its
+origin and boot recurrence are unconfirmed. One approved sysntpd restart restored the resolver and clock. No service
+configuration was edited. Evidence: `network-time/20261009T100818Z`.
+Offset was about -0.194 s at 10:08:30 UTC; SSH and web passed.
+The later reboot reproduced the stale jailed resolver. The persistent resolver-tracking
+correction passed a second reboot. See the evidence below.
+
+- [x] Diagnose NTP server resolution, routing, egress behavior, daemon state, and synchronization evidence.
+  - Evidence: the three private `network-time` captures listed above. DNS and
+    NTP replies work outside the jail. The active jailed resolver was empty.
+    No exhaustive firewall review or boot-cause claim is implied.
+  - Read the relevant state first. Any DNS or NTP probe belongs in the approved
+    diagnostic scope. Distinguish a running process from successful synchronization.
+- [x] Apply the smallest approved runtime correction and record the supported cause.
+  - Evidence: one sysntpd restart rebuilt the resolver and restored synchronization.
+    `networking/changes/mt1300-time.md` records the before/after state.
+    No persistent configuration edit or manual clock set occurred.
+  - Preserve the original configuration. Do not replace the time architecture on
+    every device to solve one fault. Do not use a manual date change as the fix.
+- [x] Verify UTC alignment and subsequent synchronization from an independent clock.
+  - Evidence: private `network-stability/20261010T122714Z`. After more than 26 hours,
+    offset is about -0.637 seconds. Same NTP PID8381 and correct 51-byte jailed
+    resolver retained. Runtime target passed. Planned reboot later reproduced the empty actual-daemon
+    resolver. Evidence: private `network-reboot/20261010T124012Z`. One NTP-service
+    restart restored runtime within one second of collector time. The persistent
+    resolver-tracking correction then passed a second reboot. Evidence: private
+    `network-time/20261010T125426Z/boot-acceptance.json`. Offset was about -0.149
+    seconds. The actual UID 123 daemon had the correct resolver. No post-boot
+    restart or manual clock change occurred. SSH and HTTP 200 passed.
+    The guarded template, apply script, and rollback script are in
+    `networking/changes/mt1300-ntp/`. Review this local patch after firmware upgrades.
+  - Record the measured offset immediately and after at least 24 hours. Use a
+    proposed acceptance target of no more than five seconds. Verify reboot recovery
+    in a planned maintenance window before closing persistence checks.
+
+Rollback: restore the original time-service settings if the correction disrupts
+operation. Retain the known clock-error finding if rollback is required. Separate
+irreversible log timestamp history from configuration rollback. A fleet-wide NTP
+policy is a later decision; MikroTik already has cloud time configured.
+
+#### Stage 3: harden management in separate changes
+
+The user requires SSH and browser access only, locally and through Tailscale.
+The unused-service proposal and exact native files are in
+`networking/changes/management-hardening.md`. All native files passed parse;
+read-only preflight passed. The first unused-service batch was applied after
+explicit approval and verified in Safe Mode. Evidence: private
+`network-management/20261009T101809Z`. Later batches below completed key-only
+AP access, stronger MikroTik crypto, and SSH/HTTP source restrictions.
+The held remote session was attributed to Apple TV; allowed-source local and
+off-LAN checks passed. HTTPS remains deferred. Denied-source and IPv6
+functional probes remain untested. Do not repeat the initial hardening batch.
+
+- [x] Agree on a per-device service and source-access matrix.
+  - Evidence: user requires SSH/browser locally and through Tailscale.
+    `networking/changes/management-hardening.md` records all five devices.
+    Held remote source `.181` is identified by DHCP/ARP as VincentsAppleTV.
+    Fresh off-LAN SSH/browser/DNS function and post-filter SSH/browser passed.
+    This does not inspect or change Apple TV or tailnet access rules.
+  - Record which SSH, Winbox, HTTPS, API, reverse-proxy, and remote-management paths
+    are required. Account for Tailscale's actual routed or translated source.
+    Do not apply a narrow address list until the required sources are verified.
+- [x] Disable approved unused MikroTik services in a bounded batch.
+  - Evidence: `networking/changes/management-hardening.md` and private
+    `network-management/20261009T101809Z`. Disabled FTP, Telnet, IP Winbox,
+    API/API-SSL, reverse proxy, and bandwidth server. SSH and HTTP retained.
+    Safe Mode entered and released. Second SSH, WebFig HTTP200, Internet
+    HTTPS200, five DNS names, and postcommit service state passed.
+    MAC Winbox, remote Tailscale, and denied-source checks remain outside this batch.
+  - Candidates: Telnet, FTP, HTTP WebFig, unused API/API-SSL, bandwidth server,
+    and reverse proxy. Retain each service with a confirmed dependency until its
+    replacement works. Save enabled flags, ports, certificates, and source lists.
+- [x] Restrict required MikroTik management sources and review stronger SSH settings.
+  - Source observation: held remote Air session `.181`; DHCP/ARP identify
+    VincentsAppleTV. Collector source is `.6`. Evidence:
+    `network-management/20261009T111706Z` and `20261009T111925Z`.
+    Applied `192.168.88.0/24,fe80::/10` to SSH/HTTP only in active Safe Mode.
+    Local fresh SSH, HTTP200, and readback passed. User confirms fresh remote
+    SSH and authenticated browser login passed. Safe Mode released successfully;
+    postcommit SSH and both source lists verified. No firewall change.
+    Denied-source and IPv6 functional probes were not run.
+    Exact recovery: `networking/changes/management-sources.md`.
+
+  - The SSH crypto portion is applied: `strong-crypto=yes`, fresh key-only SSH,
+    existing trusted host key, HTTP200, Safe Mode release, and postcommit check
+    passed. Evidence: `network-management/20261009T105452Z` and
+    `networking/changes/mikrotik-ssh-crypto.md`. Password policy stays
+    `yes-if-no-key`; the keyed admin account remains. Source restrictions were subsequently applied and verified as recorded above.
+
+  - Keep the current session and test a second key session. Use RouterOS Safe Mode
+    for supported configuration changes. Review its rollback behavior in the current
+    release; it is not firmware rollback. Do not rotate host keys in the same batch.
+- [x] Verify all OpenWrt administrative keys before disabling SSH password authentication.
+  - Completed sequentially after user authorization to continue without further
+    confirmation prompts. WAX202, MT6000, and MT1300 fresh key-only preflight
+    and post-change sessions passed. Both password flags are off on all four APs.
+    Each server offers only publickey. Web HTTP200 and original-config backups
+    passed. Evidence: `network-management/20261009T105234Z` and
+    `20261009T105332Z`; `networking/changes/openwrt-ssh-auth.md`.
+    Reboot/vendor-UI persistence and remaining Air client checks are not implied.
+  - User confirms browser login on all four OpenWrt devices. Air and workspace
+    key-based SSH pass on all four. Fresh AXT1800 public-key-only login passed;
+    evidence: private `network-management/20261009T104004Z`. The prepared
+    `networking/changes/axt1800-key-only.sh --check` passed read-only on the AP.
+    Applied only to AXT1800 after explicit approval. Evidence:
+    `network-management/20261009T104446Z`; fresh key-only session passed, server
+    offers only publickey, and web returned HTTP200. Immediate post-reload
+    connection refusal was transient and preserved. Air post-change SSH/browser
+    acceptance was initially pending; the later acceptance below passed. The
+    remaining devices were subsequently hardened under continuing authorization.
+  - Change one device at a time. Keep root key access if that is the supported
+    administration model. Test a second authorized key session before closing the
+    original session. Save authentication settings and a recovery procedure first.
+- [ ] Establish and verify HTTPS management before removing or redirecting HTTP access.
+  - Deferred by the user on 2026-10-09. Public domain `volo1st.com` uses
+    Squarespace. Certificate automation and deployment effort are outside the
+    current priority. Retain existing browser access. The user accepts continued
+    HTTP management for now; HTTPS remains open, not complete. Do not migrate
+    public DNS, create certificates, or disable HTTP under this deferral.
+  - Check the actual nginx or uHTTPd front end and intended client certificate trust.
+    Remove redundant listeners only after vendor dependencies are understood.
+    HTTPS WebFig is an option if browser access is required; it is not mandatory
+    when an approved SSH/Winbox-only workflow meets the user's needs.
+- [x] Verify post-change Air SSH and authenticated browser access on WAX202, MT6000, and MT1300, and Air SSH compatibility with MikroTik strong crypto.
+  - Evidence: user confirms Air SSH on all five devices. On the phone-hotspot/
+    Tailscale test, user reports all five IP-based SSH tests, browser logins,
+    local DNS lookup, and name-based SSH work. No untested collector browser
+    login is claimed. Remote-path functional acceptance is complete.
+  - AXT1800 Air SSH/browser passed. Workspace checks passed on all devices.
+  - The first source capture, `network-management/20261009T111342Z`, found
+    only the collector session from `.6`; the user's short sessions had closed.
+    A later held Air session resolved attribution to Apple TV. See
+    `network-management/20261009T111706Z` and `20261009T111925Z` above.
+- [x] Review the existing MikroTik administrator and verify the retained path.
+  - Retain the existing keyed `admin` account for this bounded audit. No account
+    migration or rename is required for the implemented protection. Existing
+    password policy refuses SSH passwords for keyed users; strong crypto and
+    service source limits are enabled. Workspace/Air key sessions and browser
+    login pass. This retains browser password recovery and avoids another
+    credential migration. No host keys or account credentials were changed.
+  - If replacement is chosen, create and test the new account and its key first.
+    Disable the old account in a separate approved step. Do not combine account,
+    password, source-filter, and host-key changes.
+
+For each batch, verify required access and observed service state from an allowed
+client. Test a denied source only with explicit probe approval. Confirm ordinary
+Internet, DNS, and WDS access still work. Restore saved service, account, or filter
+settings if a required path fails. Do not disable the last verified recovery path.
+Guidance: [RouterOS services](https://help.mikrotik.com/docs/spaces/ROS/pages/103841820/Services)
+and [Safe Mode](https://help.mikrotik.com/docs/spaces/ROS/pages/328155/Configuration+Management#ConfigurationManagement-SafeMode).
+
+#### Apple TV Wi-Fi reservation migration
+
+- [x] Verify the Apple TV uses `.8` after its Wi-Fi reservation migration.
+  - The owner confirmed that the same Apple TV moved from Ethernet to Wi-Fi.
+    The owner was at home and authorized the migration on 2026-10-09.
+  - Three ARP probes to `.8` received no response. The router had no ARP entry
+    for `.8`. This supports availability but cannot exclude a powered-off device.
+  - Updated static `.8` to Wi-Fi MAC `8C:26:AA:E7:DA:BB` and client ID
+    `1:8c:26:aa:e7:da:bb`. The comment preserves the old Ethernet MAC.
+  - RouterOS removed the matching dynamic `.181` lease during the update.
+    The subsequent explicit remove reported `no such item`. Independent readback
+    confirms the intended reservation and no `.181` lease. Preserve this result.
+  - Evidence: private `network-management/20261009T113231Z`, including native
+    parse, before/after state, and rollback. Rollback restores the original Ethernet
+    identity and comment. Wi-Fi then uses dynamic allocation; `.181` is not guaranteed.
+  - Initial lease was waiting. Fresh evidence in `network-radio/20261009T133446Z`
+    now shows bound `.8`, active Wi-Fi MAC/client ID, and hostname VincentsAppleTV.
+    Address migration is verified. Owner confirms off-LAN Tailscale works after renewal;
+    acceptance recorded in private `network-stability/20261010T122714Z`.
+  - Both addresses are inside the existing management allowlist. No allowlist changed.
+
+#### Stage 4: correct radio country settings
+
+- [x] Confirm the MT6000 vendor-supported country control and WAX202 effective domain.
+  - Evidence: private `network-radio/20261009T114832Z` and `20261009T115404Z`;
+    `networking/changes/radio-country.md`. Installed MT6000 handler accepts country.
+    WAX202 reports world `00` and associated WDS channel 153/80MHz.
+  - Do not edit generated MediaTek files as the primary configuration method.
+    Save current settings, channels, bridge membership, and management paths.
+- [x] Apply AU to MT6000 through its supported control and verify effective operation.
+  - Applied AU to both UCI radio sections through the installed handler. Fresh SSH,
+    HTTP200, both operating bands, and client association pass. UCI and iwinfo report AU,
+    but mapped driver profile files retain US. Live driver channel maps now exactly match
+    AU region1/region14 extracted from the installed driver. Evidence: private
+    `network-radio/20261009T130059Z/country-map-proof.json`. No profile edits or
+    network changes during proof. Driver country-string/beacon and RF power calibration
+    were not checked. Keep client acceptance, reboot persistence, and 24-hour observation
+    open at that initial checkpoint. Subsequent evidence
+    `network-stability/20261010T122714Z` confirms exact AU
+    driver channel lists after more than 24 hours and owner reports no issues.
+    MT6000 runtime observation passed. Its authorized reboot also retained saved AU
+    and exact live AU channel maps, both bands, fresh SSH, and HTTP200. Evidence:
+    private `network-reboot/20261010T124012Z`. Country reboot persistence passes.
+    The owner subsequently reported several days of productive kitchen Wi-Fi
+    use and Internet tests on 2026-10-16, and accepted the layout on 2026-10-17.
+    This supports ordinary client acceptance. A dedicated post-reboot Tailscale
+    check was not repeated. See `radio-country.md` and `topology.md`.
+  - Administer it from a path that survives its Wi-Fi restart. Verify both bands,
+    client reconnection, and persistence. Retain supported driver evidence when
+    standard `iw` is unavailable; do not infer driver state solely from UCI.
+- [x] Apply and verify AU on WAX202 in a separate approved maintenance window.
+  - Evidence: private `network-radio/20261009T133446Z`; `networking/changes/radio-country.md`.
+    Owner confirmed direct wired recovery equipment. Both country values are saved as AU;
+    runtime AU, original WDS peer/channel153/80MHz/four-address mode, SSH, HTTP200,
+    and three fresh ARP replies in each direction pass. Network config hash is unchanged.
+    Only two country fields changed. Radio0 stays disabled. At this initial
+    checkpoint, client observation and reboot checks were pending. The later
+    accepted observation window and reboot gate below supersede that status.
+  - The container depends on WDS. Use the Air on the main LAN for observation,
+    with a studio-side wired recovery path prepared before the station change.
+    Save the previous settings and define a supported local rollback if WDS fails.
+- [x] Verify WDS association, fresh ARP forwarding, client access, and accepted stability window.
+  - Latest evidence: private `network-reboot/20261010T132445Z-wax202`.
+    Owner accepted a shortened observation window of about 23h49m. Reboot
+    persistence passes: changed boot ID, AU domain, original peer, 80 MHz,
+    four-address mode, bridge membership, SSH, HTTP 200, unchanged config hashes.
+    Owner confirms NAS-file and authenticated browser acceptance after reboot pass.
+    The earlier 24-hour deadline below is superseded by this owner decision.
+  - Immediate WDS association and endpoint ARP tests passed after WAX202 AU.
+    Owner confirms Air-to-NAS file access and WAX202 browser access pass.
+    Owner also reports no visible interruption to the Air NAS connection or Studio
+    live stream during the reload. This is user-observed continuity, not a packet-loss
+    measurement. The earlier 12:27 UTC snapshot had only about 22h51m of
+    observation. Its pending deadline and reboot status were superseded by the
+    accepted 23h49m window and reboot evidence above. Preserve the initial
+    snapshot in private `network-stability/20261010T122714Z` as history.
+  - Record effective domain, channel, width, and link state. Keep SSID, key, and
+    channel tuning outside this change unless the correct domain requires a change.
+
+Rollback: restore the prior saved configuration only if it is valid for the site.
+Do not restore an incorrect country as a permanent fix. If correct settings cannot
+operate, stop the affected radio and use the prepared wired recovery path. Record
+an unresolved driver or hardware limitation rather than forcing a foreign domain.
+
+#### Studio OX connectivity — owner request 2026-10-18
+
+- [x] Provide usable studio 2.4 GHz Wi-Fi for the OX Amp Top Box.
+  - Evidence: `networking/changes/wax202-ox-wifi.md`. WAX202's `Moo Moo Farm`
+    AP is enabled. Native security, LAN bridging, and continuous WDS checks
+    passed. OX connection and app control passed by owner report.
+    The SSID uses the owner-supplied private password. No other AP changed.
+
+#### Stage 5: define firmware maintenance
+
+WAX202 upgrade preparation passed backup, published image checksums, transfer
+hash, storage, and native `sysupgrade -T` checks. The owner then authorized
+installation. OpenWrt 25.12.5, original WDS peer, four-address mode, AU, SSH,
+HTTP 200, and unchanged configuration hashes pass. Diagnostic tools restored;
+three gateway ARP probes received three replies. Owner confirms NAS-file,
+browser login, and off-LAN Tailscale checks pass. Later stability observation
+remains open.
+Evidence: private `network-firmware/20261010T143127Z-wax202`.
+Procedure: `networking/changes/wax202-firmware.md`.
+MikroTik owner acceptance after RouterBOOT also passes. Later observation stays open.
+
+The initial source review, `networking/firmware-review-2026-10-11.md`, records
+the earlier MikroTik 7.23.2 and WAX202 25.12.2 builds. The applied records above
+supersede that installed-version table: MikroTik is 7.23.8 and WAX202 is 25.12.5.
+Do not repeat completed upgrades. The later 2026-10-17 source comparison
+is appended to that review. It identified uHTTPd remediation and vendor
+patch-coverage gaps. Source comparison is complete; Stage 5 is not complete.
+The earlier documentation closeout did not perform this source review.
+
+- [x] Select an approved stable or long-term RouterOS update policy and change the channel separately.
+  - Evidence: private `network-firmware/20261010T134518Z`. Selected long-term,
+    verified offered 7.23.8, then downloaded and installed in separate steps.
+    HTTPS certificate validation remains enabled. Owner authorized proceeding.
+    `networking/changes/mikrotik-firmware.md` records recovery and results.
+  - The original 7.23.2 package was stable despite its development channel.
+    Channel selection, RouterOS installation, and RouterBOOT installation were
+    separate approved actions. The retained channel is long-term.
+- [x] Review official support, advisories, and release notes for all five exact installed builds.
+  - Evidence: `networking/firmware-review-2026-10-11.md`, current checkpoint
+    2026-10-17. Reconciled saved runtime identities and later applied versions.
+    Recorded per-device retain, remediate, or defer decisions and review triggers.
+    Public release/API/feed evidence and four candidate packages are preserved
+    in the investigation workspace at `logs/firmware-review/20261017/`.
+    This source-review outcome does not close the remediation items below.
+- [ ] Correct the later uHTTPd defects on AXT1800 and WAX202.
+  - Use `networking/changes/openwrt-uhttpd-security.md`. WAX202 now has
+    `2026.08.24~373145f7-r1` for both packages. The owner approved its update,
+    web-service activation, and original-firmware recovery fallback. Native
+    checks, fresh SSH, the new running executable, LuCI login challenge,
+    configuration/world hashes, and WDS state passed on 2026-10-17.
+    The owner confirmed fresh Air SSH, browser login, and off-LAN Tailscale.
+    Review 24 hours of normal use no earlier than 2026-10-18 22:11 Sydney.
+    AXT1800 remains on the older pair. Prepare its separate approved update
+    after WAX202 acceptance. Keep this gate open. No exploit test is authorized.
+
+- [ ] Resolve exact GL.iNet upstream patch coverage before security closeout.
+  - Start with MT6000 uHTTPd/ubus and the current upstream advisory comparison.
+    Distinguish vendor backports from package labels. MT1300's saved package
+    list has no uHTTPd. Do not claim all OpenWrt CVEs are covered by the
+    vendor's April 2025 notice or its model-support policy.
+- [ ] Prepare a separate approved procedure for each firmware upgrade that is justified.
+  - Include verified image hashes, storage requirements, packages, configuration
+    compatibility, physical recovery, downtime, and rollback image. Upgrade one
+    device at a time. Never upgrade both WDS endpoints in one maintenance batch.
+- [ ] Verify each applied upgrade against its original role and a 24-hour observation period.
+  - Check boot, management, DHCP/DNS role, service restrictions, client access,
+    and fresh WDS ARP where applicable. Restore the paired firmware and private
+    configuration through the documented recovery path if acceptance fails.
+
+An evidence-backed retain decision can close the review. It cannot close an
+unresolved required security update without explicit risk acceptance.
+
+#### Stage 6: make configuration reproducible
+
+- [ ] Confirm and record exact cable ports and mark bridged WAN ports as LAN where applicable.
+- [ ] Derive reviewed native templates under `networking/devices/<device>/`.
+  - Preserve intended vendor AP mode. Separate secret placeholders from recoverable
+    private values. Record firmware hashes, packages, custom files, and dependencies.
+- [ ] Review residual WAX202 WAN protocols and vendor AP-mode routing controls (N09).
+  - Disable only settings with no required role after runtime verification.
+    Verify bridge forwarding and management; restore saved sections on regression.
+- [ ] Verify a representative restore with physical recovery available.
+  - Start with an isolated or spare target when available. If the production device
+    must be used, obtain a specific outage and recovery approval. Record scope:
+    a representative restore does not prove every device is recoverable.
+- [ ] Record untested recovery cases and verify updated approved recovery copies after changes.
+  - The owner accepted NAS-local-only storage in Stage 0. An off-host copy is
+    deferred under that explicit risk acceptance. Refresh the approved copy;
+    do not treat a second NAS directory as off-host protection.
+
+Pass gate: documented steps recover the tested role, secrets are available privately,
+and management plus representative client behavior pass. Retain each untested
+model or procedure as an explicit recovery gap or accepted risk.
+
+#### Stage 7: decide optional architecture and measured improvements
+
+Current disposition, 2026-10-17: retain the accepted topology. Defer new APs,
+AP consolidation, radio tuning, queueing changes, Pi-hole deployment, domain
+migration, and the Bilibili-specific investigation. Review these only when
+the owner requests an improvement or normal use no longer meets requirements.
+The open items below are conditional review gates, not instructions to change
+the working network now. Keep unresolved security and recovery requirements
+separate from these optional deferrals.
+
+Retain current `.lan` names and working Tailscale access. GL.iNet cloud access
+is not required. Tailnet enrollment/access rules and IPv6 behavior have not
+received a complete policy audit. The single LAN remains the current design;
+guest/IoT isolation has not been implemented or verified. No second studio
+uplink is planned. Revisit isolation or loop prevention when a concrete
+requirement or topology change warrants it.
+
+- [ ] Decide guest/IoT isolation and management-network requirements (N11).
+  - Default: retain the working single LAN pending an approved design. If isolation
+    is required, map switches, VLAN support, routing, firewall rules, and Bonjour
+    exceptions end to end. A disabled guest SSID is not a verified isolation design.
+- [ ] Decide intended IPv6, vendor cloud, and Tailscale access behavior.
+  - Review actual enrollment and access policy before changing remote access.
+    Review router advertisements on all interfaces before enabling Internet IPv6.
+    Confirm how remote management survives earlier source restrictions.
+- [ ] Measure radio airtime and client performance before optional channel or width changes (N10).
+  - Deferred after owner acceptance. If resumed, record comparable workloads,
+    location, and actual post-swap radio state. Do not treat the old MT6000
+    channel 8 observation as current or change the accepted WDS channel by default.
+- [ ] Measure latency under load before deciding on queueing or shaping (N12).
+  - Scope the active test first. If shaping is justified, account for FastTrack,
+    gateway CPU capacity, latency, and throughput. Do not enable SQM on a bridged AP
+    as a substitute for a reviewed gateway design.
+- [ ] Record loop-prevention requirements before adding any second studio uplink (N12).
+  - No parallel Ethernet/WDS path is currently planned. Enable or redesign STP only
+    for a defined topology need, with a verified rollback and client recovery.
+
+For each decision, record implement, retain, or defer with the reason and review
+trigger. For implemented designs, define pass criteria and the original topology
+rollback before approval. Optional tuning does not block closure when the user
+accepts the existing behavior. Unresolved required isolation or security needs do.
+
+#### Stage 8: harden tools and close verified work
+
+- [ ] Harden capture cleanup in the investigation repo before shared-tool promotion.
+  - Expose stop failures. Verify process identity and artifact ownership. Mock
+    startup, PID-file, interruption, retrieval, and stop failures. Keep one copy.
+- [ ] Record unsupported runtime commands and verify collector behavior across device builds.
+  - Distinguish command results from SSH success. Keep partial evidence and explicit
+    omissions. Do not install tools on a router solely to make a report look complete.
+- [ ] Run the approved final regression checks from the Air and representative clients.
+  - Check idle IP access, DNS, fresh ARP across WDS, file access, required discovery,
+    Tailscale access, large transfer, and printer behavior. Record workaround state,
+    exact duration, file size, units, link-counter deltas, and test source.
+- [ ] Observe at least 24 hours after the last applied change and record the results.
+  - Include memory/storage trend, WDS reassociations, time alignment, and client
+    reports. Regressions return to the relevant stage. Keep the original WDS fix
+    evidence separate from acceptance of later changes.
+- [ ] Record a disposition for N01 through N13 and each remaining recovery gap.
+  - Attach evidence for corrected findings. Record the user's explicit acceptance
+    for retained risks. Keep unresolved required work open and name its next action.
+- [ ] Update design and recovery documents, scan for secrets, and commit reviewed work.
+  - Run proportional script checks and local-link checks. Commit verified batches
+    with their evidence. Do not mark the whole package complete while a required
+    restore, acceptance test, or approved corrective action remains open.

@@ -1,7 +1,9 @@
 # Configuration capture and recovery
 
-Capture the working network while the new WDS setup completes its soak test.
-Start with the AXT1800 and WAX202. Then capture the MikroTik, MT6000, and MT1300.
+Updated: 2026-10-17 (Australia/Sydney).
+The WDS fault is closed and the current AP layout is accepted.
+Use this procedure for a later authorized capture or recovery preparation.
+This documentation update made no device connection or new backup.
 Run collection from the Air or the Linux development container with confirmed
 SSH aliases and host keys. Configuration collection can run from either side
 of a working bridge. Use the Air for independent cross-bridge reachability tests.
@@ -19,8 +21,10 @@ lists, and native configuration archives. It captures the MikroTik identity and
 text export. It validates archive readability and local SHA-256 checksums.
 It retains partial files on failure. It does not publish raw exports to Git.
 
-The MikroTik encrypted binary backup and certificate/key recovery remain manual
-steps. The text export alone does not complete MikroTik recovery coverage.
+The collector does not create a MikroTik encrypted binary backup. That step
+is separate and has already passed creation and retrieval checks as recorded
+below. Certificate/key dependencies and an actual restore remain separate
+recovery requirements. The text export alone is not complete recovery coverage.
 
 ## Repository and private recovery copies
 
@@ -90,18 +94,39 @@ Source: [MikroTik configuration export and import](https://help.mikrotik.com/doc
 
 ## Current coverage
 
-The capture on 2026-10-06 completed from the Linux development container.
+The 2026-10-06 capture completed from the Linux development container.
 Its private files are in `secrets/local/network/20261006T103815Z/`.
-All four OpenWrt configuration archives passed the tar check. All recorded
-checksums passed. The MikroTik text export contains 28 menu sections.
-The capture directories have mode `0700`; the files have mode `0600`.
-Git ignores the complete capture. No raw configuration was committed.
+All four OpenWrt archives passed readability checks. All recorded checksums
+passed. The MikroTik text export contains 28 menu sections.
+Capture directories are `0700`, files are `0600`, and Git ignores the capture.
+No raw configuration was committed.
 
-Reviewed templates, an off-host private recovery copy, the MikroTik encrypted
-binary backup, and restore verification remain pending. A local ignored backup
-does not protect against loss of the NAS that hosts this container.
+The encrypted bundle at
+`/sandbox/vincent/home_network_backup/20261009T085347Z/` passed decryption,
+integrity, and retrieval checks. It contains an encrypted MikroTik binary
+backup with matching downloaded copies. Private recovery secrets remain
+outside Git. Required SSH-key dependencies were inventoried.
+The corrected certificate listing contained no certificate objects.
+See [Stage 0 evidence](../intial-plan-after-audit.md#stage-0-prepare-recovery-and-the-first-change).
+
+The owner accepted NAS-local storage on 2026-10-09. NAS loss also loses this
+copy. An off-host copy is deferred under that accepted risk; it is not an
+unperformed deployment silently required by the current baseline.
+
+MikroTik and WAX202 upgrade preparation also saved paired recovery material.
+See [MikroTik firmware](changes/mikrotik-firmware.md) and
+[WAX202 firmware](changes/wax202-firmware.md).
+The initial bundle predates later configuration and firmware changes.
+No complete post-change capture of the retained 2026-10-17 state was verified
+in this closeout. Do not assume the old bundle exactly reproduces that state.
+
+Reviewed templates, final-state recovery copies, and a representative restore
+remain open. No router restore, Netinstall, or recovery flash was tested.
+A successful decrypt proves archive access, not device recovery.
+Use an isolated or spare target first when practical. A production restore
+requires a separately approved outage and physical recovery path.
 
 The collector passed Bash syntax, ShellCheck, and mocked success and interrupted
-SSH tests. It also completed live collection on all five devices from Linux.
-Track completion only in
+SSH checks. It also completed live collection on all five devices from Linux.
+Track the remaining implementation only in
 [work package 12](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery).

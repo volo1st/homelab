@@ -69,3 +69,35 @@ No live host state was inspected for this reconciliation. Quieter hardware,
 10 GbE and broader service ideas are retained in the
 [research source record](../research-source-reconciliation.md).
 No host, service or executable configuration changed.
+
+## Operational-baseline reconciliation — 2026-10-17
+
+The owner authorized documentation closeout and corresponding Todoist updates.
+Inputs were the investigation workspace's `note.md` and `plan.md`, the five
+Todoist children, parent comments, and the homelab applied-change records.
+No live device state was collected. No Confluence or study material was changed.
+
+The current topology now records MT6000 in the kitchen and MT1300 in the study.
+It records the applied software versions, management addresses, current `.lan`
+names, DNS-based SSH aliases, and the unchanged WDS pair.
+Several days of owner use and the reported Internet tests support the owner's
+2026-10-17 acceptance. Bedroom and studio coverage limits remain accepted for now.
+
+The recovery summary now distinguishes verified encrypted backup access from an
+untested restore. NAS-local-only storage remains an explicitly accepted risk.
+Final-state copies and reproducible templates remain open in work package 12.
+The existing Tailscale path remains in use. Its complete access-policy review
+has not been claimed. Current `.lan` naming is retained; `home.arpa` is deferred.
+
+This closes the documentation outcome's topology, addressing, naming, device,
+and routine-operation requirements. It does not close the wider network audit.
+Exact physical ports and reproducibility remain explicit audit gaps, rather
+than missing content in the current operational reference.
+
+Pi-hole remains a reference. Pi-hole deployment, domain migration, Bilibili
+playback investigation, and additional Wi-Fi hardware or tuning are deferred
+optional follow-up. The playback issue has no verified fix in this review.
+The remote-access decision task remains open for its full rationale, threat
+assumptions, access scope, and maintenance record.
+Todoist retains lightweight status and links. Technical implementation tasks
+remain only in the canonical audit plan.

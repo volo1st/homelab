@@ -69,7 +69,8 @@ APK world hashes are unchanged. No device reboot or network change occurred.
 The owner confirmed Air SSH and physical access before installation and
 accepted original-firmware recovery if needed. That recovery remains untested.
 Exact old APKs are unavailable. WAX202 recovery files are also on AXT1800,
-so they do not depend on NAS access through WAX202. AXT1800 is not updated.
+so they do not depend on NAS access through WAX202. AXT1800 was updated
+later as recorded below.
 
 On 2026-10-18, the owner approved the separate studio OX Wi-Fi addition.
 WAX202 now provides `Moo Moo Farm` on its 2.4 GHz radio. Native AP/security
@@ -84,28 +85,29 @@ confirms the same process, boot ID, continuous WDS association, and accepted
 post-OX configuration. Retained logs have no crash/out-of-memory match.
 This does not close the final observation after later changes.
 
-AXT1800's refreshed technical preparation passed. The signed release index,
-candidate hashes, exact two-package simulation, storage, fresh private backup,
-and original firmware compatibility checks pass. Its recovery bundle is also
-verified on WAX202. No AXT1800 package or service change ran.
+AXT1800's two-package update was then approved and applied on 2026-10-19
+Sydney. Both WDS endpoints now have uHTTPd and its ubus module at
+`2026.08.24~373145f7-r1`. AXT1800's package/world/configuration checks,
+new running executable, fresh SSH, LuCI login challenge, and continuous
+WDS association pass. One explicit web-service restart completed activation.
+The owner confirmed Air SSH, browser login, and off-LAN Tailscale access.
+No network setting, device boot, or other installed package changed.
 
 Resume work with these actions:
 
-1. Review the current checkpoint in
-   `networking/changes/openwrt-uhttpd-security.md`. Obtain explicit approval
-   for AXT1800's two-package installation, web-service activation, and the
-   firmware/configuration recovery fallback. Physical/Air access was confirmed.
-2. Recheck the staged files and simulation before an approved AXT1800 update.
-   Stop on any changed selection. Preserve APK world. Verify the running
-   executable, client access, WDS, and a separate observation period afterward.
-3. Resolve GL.iNet upstream patch coverage. Keep actual restore, final-state
-   capture, tool hardening, and final regression gates open.
+1. Review AXT1800's 24-hour normal use no earlier than 2026-10-20 01:27
+   Sydney. Record client reports and fresh service/WDS state. Retain its
+   original recovery images and paired configuration during observation.
+2. Resolve GL.iNet upstream patch coverage from model-specific evidence.
+   Keep actual restore and final-state recovery capture open.
+3. Finish tool hardening, representative regression, the final observation
+   after later changes, and finding dispositions in their existing stages.
 
-Next available focus: **Work package 12, Stage 5: AXT1800 installation
-approval**. The earlier WAX202 approval does not authorize this installation.
-Reviewed network records were committed on 2026-10-18. This checkpoint is
-committed with the continuation. Private evidence and recovery files remain
-local and ignored. Revalidate temporary AP files on resume.
+Next available focus: **Work package 12, Stage 5: AXT1800 observation and
+vendor patch coverage**. WAX202's web-service observation remains accepted.
+AXT1800's installation has immediate client acceptance, but its observation
+is open. This checkpoint is committed locally. Private evidence and recovery
+files remain ignored. Revalidate temporary AP files before any recovery.
 
 The approved 2026-10-07/08 source reconciliations remain in
 `networking/source-reconciliation.md`, `research-source-reconciliation.md`,
@@ -1114,10 +1116,11 @@ The earlier documentation closeout did not perform this source review.
     configuration/world hashes, and WDS state passed on 2026-10-17.
     The owner confirmed fresh Air SSH, browser login, and off-LAN Tailscale.
     WAX202 observation passed after about 26 hours on 2026-10-19 Sydney.
-    AXT1800 remains on the older pair. Its refreshed technical preparation
-    passed, with a verified recovery bundle on WAX202. Obtain its separate
-    installation and recovery approval. Keep this gate open until both devices
-    pass. No exploit test is authorized.
+    AXT1800 was approved, updated, and activated on 2026-10-19 Sydney.
+    The same technical checks and the owner's three client checks pass.
+    Both endpoints now have the corrected pair. Review AXT1800's 24-hour
+    observation no earlier than 2026-10-20 01:27 Sydney. Keep this gate open
+    until that acceptance passes. No exploit test is authorized.
 
 - [ ] Resolve exact GL.iNet upstream patch coverage before security closeout.
   - Start with MT6000 uHTTPd/ubus and the current upstream advisory comparison.

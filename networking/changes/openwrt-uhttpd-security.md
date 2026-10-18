@@ -1,6 +1,6 @@
 # OpenWrt uHTTPd security update
 
-Prepared: 2026-10-17. State: **WAX202 observation passed; AXT1800 prepared, installation approval pending**.
+Prepared: 2026-10-17. State: **both APs updated; AXT1800 immediate acceptance passed; its observation remains open**.
 This procedure covers AXT1800 and WAX202 only. It excludes the GL.iNet
 vendor builds. It does not authorize a device connection or installation.
 The source assessment is in the [firmware review](../firmware-review-2026-10-11.md#current-review--2026-10-17-sydney).
@@ -324,3 +324,50 @@ Private evidence roots in the investigation workspace:
 `backups/network-next/20261018T141345Z/`. The first holds WAX202 observation
 and the partial AXT1800 check. The second holds the successful AXT1800
 preflight, fresh backup, and peer recovery bundle. These files stay out of Git.
+
+## AXT1800 application checkpoint — 2026-10-19 Sydney
+
+The owner approved the two-package installation, web-service activation,
+and prepared firmware/configuration recovery if needed. Immediate checks
+revalidated the existing signed release index, fetched candidate hashes,
+exact solver output, paired configuration backup, original image, and the
+recovery bundle on WAX202. No trust key or persistent feed changed.
+
+The approved world-preserving `apk fix --upgrade uhttpd uhttpd-mod-ubus`
+transaction ran once on AXT1800. It used the verified temporary base-feed
+list and cache. Only the two expected packages changed. Package scripts
+started an intermediate process. The activation guard then selected one
+explicit uHTTPd restart before final verification. That guard checks for an
+old executable or a deleted module mapping. No network service restart,
+device reboot, or firmware flash ran.
+
+| Check | Result |
+| --- | --- |
+| uHTTPd and ubus module | Both `2026.08.24~373145f7-r1` |
+| Other installed packages | Unchanged |
+| Existing configuration and APK world hashes | Unchanged |
+| New default configuration | Inactive `/etc/config/uhttpd.apk-new`; active file retained |
+| Running executable | New PID 26820; SHA-256 matches installed binary |
+| Boot ID | Unchanged |
+| Wireless runtime and WDS association start time | Unchanged |
+| WDS role, AU, channel 153, 80 MHz, four-address mode | Pass |
+| Fresh SSH and LuCI login challenge | Pass; expected HTTP 403 with login-required header |
+| Owner's Air SSH, browser login, and off-LAN Tailscale checks | All three pass |
+
+Technical verification passed at `2026-10-18T14:26:49Z` (01:26 on October 19
+Sydney). Review 24 hours of normal use no earlier than **2026-10-20 01:27
+Sydney**. Keep that gate open. WAX202's earlier observation remains accepted.
+The final network observation after later changes, vendor patch mapping,
+actual restore, and final-state recovery capture remain separate open work.
+
+The first station query on the base AP returned an empty result with exit
+zero. The WDS client belongs to `phy0-ap0.sta1`. A separate query verified
+its authorized association before application. Both results remain evidence.
+No installation was attempted before that check passed.
+
+Private evidence is in the investigation workspace at
+`backups/uhttpd-update/axt1800-20261018T142508Z/`. It contains the native
+commands, raw results, corrected preflight, paired backup, package comparison,
+service activation, HTTP response, and owner acceptance. Recovery was not
+needed. Preserve the original firmware and paired configuration until the
+observation ends. No NAS or Mac Studio connection or exploit test ran.

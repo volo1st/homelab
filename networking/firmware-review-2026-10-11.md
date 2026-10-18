@@ -67,7 +67,7 @@ installed-version table above. These are saved observations, not a new inventory
 | Device | Recorded build | Disposition and next review trigger |
 | --- | --- | --- |
 | MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Later stability acceptance remains open. |
-| AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Retain the firmware and WDS role. Prepare a targeted uHTTPd security update. This remediation remains open. |
+| AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Targeted uHTTPd/module update applied on 2026-10-19 Sydney. Technical and immediate client checks passed. Its 24-hour observation remains open. |
 | WAX202 | OpenWrt 25.12.5; ramips/mt7621 | Targeted uHTTPd/module update applied on 2026-10-17. Technical, client, and 26-hour web-service observation checks passed. Other final audit gates remain open. |
 | MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Retain provisionally. Defer the 4.11.0 feature upgrade. Resolve the vendor patch-coverage questions below before security closeout. |
 | MT1300 | GL.iNet 4.3.25; ramips/mt7621; r20123-38ccc47687; local NTP patch | Retain provisionally. Preserve the time repair. Recheck vendor patches and support status. Support ends on 2028-06-08. |
@@ -252,3 +252,12 @@ process, boot ID, continuous WDS association, and owner report of no issues.
 AXT1800's refreshed native trust, candidate hashes, two-package simulation,
 storage, fresh backup, and original-image tests pass. Its installation still
 requires separate approval. See the [current checkpoint](changes/openwrt-uhttpd-security.md#wax202-observation-and-axt1800-preparation--2026-10-19-sydney).
+
+## AXT1800 update applied — 2026-10-19 Sydney
+
+The approved update installed and activated the corrected pair on AXT1800.
+Both WDS endpoints now have `2026.08.24~373145f7-r1`. Native package,
+configuration, running executable, SSH, LuCI, and WDS checks pass. The owner
+confirmed Air SSH, browser login, and off-LAN Tailscale. Review AXT1800's
+24-hour observation after 2026-10-20 01:27 Sydney. See the
+[application checkpoint](changes/openwrt-uhttpd-security.md#axt1800-application-checkpoint--2026-10-19-sydney).

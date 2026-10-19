@@ -98,15 +98,18 @@ Resume work with these actions:
 1. Review AXT1800's 24-hour normal use no earlier than 2026-10-20 01:27
    Sydney. Record client reports and fresh service/WDS state. Retain its
    original recovery images and paired configuration during observation.
-2. Resolve the GL.iNet source-mapping and later management findings. The
-   19 October review and vendor enquiry draft are prepared. Obtain owner
-   approval before sending the enquiry. Exact corrected builds remain
-   unconfirmed. Keep actual restore and final-state recovery capture open.
+2. Use the owner's production-firmware policy recorded on 19 October.
+   Prepare MT6000's stable update with backup, compatibility, rollback, and
+   normal-function checks. The last catalogue review identified 4.11.0 as
+   its stable candidate and 4.3.25 as MT1300's latest stable release.
+   Recheck the catalogue before application. Preserve MT1300's NTP patch.
+   Vendor patch mapping and the unsent enquiry are deferred maintenance
+   research. They are not baseline closure gates.
 3. Finish tool hardening, representative regression, the final observation
    after later changes, and finding dispositions in their existing stages.
 
 Next available focus: **Work package 12, Stage 5: AXT1800 observation and
-vendor clarification**. The prepared enquiry is not sent.
+production firmware**. The vendor enquiry is deferred and remains unsent.
 WAX202's web-service observation remains accepted.
 AXT1800's installation has immediate client acceptance, but its observation
 is open. This checkpoint is committed locally. Private evidence and recovery
@@ -1125,24 +1128,23 @@ The earlier documentation closeout did not perform this source review.
     observation no earlier than 2026-10-20 01:27 Sydney. Keep this gate open
     until that acceptance passes. No exploit test is authorized.
 
-- [ ] Resolve exact GL.iNet upstream patch coverage before security closeout.
-  - Start with MT6000 uHTTPd/ubus and the current upstream advisory comparison.
-    Distinguish vendor backports from package labels. MT1300's saved package
-    list has no uHTTPd. Do not claim all OpenWrt CVEs are covered by the
-    vendor's April 2025 notice or its model-support policy.
-  - Evidence: the 2026-10-19 section of
-    `networking/firmware-review-2026-10-11.md`. The upstream 2021 source has
-    two code patterns addressed by upstream fixes, but vendor binary backports are unverified.
-    Inspected public source trees do not identify the exact shipping source.
-- [ ] Resolve the later GL.iNet management-interface findings before security closeout.
-  - Evidence: the same 19 October review and the 63-notice comparison.
-    Vendor notices directly name MT6000 4.9.1 for Host-validation and session-log
-    defects. Thirteen authenticated RPC notices give family-level fix references,
-    including an MT1300 4.5.x reference absent from its current catalogue.
-    NAS-web and timer findings also need exact version and exposure decisions.
-    `networking/glinet-vendor-enquiry-2026-10-19.md` is prepared but not sent.
-    Confirm exact fixes before selecting an upgrade or mitigation. No device
-    change or risk acceptance occurred during this source review.
+- [x] Decide the required depth of GL.iNet patch-coverage review.
+  - Evidence: on 2026-10-19 the owner chose a home-network maintenance
+    baseline based on the latest supported production firmware. This
+    explicitly supersedes the earlier exact-patch-mapping closure gate.
+    Mapping remains unknown. No security fix is claimed from this decision.
+    The source comparison stays in `networking/firmware-review-2026-10-11.md`.
+- [x] Record the disposition of later vendor findings under the accepted maintenance policy.
+  - Evidence: the same owner decision defers detailed vendor research and
+    the unsent enquiry. Preserve the findings for brief release/advisory
+    checks. No vendor response is required for baseline closure. This does
+    not establish that the findings are fixed or authorize a device change.
+- [ ] Verify that the GL.iNet devices meet the production-firmware policy.
+  - The last catalogue review identifies MT6000 4.11.0 as the stable update
+    candidate and MT1300 4.3.25 as current. Recheck before an approved update.
+    Use the existing per-device preparation and acceptance gates below.
+    Record any clear remaining advisory issue briefly. Exact backport proof
+    is outside this gate. Preserve MT1300's local NTP correction.
 - [ ] Prepare a separate approved procedure for each firmware upgrade that is justified.
   - Include verified image hashes, storage requirements, packages, configuration
     compatibility, physical recovery, downtime, and rollback image. Upgrade one
@@ -1152,8 +1154,10 @@ The earlier documentation closeout did not perform this source review.
     and fresh WDS ARP where applicable. Restore the paired firmware and private
     configuration through the documented recovery path if acceptance fails.
 
-An evidence-backed retain decision can close the review. It cannot close an
-unresolved required security update without explicit risk acceptance.
+An evidence-backed retain decision can close the review. Use the owner's
+production-firmware policy to bound this home-network audit. Record a clear
+remaining advisory issue and its disposition. Do not infer that a defect is
+fixed from a firmware version alone. Detailed vendor patch research is deferred.
 
 #### Stage 6: make configuration reproducible
 

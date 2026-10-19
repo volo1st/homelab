@@ -1,6 +1,8 @@
 # GL.iNet patch-coverage enquiry
 
-Prepared: 2026-10-19 Sydney. Draft only. Not sent.
+Prepared: 2026-10-19 Sydney. Deferred after the owner chose production-release
+maintenance for this home network. Draft only. Not sent. No response is
+required for baseline closure.
 Use the vendor's official support channel after owner approval.
 Do not attach configuration archives, keys, or raw web logs.
 

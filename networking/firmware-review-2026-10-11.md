@@ -1,5 +1,6 @@
 # Firmware review: 2026-10-11 Sydney
 
+For the accepted maintenance scope, see [the owner decision](#home-network-maintenance-decision--2026-10-19-sydney).
 For the latest vendor findings, see [the 2026-10-19 review](#vendor-patch-review--2026-10-19-sydney).
 The five-device comparison is in [the 2026-10-17 review](#current-review--2026-10-17-sydney).
 The initial review below is retained as history.
@@ -70,7 +71,7 @@ installed-version table above. These are saved observations, not a new inventory
 | MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Later stability acceptance remains open. |
 | AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Targeted uHTTPd/module update applied on 2026-10-19 Sydney. Technical and immediate client checks passed. Its 24-hour observation remains open. |
 | WAX202 | OpenWrt 25.12.5; ramips/mt7621 | Targeted uHTTPd/module update applied on 2026-10-17. Technical, client, and 26-hour web-service observation checks passed. Other final audit gates remain open. |
-| MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Retain pending vendor clarification. The 19 October review found later vendor management defects. Review 4.11.0 as a candidate after exact fix confirmation; no installation is selected. |
+| MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Prepare the latest stable production update under the owner policy below. The last catalogue check identifies 4.11.0. Recheck before installation. Vendor patch mapping is deferred. |
 | MT1300 | GL.iNet 4.3.25; ramips/mt7621; r20123-38ccc47687; local NTP patch | Retain provisionally. Preserve the time repair. Recheck vendor patches and support status. Support ends on 2028-06-08. |
 
 Review retained builds at the next maintenance session, no later than
@@ -320,7 +321,9 @@ stable 4.3.25. The MT1300 4.5.x fix reference conflicts with that published
 maintenance catalogue. This needs clarification. Do not invent an MT1300
 upgrade target. Preserve its local NTP correction.
 
-### Disposition and evidence
+### Initial disposition and evidence
+
+The owner decision below supersedes this initial closure requirement.
 
 Keep security closeout open for both vendor devices. Request an exact
 model/build response and corresponding patch evidence. The
@@ -338,3 +341,29 @@ under ignored `backups/vendor-review/20261019/`. The committed comparison
 contains relevant summaries and affected-version lines. Saved package
 identities are in `saved-package-comparison.json`; this is not a fresh audit.
 The review does not prove compromise or a complete absence of defects.
+
+## Home-network maintenance decision — 2026-10-19 Sydney
+
+The owner confirmed that this is a home-network baseline. Use the latest
+supported production firmware for each model and current firmware family.
+Use stable GL.iNet and official OpenWrt releases. Retain MikroTik's chosen
+long-term channel. Exclude beta, testing, and snapshot builds.
+
+Keep checks bounded: read release notes and clear applicable advisories,
+back up configuration, check compatibility and rollback, update one device
+at a time, and verify normal functions. Preserve MT1300's local NTP patch.
+The last catalogue check identifies MT6000 stable 4.11.0 as an update
+candidate and MT1300 4.3.25 as current. Recheck before application.
+No installation or network change was authorized by this policy decision.
+
+Detailed source-to-binary patch mapping and the vendor response are removed
+as baseline closure requirements. The enquiry is deferred and remains unsent.
+Keep the source findings as dated maintenance evidence. Patch coverage stays
+unknown; this decision does not prove that a published defect is fixed.
+Record a clear unresolved advisory issue briefly when reviewing the selected
+production release. This policy accepts the limits of release-based
+maintenance. It does not establish a vulnerability-free network.
+
+The canonical work package records the changed gate dispositions explicitly.
+Production-version verification, approved updates, and their normal-function
+acceptance remain open. Recovery and other final audit gates are unchanged.

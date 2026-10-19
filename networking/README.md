@@ -1,6 +1,6 @@
 # Home network
 
-Updated: 2026-10-18 (Australia/Sydney).
+Updated: 2026-10-19 (Australia/Sydney).
 This directory owns the current network design and recovery instructions.
 The original wireless distribution system (WDS) reachability fault is closed.
 On 2026-10-17, the owner also accepted the swapped access point (AP) layout
@@ -58,6 +58,16 @@ access is not required. A separate directly managed WireGuard deployment is
 deferred. Tailnet enrollment, access-rule review, and remaining remote-path
 checks remain in work package 12. Functional access does not prove a complete
 access-policy audit.
+
+Firmware policy accepted on 2026-10-19: use the latest supported production
+release for each model and its current firmware family. Use stable GL.iNet
+and official OpenWrt releases. Keep MikroTik on its chosen long-term channel.
+Exclude beta, testing, and snapshot builds. Check release notes and clear
+applicable advisories briefly. Detailed vendor source-to-binary patch mapping
+and a vendor response are not baseline closure requirements.
+Retain unresolved findings as maintenance notes. Latest firmware does not
+prove that every published defect is fixed. Review a clear remaining issue
+briefly and record its disposition.
 
 Preserve AU radio settings and the working WDS channel 153 / 80 MHz.
 Review the MT1300 local NTP patch after a firmware upgrade.

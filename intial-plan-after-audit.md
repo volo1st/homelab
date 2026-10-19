@@ -98,13 +98,16 @@ Resume work with these actions:
 1. Review AXT1800's 24-hour normal use no earlier than 2026-10-20 01:27
    Sydney. Record client reports and fresh service/WDS state. Retain its
    original recovery images and paired configuration during observation.
-2. Resolve GL.iNet upstream patch coverage from model-specific evidence.
-   Keep actual restore and final-state recovery capture open.
+2. Resolve the GL.iNet source-mapping and later management findings. The
+   19 October review and vendor enquiry draft are prepared. Obtain owner
+   approval before sending the enquiry. Exact corrected builds remain
+   unconfirmed. Keep actual restore and final-state recovery capture open.
 3. Finish tool hardening, representative regression, the final observation
    after later changes, and finding dispositions in their existing stages.
 
 Next available focus: **Work package 12, Stage 5: AXT1800 observation and
-vendor patch coverage**. WAX202's web-service observation remains accepted.
+vendor clarification**. The prepared enquiry is not sent.
+WAX202's web-service observation remains accepted.
 AXT1800's installation has immediate client acceptance, but its observation
 is open. This checkpoint is committed locally. Private evidence and recovery
 files remain ignored. Revalidate temporary AP files before any recovery.
@@ -1127,6 +1130,19 @@ The earlier documentation closeout did not perform this source review.
     Distinguish vendor backports from package labels. MT1300's saved package
     list has no uHTTPd. Do not claim all OpenWrt CVEs are covered by the
     vendor's April 2025 notice or its model-support policy.
+  - Evidence: the 2026-10-19 section of
+    `networking/firmware-review-2026-10-11.md`. The upstream 2021 source has
+    two code patterns addressed by upstream fixes, but vendor binary backports are unverified.
+    Inspected public source trees do not identify the exact shipping source.
+- [ ] Resolve the later GL.iNet management-interface findings before security closeout.
+  - Evidence: the same 19 October review and the 63-notice comparison.
+    Vendor notices directly name MT6000 4.9.1 for Host-validation and session-log
+    defects. Thirteen authenticated RPC notices give family-level fix references,
+    including an MT1300 4.5.x reference absent from its current catalogue.
+    NAS-web and timer findings also need exact version and exposure decisions.
+    `networking/glinet-vendor-enquiry-2026-10-19.md` is prepared but not sent.
+    Confirm exact fixes before selecting an upgrade or mitigation. No device
+    change or risk acceptance occurred during this source review.
 - [ ] Prepare a separate approved procedure for each firmware upgrade that is justified.
   - Include verified image hashes, storage requirements, packages, configuration
     compatibility, physical recovery, downtime, and rollback image. Upgrade one

@@ -1,6 +1,7 @@
 # Firmware review: 2026-10-11 Sydney
 
-For the current checkpoint, see [the 2026-10-17 review](#current-review--2026-10-17-sydney).
+For the latest vendor findings, see [the 2026-10-19 review](#vendor-patch-review--2026-10-19-sydney).
+The five-device comparison is in [the 2026-10-17 review](#current-review--2026-10-17-sydney).
 The initial review below is retained as history.
 
 This is an initial source review. No firmware or update-channel change occurred.
@@ -69,7 +70,7 @@ installed-version table above. These are saved observations, not a new inventory
 | MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Later stability acceptance remains open. |
 | AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Targeted uHTTPd/module update applied on 2026-10-19 Sydney. Technical and immediate client checks passed. Its 24-hour observation remains open. |
 | WAX202 | OpenWrt 25.12.5; ramips/mt7621 | Targeted uHTTPd/module update applied on 2026-10-17. Technical, client, and 26-hour web-service observation checks passed. Other final audit gates remain open. |
-| MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Retain provisionally. Defer the 4.11.0 feature upgrade. Resolve the vendor patch-coverage questions below before security closeout. |
+| MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Retain pending vendor clarification. The 19 October review found later vendor management defects. Review 4.11.0 as a candidate after exact fix confirmation; no installation is selected. |
 | MT1300 | GL.iNet 4.3.25; ramips/mt7621; r20123-38ccc47687; local NTP patch | Retain provisionally. Preserve the time repair. Recheck vendor patches and support status. Support ends on 2028-06-08. |
 
 Review retained builds at the next maintenance session, no later than
@@ -261,3 +262,79 @@ configuration, running executable, SSH, LuCI, and WDS checks pass. The owner
 confirmed Air SSH, browser login, and off-LAN Tailscale. Review AXT1800's
 24-hour observation after 2026-10-20 01:27 Sydney. See the
 [application checkpoint](changes/openwrt-uhttpd-security.md#axt1800-application-checkpoint--2026-10-19-sydney).
+
+## Vendor patch review — 2026-10-19 Sydney
+
+Outcome: exact upstream patch coverage remains unresolved. The vendor's
+[CVE repository](https://github.com/gl-inet/CVE-issues) also contains later
+model-specific findings that are absent from its router security index.
+These findings supersede the earlier feature-only reason to defer MT6000
+4.11.0. They do not establish a complete fix in that release.
+No device connection, probe, package change, or network change ran.
+
+### Observed records and source comparison
+
+Saved package inventories from 6 October show MT6000 uHTTPd/module
+`2021-03-21-15346de8-2` and nginx `1.26.1-1`. MT1300 has nginx `1.17.7-2`
+and no uHTTPd package. Both have the vendor VPN and plugin RPC packages.
+MT6000 also has `gl-sdk4-nas-web`. Installed packages alone do not prove
+that each optional feature is active or reachable.
+
+The upstream [15346de8 ubus source](https://github.com/openwrt/uhttpd/blob/15346de8/ubus.c)
+contains the REST call path and unchecked parameter iteration corrected by
+[e76736e](https://github.com/openwrt/uhttpd/commit/e76736e).
+Its [client source](https://github.com/openwrt/uhttpd/blob/15346de8/client.c)
+lacks the cumulative header limits added by
+[f6c2fcf](https://github.com/openwrt/uhttpd/commit/f6c2fcf).
+This is source evidence for the revision in the label. It does not prove
+that the installed vendor binary lacks equivalent backports.
+All five uHTTPd issues in the earlier table still need vendor mapping.
+
+The public `gl-feeds` branches contain nginx and Dropbear recipes that
+match the saved MT6000 labels. They do not provide a matching uHTTPd recipe
+or a shipping-build source manifest in the inspected trees.
+`libuhttpd` is a separate project; its recipe cannot establish an OpenWrt
+uHTTPd fix. The vendor's `openwrt-patch-status` pages describe device support
+and compilation, rather than security backports. The inspected `gl-image`
+branches cover other models. No exact source-to-binary mapping was found.
+This bounded search does not establish that such source is unavailable.
+
+### Later vendor findings
+
+| Finding | Published scope and our conclusion |
+| --- | --- |
+| [Host validation after setup](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Host%20header%20validation%20disabled%20after%20initialization%20enables%20DNS%20rebinding%20on%20GL-MT6000.md) | Names MT6000 4.9.1. Reports unauthenticated information disclosure through DNS rebinding. No fixed build is named. LAN-only listeners do not eliminate a browser-mediated path. Wider impact is not established. |
+| [WebSocket session in logs](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/WebSocket%20session%20token%20exposed%20in%20URL%20query%20string%20and%20plaintext%20logs%20on%20GL-MT6000.md) | Names MT6000 4.9.1. Requires access to a log containing a live session. Root-key-only SSH reduces one entry path. It does not establish that local processes cannot read the log. No fixed build is named. Treat future web logs as potentially secret-bearing. |
+| [Authenticated management RPC failures](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/wg-server.set_peer%20Null%20Pointer%20Dereference%20Denial-of-Service%20Vulnerability%20After%20Authentication.md) | Thirteen notices cover traffic, OpenVPN, WireGuard, and plugin methods. They name MT6000 fixes in 4.10.x and MT1300 fixes in 4.5.x. These family-level references do not identify an exact corrected build. Do not substitute the separate “Native OpenWrt” row for installed MT6000 vendor firmware. |
+| [NAS listing overflow](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Heap%20buffer%20overflow%20in%20nas-web.get_file_list%20leading%20to%20authenticated%20denial%20of%20service.md) | MT6000 and its installed NAS-web package are in published scope. Authentication and a large listing are required. Feature activation and a corrected version are not established. |
+| [Language timer](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Language%20Auto-Update%20Cron%20RCE.md) and [Wi-Fi timer](https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Wi-Fi%20Timer%20Power-Schedule%20Cron%20RCE.md) | Both list MT6000 4.6 or later and command execution through schedule input. No upper affected version or fixed build is given. Confirm required permissions and exact fixed versions. No schedule API was tested. |
+
+Earlier vendor fixes with exact model thresholds remain satisfied.
+Some later NAS/firewall notices say only “fixed in 4.9.x”. Ask whether that
+includes installed 4.9.1. Do not infer that all newer notices are resolved
+from the April 2025 table. Reports naming only other models are not
+confirmed findings on these two devices.
+
+Fresh vendor catalogue data still lists MT6000 stable 4.11.0 and MT1300
+stable 4.3.25. The MT1300 4.5.x fix reference conflicts with that published
+maintenance catalogue. This needs clarification. Do not invent an MT1300
+upgrade target. Preserve its local NTP correction.
+
+### Disposition and evidence
+
+Keep security closeout open for both vendor devices. Request an exact
+model/build response and corresponding patch evidence. The
+[prepared enquiry](glinet-vendor-enquiry-2026-10-19.md) is a draft and has
+not been sent. A response must distinguish covered, affected, and
+inapplicable issues. Then prepare a separate upgrade or mitigation procedure
+for review if required. No new risk acceptance or firmware-family choice
+was made. Do not mix official OpenWrt packages into vendor firmware.
+
+Public source metadata, pinned source comparisons, catalogue responses,
+and the 63-notice comparison are in the investigation workspace at
+`logs/firmware-review/20261019-vendor/`. Its `sources.json` records retrieval
+times, URLs, hashes, and storage. Full public notices are retained locally
+under ignored `backups/vendor-review/20261019/`. The committed comparison
+contains relevant summaries and affected-version lines. Saved package
+identities are in `saved-package-comparison.json`; this is not a fresh audit.
+The review does not prove compromise or a complete absence of defects.

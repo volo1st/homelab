@@ -92,6 +92,13 @@ WDS association pass. One explicit web-service restart completed activation.
 The owner confirmed Air SSH, browser login, and off-LAN Tailscale access.
 No network setting, device boot, or other installed package changed.
 
+AXT1800 observation passed on 2026-10-20 at 13:53 Sydney, 36.44 hours
+after its post-update check. The owner reports no other issues. Fresh state
+shows the same service/boot, configuration, package set, wireless runtime,
+and continuous WDS association. LuCI's login challenge passes. Both WDS
+endpoints now pass the uHTTPd update and observation gate. Retained logs have
+no matched crash/out-of-memory event; they are not a full 24-hour recording.
+
 MT6000 was approved and updated from vendor 4.9.1 to 4.11.0 release3 on
 19 October Sydney. Native signature, image, backup, post-boot role, gateway,
 and DNS checks pass. The owner confirms Wi-Fi/Internet, Air SSH, and off-LAN
@@ -107,14 +114,14 @@ Resume work with these actions:
 
 1. Review MT6000's 24-hour normal use no earlier than 2026-10-21 01:45
    Sydney. All immediate client checks, including browser login, pass.
-2. Review AXT1800's 24-hour normal use. Its 2026-10-20 01:27 Sydney deadline
-   has elapsed. Record client reports and fresh service/WDS state before
-   closing it. No AXT1800 observation capture ran during the MT6000 update.
+2. Continue the existing configuration/recovery preparation while MT6000's
+   observation runs. AXT1800's observation is accepted; do not repeat it.
 3. Finish the existing recovery, tool, regression, and finding-disposition
    gates. Vendor research and the unsent enquiry remain deferred. The latest
    catalogue check retains MT1300 4.3.25; preserve its NTP patch.
 
-Next available focus: **Work package 12, Stage 5: upgrade acceptance**.
+Next available focus: **Work package 12: configuration and recovery closeout,
+with MT6000 observation pending**.
 Keep paired recovery files during observation. The native MT6000 archive
 needs the separately tracked one-host patch to restore hostname management.
 Actual restore and other final audit gates remain open. This checkpoint is
@@ -1119,7 +1126,7 @@ The earlier documentation closeout did not perform this source review.
     Public release/API/feed evidence and four candidate packages are preserved
     in the investigation workspace at `logs/firmware-review/20261017/`.
     This source-review outcome does not close the remediation items below.
-- [ ] Correct the later uHTTPd defects on AXT1800 and WAX202.
+- [x] Correct the later uHTTPd defects on AXT1800 and WAX202.
   - Use `networking/changes/openwrt-uhttpd-security.md`. WAX202 now has
     `2026.08.24~373145f7-r1` for both packages. The owner approved its update,
     web-service activation, and original-firmware recovery fallback. Native
@@ -1129,9 +1136,13 @@ The earlier documentation closeout did not perform this source review.
     WAX202 observation passed after about 26 hours on 2026-10-19 Sydney.
     AXT1800 was approved, updated, and activated on 2026-10-19 Sydney.
     The same technical checks and the owner's three client checks pass.
-    Both endpoints now have the corrected pair. Review AXT1800's 24-hour
-    observation no earlier than 2026-10-20 01:27 Sydney. Keep this gate open
-    until that acceptance passes. No exploit test is authorized.
+    Both endpoints now have the corrected pair. AXT1800 observation passed
+    at 13:53 on 2026-10-20 Sydney, after 36.44 hours. The owner reports no other
+    issues. Fresh service, boot, executable, package/configuration, wireless,
+    WDS association, and LuCI checks pass. Retained logs have no crash/OOM
+    match; they are not a complete 24-hour recording. Evidence is in
+    `networking/changes/openwrt-uhttpd-security.md` and private investigation
+    `backups/axt1800-observation/`. No exploit test ran.
 
 - [x] Decide the required depth of GL.iNet patch-coverage review.
   - Evidence: on 2026-10-19 the owner chose a home-network maintenance

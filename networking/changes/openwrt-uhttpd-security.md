@@ -371,3 +371,30 @@ commands, raw results, corrected preflight, paired backup, package comparison,
 service activation, HTTP response, and owner acceptance. Recovery was not
 needed. Preserve the original firmware and paired configuration until the
 observation ends. No NAS or Mac Studio connection or exploit test ran.
+
+## AXT1800 observation acceptance — 2026-10-20 Sydney
+
+Fresh read-only checks passed at `2026-10-20T02:53:00Z`, 13:53 Sydney,
+36.44 hours after the immediate post-update verification. The owner reports
+no other network issues. The separate MT6000 hostname problem was fixed in
+its own change; it does not establish an AXT1800 regression.
+
+The same boot ID, uHTTPd PID 26820, running binary/module hashes, package
+set, configuration/APK-world hashes, and wireless runtime remain present.
+The WDS station is authenticated, authorized, and associated. Its association
+start time is unchanged. LuCI returns its expected HTTP 403 login challenge,
+login-required header, and login form. Retained logs contain no matched
+uHTTPd crash, out-of-memory kill, or kernel panic. The ring buffer is not a
+continuous 24-hour recording. No installation, restart, reboot, or network
+configuration change ran during observation collection.
+
+AXT1800's web-service observation passes. WAX202's earlier observation
+remains accepted. The two-endpoint uHTTPd remediation gate is complete.
+The final network observation after other changes, MT6000 observation,
+actual restore, and final-state recovery coverage remain separate gates.
+Vendor patch research remains deferred under the owner's maintenance policy.
+
+Private evidence: investigation `backups/axt1800-observation/`.
+The public result summary is `logs/firmware-review/20261020-axt1800-observation/summary.json`.
+No NAS or Mac Studio connection, ARP/ping probe, throughput test, or exploit
+test ran. Only AXT1800 SSH and its unauthenticated LuCI page request were used.

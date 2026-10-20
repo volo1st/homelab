@@ -106,23 +106,21 @@ Tailscale. Its new Host validation rejected `mt6000.lan`. A guarded one-host
 allowlist repair restores HTTP 200 while unrelated hosts remain denied.
 Wireless runtime and post-upgrade configuration are unchanged by that repair.
 A fresh paired private backup passes integrity checks. The owner confirmed
-browser login after repair. All immediate client checks pass; the 24-hour
-observation remains open. See
+browser login after repair and reports about half a day without issues.
+The owner accepts that normal use as sufficient. MT6000 acceptance passes;
+the earlier fixed deadline is superseded. See
 `networking/changes/mt6000-firmware.md`.
 
 Resume work with these actions:
 
-1. Review MT6000's 24-hour normal use no earlier than 2026-10-21 01:45
-   Sydney. All immediate client checks, including browser login, pass.
-2. Continue the existing configuration/recovery preparation while MT6000's
-   observation runs. AXT1800's observation is accepted; do not repeat it.
-3. Finish the existing recovery, tool, regression, and finding-disposition
-   gates. Vendor research and the unsent enquiry remain deferred. The latest
-   catalogue check retains MT1300 4.3.25; preserve its NTP patch.
+1. Finish the existing configuration/recovery preparation. Firmware update
+   and normal-use acceptance are complete. No waiting period remains.
+2. Finish the existing tool, representative regression, and finding-disposition
+   gates. Keep checks proportional to this home network. Vendor research and
+   the unsent enquiry remain deferred. MT1300 retains 4.3.25 and its NTP patch.
 
-Next available focus: **Work package 12: configuration and recovery closeout,
-with MT6000 observation pending**.
-Keep paired recovery files during observation. The native MT6000 archive
+Next available focus: **Work package 12: configuration and recovery closeout**.
+Keep paired recovery files for later recovery. The native MT6000 archive
 needs the separately tracked one-host patch to restore hostname management.
 Actual restore and other final audit gates remain open. This checkpoint is
 committed locally. Private evidence remains ignored. No push ran.
@@ -1101,14 +1099,15 @@ browser login, and off-LAN Tailscale checks pass. Later stability observation
 remains open.
 Evidence: private `network-firmware/20261010T143127Z-wax202`.
 Procedure: `networking/changes/wax202-firmware.md`.
-MikroTik owner acceptance after RouterBOOT also passes. Later observation stays open.
+MikroTik owner acceptance after RouterBOOT also passes. The later owner
+normal-use report closes its stability acceptance under the home policy.
 
 The initial source review, `networking/firmware-review-2026-10-11.md`, records
 the earlier MikroTik 7.23.2 and WAX202 25.12.2 builds. The applied records above
 supersede that installed-version table: MikroTik is 7.23.8 and WAX202 is 25.12.5.
 Do not repeat completed upgrades. The later 2026-10-17 source comparison
 is appended to that review. It identified uHTTPd remediation and vendor
-patch-coverage gaps. Source comparison is complete; Stage 5 is not complete.
+patch-coverage gaps. Source comparison is complete. The later acceptance below completes Stage 5.
 The earlier documentation closeout did not perform this source review.
 
 - [x] Select an approved stable or long-term RouterOS update policy and change the channel separately.
@@ -1170,14 +1169,18 @@ The earlier documentation closeout did not perform this source review.
     web-service procedure, and MT6000 production procedure. The owner approved
     each applied change. MT6000 physical access, original image, paired backup,
     vendor signature, and native image test passed. Actual recovery is untested.
-- [ ] Verify each applied upgrade against its original role and a 24-hour observation period.
+- [x] Verify each applied upgrade against its original role and accepted normal use.
   - Check boot, management, DHCP/DNS role, service restrictions, client access,
     and fresh WDS ARP where applicable. Restore the paired firmware and private
     configuration through the documented recovery path if acceptance fails.
   - MT6000: technical role and hostname repair checks pass. The owner confirms
     Wi-Fi/Internet, Air SSH, Tailscale, and browser login after repair.
-    Review normal use after 2026-10-21 01:45 Sydney. Its vendor migration changed
-    network/wireless files; reviewed role/security values remain retained.
+    Evidence: on 2026-10-20 the owner reports about half a day without issues
+    and accepts that duration. This supersedes its fixed waiting deadline.
+    The WDS AP observations already pass. Earlier MikroTik/WAX202 role/client
+    checks and the owner's normal-use reports support their retained builds.
+    No full 24-hour MT6000 test is claimed. Vendor network/wireless migrations
+    were reviewed; role and encryption/passphrase values remain retained.
 
 An evidence-backed retain decision can close the review. Use the owner's
 production-firmware policy to bound this home-network audit. Record a clear
@@ -1260,10 +1263,11 @@ accepts the existing behavior. Unresolved required isolation or security needs d
   - Check idle IP access, DNS, fresh ARP across WDS, file access, required discovery,
     Tailscale access, large transfer, and printer behavior. Record workaround state,
     exact duration, file size, units, link-counter deltas, and test source.
-- [ ] Observe at least 24 hours after the last applied change and record the results.
-  - Include memory/storage trend, WDS reassociations, time alignment, and client
-    reports. Regressions return to the relevant stage. Keep the original WDS fix
-    evidence separate from acceptance of later changes.
+- [ ] Confirm normal operation after the last applied change and record the results.
+  - Use relevant service/link checks and owner client reports. The owner removed
+    the fixed 24-hour waiting rule on 2026-10-20 for this home network. Investigate
+    symptoms if reported. Recheck after a later change when needed. Keep the
+    original WDS fault evidence separate from acceptance of later changes.
 - [ ] Record a disposition for N01 through N13 and each remaining recovery gap.
   - Attach evidence for corrected findings. Record the user's explicit acceptance
     for retained risks. Keep unresolved required work open and name its next action.

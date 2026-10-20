@@ -68,10 +68,10 @@ installed-version table above. These are saved observations, not a new inventory
 
 | Device | Recorded build | Disposition and next review trigger |
 | --- | --- | --- |
-| MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Later stability acceptance remains open. |
+| MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Normal-use acceptance recorded on 20 October. |
 | AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Targeted uHTTPd/module update applied on 2026-10-19 Sydney. Technical, immediate client, and 36.44-hour observation checks pass. Observation accepted on 20 October. |
 | WAX202 | OpenWrt 25.12.5; ramips/mt7621 | Targeted uHTTPd/module update applied on 2026-10-17. Technical, client, and 26-hour web-service observation checks passed. Other final audit gates remain open. |
-| MT6000 | GL.iNet 4.11.0 release3; mediatek/mt7986; r15812+1095-46b6ee7ffc | Latest production catalogue entry verified and installed on 19 October Sydney. Native role checks and a local web-host compatibility repair pass. All immediate owner checks pass; 24-hour observation remains open. Vendor patch mapping is deferred. |
+| MT6000 | GL.iNet 4.11.0 release3; mediatek/mt7986; r15812+1095-46b6ee7ffc | Latest production catalogue entry verified and installed on 19 October Sydney. Native role checks and a local web-host compatibility repair pass. Immediate checks and owner-reported half-day normal use pass; accepted on 20 October. Vendor patch mapping is deferred. |
 | MT1300 | GL.iNet 4.3.25; ramips/mt7621; r20123-38ccc47687; local NTP patch | Retain provisionally. Preserve the time repair. Recheck vendor patches and support status. Support ends on 2028-06-08. |
 
 Review retained builds at the next maintenance session, no later than
@@ -395,3 +395,13 @@ have no crash/out-of-memory match; they are not a complete 24-hour recording.
 Both WDS endpoints now pass the uHTTPd remediation and observation gate.
 See [the acceptance record](changes/openwrt-uhttpd-security.md#axt1800-observation-acceptance--2026-10-20-sydney).
 MT6000's later observation and final recovery/regression gates remain open.
+
+## Home normal-use acceptance — 2026-10-20 Sydney
+
+The owner reports MT6000 working without issues for about half a day and
+accepts that duration for this home network. Together with the verified
+post-update role and client checks, this closes MT6000 acceptance.
+The earlier 21 October deadline is superseded; no full 24-hour run is claimed.
+Use technical checks and normal-use reports without a fixed waiting period.
+Investigate a regression if reported. Firmware update acceptance is complete;
+configuration/recovery and the remaining final audit work are separate.

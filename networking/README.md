@@ -66,6 +66,9 @@ and official OpenWrt releases. Keep MikroTik on its chosen long-term channel.
 Exclude beta, testing, and snapshot builds. Check release notes and clear
 applicable advisories briefly. Detailed vendor source-to-binary patch mapping
 and a vendor response are not baseline closure requirements.
+Use post-change checks and owner-confirmed normal use for acceptance.
+No fixed 24-hour waiting period is required for this home network.
+Investigate again if symptoms occur.
 Retain unresolved findings as maintenance notes. Latest firmware does not
 prove that every published defect is fixed. Review a clear remaining issue
 briefly and record its disposition.

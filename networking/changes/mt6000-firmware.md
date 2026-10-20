@@ -136,9 +136,10 @@ Private before/after Lua copies and manifests are saved beside the archives.
 No actual restore or bootloader recovery was needed or tested.
 
 The owner confirmed browser login after the hostname fix. All immediate
-client checks now pass. Review 24 hours of normal use no earlier than
-2026-10-21 01:45 Sydney,
-measured from the final web-change verification. Keep the original recovery
-image and paired backup. AXT1800's earlier observation is separate and ready
-for review; this MT6000 change does not complete that check.
+client checks pass. On 20 October, the owner reported about half a day of
+normal use without issues and accepted that as sufficient for this home
+network. MT6000's normal-use acceptance is complete. This explicitly replaces
+the earlier 21 October 01:45 deadline; it does not claim a full 24-hour test.
+Keep the paired recovery material. Investigate again if symptoms occur.
+AXT1800's separate observation has also passed.
 No other AP or MikroTik setting changed. No NAS or Mac Studio connection ran.

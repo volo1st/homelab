@@ -47,6 +47,9 @@ python3 scripts/prepare-network-recovery.py --run \
 ```
 
 The current supplement path is saved in the recovery directory's `inputs.json`.
+That file records the original collection paths. If the investigation workspace
+is removed, recover `supplement/` from the current encrypted bundle before a
+later refresh. The bundle itself does not require the old workspace for recovery.
 Keep its firmware, custom files, and `SHA256SUMS.json` current before reuse.
 The helper verifies source hashes, encryption/decryption, and repeated MikroTik
 retrieval. It requires an explicit source and refuses output inside the repository.

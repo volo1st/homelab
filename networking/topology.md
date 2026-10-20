@@ -65,7 +65,7 @@ is intended across WDS. Preserve the working pair and channel 153 / 80 MHz.
 | Device | Retained role | Management / host IPv4 | Latest recorded software |
 |---|---|---|---|
 | MikroTik RB760iGS | Main router, kitchen | `192.168.88.1` | RouterOS and RouterBOOT 7.23.8; long-term channel |
-| GL.iNet MT6000 | Kitchen client AP | `192.168.88.2` | GL.iNet 4.9.1 |
+| GL.iNet MT6000 | Kitchen client AP | `192.168.88.2` | GL.iNet 4.11.0 release3; local web hostname allowlist entry |
 | GL.iNet MT1300 | Study client AP | `192.168.88.3` | GL.iNet 4.3.25; local NTP resolver-tracking patch |
 | Netgear WAX202 | Studio WDS station and 2.4 GHz client AP | `192.168.88.4` | OpenWrt 25.12.5 |
 | GL.iNet AXT1800 | Bedroom WDS AP | `192.168.88.5` | OpenWrt 25.12.5 |
@@ -76,7 +76,8 @@ is intended across WDS. Preserve the working pair and channel 153 / 80 MHz.
 
 Software sources: [runtime audit](runtime-audit-2026-10-09.md),
 [MikroTik upgrade](changes/mikrotik-firmware.md),
-[WAX202 upgrade](changes/wax202-firmware.md), and
+[WAX202 upgrade](changes/wax202-firmware.md),
+[MT6000 upgrade](changes/mt6000-firmware.md), and
 [MT1300 time repair](changes/mt1300-time.md).
 NTP means Network Time Protocol. Review the local MT1300 patch after any upgrade.
 

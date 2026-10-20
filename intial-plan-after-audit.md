@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-19
+Last update: 2026-10-20
 
 Current package: **Work package 12: network documentation and recovery**
 
@@ -53,10 +53,9 @@ The 2026-10-17 firmware source comparison covers all five recorded builds.
 It found later uHTTPd defects in the 25.12.5 web-service revision. The current
 official feeds contain corrected packages. A separate targeted-update
 procedure is prepared. WAX202 was subsequently updated as recorded below.
-AXT1800 remains prepared only. MT6000 stable 4.11.0 is newer than
-the status-table entry, but its notes do not establish the required parser
-fixes. Vendor patch mapping remains unresolved. Keep these security gates
-open. Existing HTTP acceptance does not accept the newly identified defects.
+Both WDS endpoints were later updated as recorded below. The owner then
+bounded vendor maintenance to supported production releases. Detailed patch
+mapping is deferred. MT6000's approved production update is recorded below.
 
 The owner approved the WAX202 uHTTPd/module update. It was applied on
 2026-10-17. Both packages are now `2026.08.24~373145f7-r1`. Fresh native
@@ -93,27 +92,33 @@ WDS association pass. One explicit web-service restart completed activation.
 The owner confirmed Air SSH, browser login, and off-LAN Tailscale access.
 No network setting, device boot, or other installed package changed.
 
+MT6000 was approved and updated from vendor 4.9.1 to 4.11.0 release3 on
+19 October Sydney. Native signature, image, backup, post-boot role, gateway,
+and DNS checks pass. The owner confirms Wi-Fi/Internet, Air SSH, and off-LAN
+Tailscale. Its new Host validation rejected `mt6000.lan`. A guarded one-host
+allowlist repair restores HTTP 200 while unrelated hosts remain denied.
+Wireless runtime and post-upgrade configuration are unchanged by that repair.
+A fresh paired private backup passes integrity checks. The owner confirmed
+browser login after repair. All immediate client checks pass; the 24-hour
+observation remains open. See
+`networking/changes/mt6000-firmware.md`.
+
 Resume work with these actions:
 
-1. Review AXT1800's 24-hour normal use no earlier than 2026-10-20 01:27
-   Sydney. Record client reports and fresh service/WDS state. Retain its
-   original recovery images and paired configuration during observation.
-2. Use the owner's production-firmware policy recorded on 19 October.
-   Prepare MT6000's stable update with backup, compatibility, rollback, and
-   normal-function checks. The last catalogue review identified 4.11.0 as
-   its stable candidate and 4.3.25 as MT1300's latest stable release.
-   Recheck the catalogue before application. Preserve MT1300's NTP patch.
-   Vendor patch mapping and the unsent enquiry are deferred maintenance
-   research. They are not baseline closure gates.
-3. Finish tool hardening, representative regression, the final observation
-   after later changes, and finding dispositions in their existing stages.
+1. Review MT6000's 24-hour normal use no earlier than 2026-10-21 01:45
+   Sydney. All immediate client checks, including browser login, pass.
+2. Review AXT1800's 24-hour normal use. Its 2026-10-20 01:27 Sydney deadline
+   has elapsed. Record client reports and fresh service/WDS state before
+   closing it. No AXT1800 observation capture ran during the MT6000 update.
+3. Finish the existing recovery, tool, regression, and finding-disposition
+   gates. Vendor research and the unsent enquiry remain deferred. The latest
+   catalogue check retains MT1300 4.3.25; preserve its NTP patch.
 
-Next available focus: **Work package 12, Stage 5: AXT1800 observation and
-production firmware**. The vendor enquiry is deferred and remains unsent.
-WAX202's web-service observation remains accepted.
-AXT1800's installation has immediate client acceptance, but its observation
-is open. This checkpoint is committed locally. Private evidence and recovery
-files remain ignored. Revalidate temporary AP files before any recovery.
+Next available focus: **Work package 12, Stage 5: upgrade acceptance**.
+Keep paired recovery files during observation. The native MT6000 archive
+needs the separately tracked one-host patch to restore hostname management.
+Actual restore and other final audit gates remain open. This checkpoint is
+committed locally. Private evidence remains ignored. No push ran.
 
 The approved 2026-10-07/08 source reconciliations remain in
 `networking/source-reconciliation.md`, `research-source-reconciliation.md`,
@@ -1139,20 +1144,29 @@ The earlier documentation closeout did not perform this source review.
     the unsent enquiry. Preserve the findings for brief release/advisory
     checks. No vendor response is required for baseline closure. This does
     not establish that the findings are fixed or authorize a device change.
-- [ ] Verify that the GL.iNet devices meet the production-firmware policy.
-  - The last catalogue review identifies MT6000 4.11.0 as the stable update
-    candidate and MT1300 4.3.25 as current. Recheck before an approved update.
-    Use the existing per-device preparation and acceptance gates below.
-    Record any clear remaining advisory issue briefly. Exact backport proof
-    is outside this gate. Preserve MT1300's local NTP correction.
-- [ ] Prepare a separate approved procedure for each firmware upgrade that is justified.
+- [x] Verify that the GL.iNet devices meet the production-firmware policy.
+  - Evidence: official catalogue and MT6000 native pre/post records on
+    2026-10-19/20. MT6000 now runs production 4.11.0 release3. The latest
+    MT1300 production entry remains its recorded 4.3.25. No MT1300 change ran.
+    `networking/changes/mt6000-firmware.md` records verified image/signature,
+    backup, and role results. Client acceptance and observation stay separate.
+    Exact backport proof is outside this gate. Preserve the local NTP patch.
+- [x] Prepare a separate approved procedure for each firmware upgrade that is justified.
   - Include verified image hashes, storage requirements, packages, configuration
     compatibility, physical recovery, downtime, and rollback image. Upgrade one
     device at a time. Never upgrade both WDS endpoints in one maintenance batch.
+  - Evidence: the existing MikroTik and WAX202 firmware records, separate WDS
+    web-service procedure, and MT6000 production procedure. The owner approved
+    each applied change. MT6000 physical access, original image, paired backup,
+    vendor signature, and native image test passed. Actual recovery is untested.
 - [ ] Verify each applied upgrade against its original role and a 24-hour observation period.
   - Check boot, management, DHCP/DNS role, service restrictions, client access,
     and fresh WDS ARP where applicable. Restore the paired firmware and private
     configuration through the documented recovery path if acceptance fails.
+  - MT6000: technical role and hostname repair checks pass. The owner confirms
+    Wi-Fi/Internet, Air SSH, Tailscale, and browser login after repair.
+    Review normal use after 2026-10-21 01:45 Sydney. Its vendor migration changed
+    network/wireless files; reviewed role/security values remain retained.
 
 An evidence-backed retain decision can close the review. Use the owner's
 production-firmware policy to bound this home-network audit. Record a clear

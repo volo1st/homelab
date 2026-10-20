@@ -1,6 +1,6 @@
 # Home network
 
-Updated: 2026-10-19 (Australia/Sydney).
+Updated: 2026-10-20 (Australia/Sydney).
 This directory owns the current network design and recovery instructions.
 The original wireless distribution system (WDS) reachability fault is closed.
 On 2026-10-17, the owner also accepted the swapped access point (AP) layout
@@ -17,6 +17,7 @@ Firmware-review and recovery gates remain open in work package 12.
 - [Network configuration audit, 2026-10-09](configuration-audit-2026-10-09.md)
 - [Network runtime audit, 2026-10-09](runtime-audit-2026-10-09.md)
 - [Firmware and advisory review, current checkpoint](firmware-review-2026-10-11.md#current-review--2026-10-17-sydney)
+- [MT6000 production update and hostname compatibility](changes/mt6000-firmware.md)
 - [OpenWrt web-service security update and results](changes/openwrt-uhttpd-security.md)
 - [Network improvement stages](../intial-plan-after-audit.md#network-improvement-stages)
 - [Configuration capture and recovery](configuration-backup.md)
@@ -71,6 +72,10 @@ briefly and record its disposition.
 
 Preserve AU radio settings and the working WDS channel 153 / 80 MHz.
 Review the MT1300 local NTP patch after a firmware upgrade.
+MT6000 is on vendor 4.11.0 release3. Its retained `mt6000.lan` browser name
+requires a local one-host allowlist entry on this build. Review the native
+allowlist on a later upgrade; do not copy the old web source over new firmware.
+See [the update record](changes/mt6000-firmware.md).
 Check a device's exact release, packages, backup, and rollback path before an
 approved change. Upgrade the two WDS endpoints separately.
 Use [the troubleshooting workflow](troubleshooting.md) if symptoms return.

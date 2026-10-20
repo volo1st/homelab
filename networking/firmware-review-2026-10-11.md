@@ -71,7 +71,7 @@ installed-version table above. These are saved observations, not a new inventory
 | MikroTik RB760iGS | RouterOS and RouterBOOT 7.23.8; long-term | Retain. Reviewed fixes are in this branch. Recheck on a new applicable advisory, a new long-term release, or a change to certificate-based services. Later stability acceptance remains open. |
 | AXT1800 | OpenWrt 25.12.5, r33051-f5dae5ece4; qualcommax/ipq60xx | Targeted uHTTPd/module update applied on 2026-10-19 Sydney. Technical and immediate client checks passed. Its 24-hour observation remains open. |
 | WAX202 | OpenWrt 25.12.5; ramips/mt7621 | Targeted uHTTPd/module update applied on 2026-10-17. Technical, client, and 26-hour web-service observation checks passed. Other final audit gates remain open. |
-| MT6000 | GL.iNet 4.9.1; mediatek/mt7986; r15812+1092-46b6ee7ffc | Prepare the latest stable production update under the owner policy below. The last catalogue check identifies 4.11.0. Recheck before installation. Vendor patch mapping is deferred. |
+| MT6000 | GL.iNet 4.11.0 release3; mediatek/mt7986; r15812+1095-46b6ee7ffc | Latest production catalogue entry verified and installed on 19 October Sydney. Native role checks and a local web-host compatibility repair pass. All immediate owner checks pass; 24-hour observation remains open. Vendor patch mapping is deferred. |
 | MT1300 | GL.iNet 4.3.25; ramips/mt7621; r20123-38ccc47687; local NTP patch | Retain provisionally. Preserve the time repair. Recheck vendor patches and support status. Support ends on 2028-06-08. |
 
 Review retained builds at the next maintenance session, no later than
@@ -367,3 +367,20 @@ maintenance. It does not establish a vulnerability-free network.
 The canonical work package records the changed gate dispositions explicitly.
 Production-version verification, approved updates, and their normal-function
 acceptance remain open. Recovery and other final audit gates are unchanged.
+
+## MT6000 production application — 2026-10-19/20 Sydney
+
+Fresh official catalogue data selected 4.11.0 release3 as `RELEASE`.
+Published size/hash, the existing device signing key, target metadata,
+paired native backup, and `sysupgrade -T` passed. The owner approved the
+configuration-retaining update and confirmed physical recovery access.
+Fresh post-boot evidence verifies the recorded new version and AP role.
+
+The vendor migration blocked the retained web name. A one-host allowlist
+entry restores `mt6000.lan` while unrelated Host headers remain denied.
+Wi-Fi/Internet, Air SSH, off-LAN Tailscale, and browser login after the repair
+have owner acceptance. The 24-hour observation remains open.
+Review observation after 2026-10-21 01:45 Sydney.
+See [application and recovery evidence](changes/mt6000-firmware.md#applied-result--2026-10-1920-sydney).
+The unchanged uHTTPd/nginx labels do not establish exact patch coverage.
+No new source-mapping requirement is introduced.

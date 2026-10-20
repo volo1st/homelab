@@ -1,0 +1,10 @@
+--- a/usr/share/gl-ngx/oui-access.lua
++++ b/usr/share/gl-ngx/oui-access.lua
+@@ -66,6 +66,7 @@
+ 
+ local hosts = {
+     ['console.gl-inet.com'] = true,
++    ['mt6000.lan'] = true,
+     ['localhost'] = true,
+     ['127.0.0.1'] = true,
+     ['::1'] = true

@@ -1,9 +1,9 @@
 # Configuration capture and recovery
 
-Updated: 2026-10-17 (Australia/Sydney).
+Updated: 2026-10-20 (Australia/Sydney).
 The WDS fault is closed and the current AP layout is accepted.
 Use this procedure for a later authorized capture or recovery preparation.
-This documentation update made no device connection or new backup.
+Dated change records below identify later per-device backups.
 Run collection from the Air or the Linux development container with confirmed
 SSH aliases and host keys. Configuration collection can run from either side
 of a working bridge. Use the Air for independent cross-bridge reachability tests.
@@ -119,6 +119,16 @@ See [MikroTik firmware](changes/mikrotik-firmware.md) and
 The initial bundle predates later configuration and firmware changes.
 No complete post-change capture of the retained 2026-10-17 state was verified
 in this closeout. Do not assume the old bundle exactly reproduces that state.
+
+MT6000's 2026-10-19/20 update has paired 4.9.1 and 4.11.0 images and
+private native backups in the investigation workspace at
+`backups/mt6000-update/`. Both backup archives passed integrity checks.
+The final 4.11.0 archive has 163 entries. It does not include the local
+web-host allowlist source change. Recover that change from the reviewed
+[helper and update record](changes/mt6000-firmware.md#browser-hostname-compatibility),
+not by restoring the complete old Lua file over a different firmware build.
+This per-device checkpoint does not refresh the whole encrypted bundle or
+prove a representative restore.
 
 Reviewed templates, final-state recovery copies, and a representative restore
 remain open. No router restore, Netinstall, or recovery flash was tested.

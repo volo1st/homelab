@@ -55,17 +55,35 @@ def main():
     parser.add_argument('--run', action='store_true', help='Create one encrypted router backup, retrieve it, and create local recovery files')
     parser.add_argument('--resume', help='Resume an existing timestamp without creating another router backup')
     parser.add_argument('--output', type=Path, default=Path('/sandbox/vincent/home_network_backup'))
+    parser.add_argument('--source', type=Path, help='Reviewed current configuration capture directory; required with --run')
+    parser.add_argument('--runtime', type=Path, help='Matching read-only runtime capture directory')
+    parser.add_argument('--supplement', type=Path, help='Verified custom files, firmware, packages, and recovery notes')
     args = parser.parse_args()
     if not args.run:
         parser.print_help()
         return
     root = Path(__file__).resolve().parents[1]
-    source = root / 'secrets/local/network/20261006T103815Z'
-    runtime = root / 'secrets/local/network-runtime/20261009T004414Z'
-    refresh = root / 'secrets/local/network-stage0/20261009T084844Z'
+    if args.source is None:
+        parser.error('--source is required with --run; historical captures are never selected implicitly')
+    source = args.source.resolve()
+    runtime = args.runtime.resolve() if args.runtime else None
+    supplement = args.supplement.resolve() if args.supplement else None
     verify_sources(source)
-    if not all(p.is_dir() for p in [runtime, refresh]):
-        raise RuntimeError('Reviewed runtime or Stage 0 evidence is absent')
+    capture_manifest = (source / 'manifest.txt').read_text()
+    if 'completed_utc=' not in capture_manifest or 'collection_exit=0' not in capture_manifest:
+        raise RuntimeError('Configuration capture did not complete')
+    if runtime is not None:
+        manifest = json.loads((runtime / 'manifest.json').read_text())
+        if not manifest.get('all_transports_passed'):
+            raise RuntimeError('Runtime capture has an incomplete transport')
+    if supplement is not None:
+        expected_files = json.loads((supplement / 'SHA256SUMS.json').read_text())
+        for name, expected in expected_files.items():
+            candidate = supplement / name
+            if not candidate.resolve().is_relative_to(supplement) or not candidate.is_file():
+                raise RuntimeError('Invalid supplemental recovery path')
+            if digest(candidate) != expected:
+                raise RuntimeError('Supplemental recovery checksum mismatch')
     for tool in ['gpg', 'gpgconf', 'ssh', 'sftp']:
         if not shutil.which(tool):
             raise RuntimeError('Required installed tool is absent: ' + tool)
@@ -80,6 +98,14 @@ def main():
     output_root.mkdir(parents=True, exist_ok=True)
     output = output_root / stamp
     output.mkdir(mode=0o700, exist_ok=bool(args.resume))
+    input_record = {'source': str(source), 'runtime': str(runtime) if runtime else None,
+                    'supplement': str(supplement) if supplement else None}
+    inputs_path = output / 'inputs.json'
+    if args.resume:
+        if json.loads(inputs_path.read_text()) != input_record:
+            raise RuntimeError('Resume inputs differ from the original recovery run')
+    else:
+        inputs_path.write_text(json.dumps(input_record, indent=2) + chr(10))
     key_dir = root / 'secrets/local/network-recovery-keys'
     key_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     key_path = key_dir / (stamp + '.passphrase')
@@ -114,7 +140,8 @@ def main():
         raise RuntimeError('Router backup creation did not verify; private partial files are retained')
     remote_password = key_dir / (stamp + '.mikrotik-passphrase')  # secret-scan: allow -- private file path, not a credential
     remote_password.write_text(match.group(1) + '\n')
-    stage_parent = root / 'secrets/local/network-stage0'
+    stage_parent = root / 'secrets/local/network-recovery-work'
+    stage_parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     with tempfile.TemporaryDirectory(prefix='recovery-work-', dir=stage_parent) as temporary:
         work = Path(temporary)
         local_backup = output / (backup_base + '.backup')
@@ -129,9 +156,12 @@ def main():
             raise RuntimeError('Backup size or repeated-download hash check failed')
         bundle = work / 'recovery.tar.gz'
         with tarfile.open(bundle, 'w:gz') as archive:
-            archive.add(source, arcname='configuration/20261006T103815Z')
-            archive.add(runtime, arcname='runtime/20261009T004414Z')
-            archive.add(refresh, arcname='stage0/20261009T084844Z')
+            archive.add(source, arcname='configuration/' + source.name)
+            if runtime is not None:
+                archive.add(runtime, arcname='runtime/' + runtime.name)
+            if supplement is not None:
+                archive.add(supplement, arcname='supplement')
+            archive.add(inputs_path, arcname='inputs.json')
             archive.add(local_backup, arcname='mikrotik/' + local_backup.name)
             archive.add(remote_password, arcname='mikrotik/backup-passphrase.txt')
         # A short path avoids the Unix-domain socket path limit in gpg-agent.
@@ -157,6 +187,7 @@ def main():
             'mikrotik_encryption': 'aes-sha256; explicit random password',
             'mikrotik_restore_test': 'not run', 'remote_file_retained': backup_base + '.backup',
             'outer_passphrase_file': str(key_path),
+            'inputs': input_record,
         }
         (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print('Local encrypted recovery directory:', output)

@@ -1,0 +1,22 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config oui-httpd 'main'
+	option security_rule '1'
+	option max_login_fail '10'
+	option login_fail_wait '600'
+	option lang 'en'
+	option inited '1'
+	option console_disabled '0'
+
+config no-auth-methods
+	option object 'ui'
+	list method 'get_lang'
+	list method 'load_locales'
+	list method 'check_initialized'
+	list method 'get_wifi_config_init'
+	list method 'init'
+	list method 'get_timezone_list'
+
+config no-auth-methods
+	option object 'system'
+	list method 'get_timezone_list'

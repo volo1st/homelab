@@ -30,7 +30,8 @@ AU radio settings on MT6000 and WAX202, and the persistent MT1300 NTP repair.
 MT1300 automatic time recovery passed a second controlled reboot.
 MikroTik RouterOS and RouterBOOT are 7.23.8 long-term. WAX202 is on OpenWrt
 25.12.5. Immediate MikroTik and WAX202 owner checks passed, including required
-Tailscale access. Their later upgrade-specific stability gates remain open.
+Tailscale access. Later normal-use acceptance is recorded below. Firmware
+acceptance is complete under the owner's home-network policy.
 MT6000 AU runtime and reboot persistence passed. The owner's later everyday
 Wi-Fi use is accepted; no new dedicated post-reboot Tailscale test was claimed.
 
@@ -45,8 +46,8 @@ tool hardening, final regression coverage, or finding dispositions.
 
 The encrypted NAS-local recovery bundle passed integrity, decryption, and
 retrieval checks. The owner accepts that NAS loss also loses that copy.
-An off-host copy is deferred under that accepted risk. Actual restore and a
-complete final-state capture remain unverified. HTTP management remains
+An off-host copy is deferred under that accepted risk. Actual restore remains
+untested. The final-state capture and encrypted refresh now pass. HTTP management remains
 accepted; HTTPS work is deferred. Tailnet access-policy review is incomplete.
 
 The 2026-10-17 firmware source comparison covers all five recorded builds.
@@ -111,19 +112,23 @@ The owner accepts that normal use as sufficient. MT6000 acceptance passes;
 the earlier fixed deadline is superseded. See
 `networking/changes/mt6000-firmware.md`.
 
-Resume work with these actions:
+Current closeout checkpoint: fresh five-device configuration and runtime
+captures are complete. The 20261020T033118Z encrypted bundle includes paired
+firmware, private credentials, the MikroTik binary backup, and both local fixes.
+Decryption, hashes, and repeated MikroTik retrieval pass. All 33 essential AP
+templates pass native parsing. Router-side ports and N09 routing behavior are
+reviewed. See `networking/baseline-review-2026-10-20.md`.
 
-1. Finish the existing configuration/recovery preparation. Firmware update
-   and normal-use acceptance are complete. No waiting period remains.
-2. Finish the existing tool, representative regression, and finding-disposition
-   gates. Keep checks proportional to this home network. Vendor research and
-   the unsent enquiry remain deferred. MT1300 retains 4.3.25 and its NTP patch.
+Resume: obtain the owner's final decision on untested device restore and the
+remaining access-policy/client-check limits. A production restore requires a
+specific outage and physical recovery approval. Do not flash a working AP to
+satisfy a checklist without that approval. Physical labels remain unverified.
+Keep the incident capture tools unpromoted until their cleanup is hardened.
+No fixed waiting period remains. No required limit has been silently accepted.
 
-Next available focus: **Work package 12: configuration and recovery closeout**.
-Keep paired recovery files for later recovery. The native MT6000 archive
-needs the separately tracked one-host patch to restore hostname management.
-Actual restore and other final audit gates remain open. This checkpoint is
-committed locally. Private evidence remains ignored. No push ran.
+Next available focus: **Work package 12: final closeout decision**.
+The package remains active. Optional hardware, RF tuning, vendor patch research,
+and new services remain deferred. All authorized preparation is recorded below.
 
 The approved 2026-10-07/08 source reconciliations remain in
 `networking/source-reconciliation.md`, `research-source-reconciliation.md`,
@@ -1189,18 +1194,34 @@ fixed from a firmware version alone. Detailed vendor patch research is deferred.
 
 #### Stage 6: make configuration reproducible
 
-- [ ] Confirm and record exact cable ports and mark bridged WAN ports as LAN where applicable.
-- [ ] Derive reviewed native templates under `networking/devices/<device>/`.
+- [ ] Finish physical cable/faceplate labels. Router-side ports and bridged WAN roles are recorded.
+  - Evidence: the 2026-10-20 passive FDB/link capture maps ether3 to AXT1800,
+    ether4 to MT1300 at 100 Mbit/s, and ether5 to MT6000. See `networking/topology.md`.
+    Intermediate switch and faceplate labels remain unverified.
+- [x] Derive reviewed native templates under `networking/devices/<device>/`.
+  - Evidence: 2026-10-20 current native exports, reviewed private-value placeholders,
+    installed package lists, paired image hashes, and custom-file dependencies.
+    All 33 AP templates pass each device's native parser in temporary storage.
+    MikroTik text was reviewed only. Actual restore remains separate.
   - Preserve intended vendor AP mode. Separate secret placeholders from recoverable
     private values. Record firmware hashes, packages, custom files, and dependencies.
-- [ ] Review residual WAX202 WAN protocols and vendor AP-mode routing controls (N09).
+- [x] Review residual WAX202 WAN protocols and vendor AP-mode routing controls (N09).
+  - Evidence: fresh 2026-10-20 runtime shows WAX202 WAN/WAN6 down and no second
+    IPv4 default route. Retain its unused WAN jack. Vendor AP mode and disabled
+    primary WAN/WAN6 are retained. No unnecessary setting removal ran.
+    Recheck before using a spare uplink. See the current baseline review.
   - Disable only settings with no required role after runtime verification.
     Verify bridge forwarding and management; restore saved sections on regression.
 - [ ] Verify a representative restore with physical recovery available.
   - Start with an isolated or spare target when available. If the production device
     must be used, obtain a specific outage and recovery approval. Record scope:
     a representative restore does not prove every device is recoverable.
-- [ ] Record untested recovery cases and verify updated approved recovery copies after changes.
+- [x] Record untested recovery cases and verify updated approved recovery copies after changes.
+  - Evidence: `/sandbox/vincent/home_network_backup/20261020T033118Z/`;
+    decryption/plaintext hashes pass, 145 archive members, two matching downloads
+    of the 43,611-byte encrypted MikroTik backup. Current native captures, firmware,
+    web packages, and both omitted custom files are included. Actual restore,
+    replacement devices, and bootloader recovery remain explicitly untested.
   - The owner accepted NAS-local-only storage in Stage 0. An off-host copy is
     deferred under that explicit risk acceptance. Refresh the approved copy;
     do not treat a second NAS directory as off-host protection.
@@ -1226,7 +1247,10 @@ guest/IoT isolation has not been implemented or verified. No second studio
 uplink is planned. Revisit isolation or loop prevention when a concrete
 requirement or topology change warrants it.
 
-- [ ] Decide guest/IoT isolation and management-network requirements (N11).
+- [x] Record the current guest/IoT isolation and management-network disposition (N11).
+  - Decision: retain the working single LAN under the accepted home layout. No
+    new isolated network is required by this work. This does not claim isolation
+    or a complete security-policy audit. Review when a concrete need appears.
   - Default: retain the working single LAN pending an approved design. If isolation
     is required, map switches, VLAN support, routing, firewall rules, and Bonjour
     exceptions end to end. A disabled guest SSID is not a verified isolation design.
@@ -1234,15 +1258,15 @@ requirement or topology change warrants it.
   - Review actual enrollment and access policy before changing remote access.
     Review router advertisements on all interfaces before enabling Internet IPv6.
     Confirm how remote management survives earlier source restrictions.
-- [ ] Measure radio airtime and client performance before optional channel or width changes (N10).
+- [x] Defer radio measurements and tuning under the accepted layout (N10).
   - Deferred after owner acceptance. If resumed, record comparable workloads,
     location, and actual post-swap radio state. Do not treat the old MT6000
     channel 8 observation as current or change the accepted WDS channel by default.
-- [ ] Measure latency under load before deciding on queueing or shaping (N12).
+- [x] Defer latency/shaping measurements until symptoms justify them (N12).
   - Scope the active test first. If shaping is justified, account for FastTrack,
     gateway CPU capacity, latency, and throughput. Do not enable SQM on a bridged AP
     as a substitute for a reviewed gateway design.
-- [ ] Record loop-prevention requirements before adding any second studio uplink (N12).
+- [x] Record loop-prevention requirements before adding any second studio uplink (N12).
   - No parallel Ethernet/WDS path is currently planned. Enable or redesign STP only
     for a defined topology need, with a verified rollback and client recovery.
 
@@ -1254,21 +1278,32 @@ accepts the existing behavior. Unresolved required isolation or security needs d
 #### Stage 8: harden tools and close verified work
 
 - [ ] Harden capture cleanup in the investigation repo before shared-tool promotion.
+  - Current scope: incident-only tools remain unpromoted. This conditional work
+    is not evidence of a network defect. Cleanup failure paths remain untested.
   - Expose stop failures. Verify process identity and artifact ownership. Mock
     startup, PID-file, interruption, retrieval, and stop failures. Keep one copy.
-- [ ] Record unsupported runtime commands and verify collector behavior across device builds.
+- [x] Record unsupported runtime commands and verify collector behavior across device builds.
+  - Evidence: current five-device capture completed. The baseline review lists
+    nonzero sections and native alternatives. SSH success is kept separate from
+    command success. No packages were installed to fill report omissions.
   - Distinguish command results from SSH success. Keep partial evidence and explicit
     omissions. Do not install tools on a router solely to make a report look complete.
 - [ ] Run the approved final regression checks from the Air and representative clients.
   - Check idle IP access, DNS, fresh ARP across WDS, file access, required discovery,
     Tailscale access, large transfer, and printer behavior. Record workaround state,
     exact duration, file size, units, link-counter deltas, and test source.
-- [ ] Confirm normal operation after the last applied change and record the results.
+- [x] Confirm normal operation after the last applied change and record the results.
+  - Evidence: accepted MT6000 half-day normal use, repaired browser login, AXT1800
+    no-issues report, and fresh 20 October role/runtime captures. No later
+    network change occurred. No printer/discovery or live restore pass is inferred.
   - Use relevant service/link checks and owner client reports. The owner removed
     the fixed 24-hour waiting rule on 2026-10-20 for this home network. Investigate
     symptoms if reported. Recheck after a later change when needed. Keep the
     original WDS fault evidence separate from acceptance of later changes.
-- [ ] Record a disposition for N01 through N13 and each remaining recovery gap.
+- [x] Record a disposition for N01 through N13 and each remaining recovery gap.
+  - Evidence: `networking/baseline-review-2026-10-20.md` separates corrections,
+    prior owner acceptances, optional deferrals, and limits still requiring a
+    decision. Recording an open gap does not close it.
   - Attach evidence for corrected findings. Record the user's explicit acceptance
     for retained risks. Keep unresolved required work open and name its next action.
 - [ ] Update design and recovery documents, scan for secrets, and commit reviewed work.

@@ -1,0 +1,16 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config service 'general'
+	list track_ipv6 '2001:4860:4860::8844'
+	list track_ipv6 '2001:4860:4860::8888'
+	list track_ipv6 '2620:0:ccd::2'
+	list track_ipv6 '2620:0:ccc::2'
+	list track_ip '1.1.1.1'
+	list track_ip '8.8.8.8'
+	list track_ip '208.67.222.222'
+	list track_ip '208.67.220.220'
+	option inited '1'
+	option autotimezone '1'
+	option inited_internet '1'
+	option lan2wan '0'
+	option mode 'ap'

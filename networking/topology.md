@@ -1,6 +1,6 @@
 # Network topology
 
-Updated: 2026-10-18 (Australia/Sydney).
+Updated: 2026-10-20 (Australia/Sydney).
 This is the retained operational layout. The owner accepted it on 2026-10-17.
 AP means access point. WDS means wireless distribution system.
 LAN means local area network.
@@ -31,8 +31,8 @@ flowchart TB
 ```
 
 Solid lines show logical Ethernet paths. Dashed lines show wireless paths.
-This is not an exact physical port map. Post-swap cable ports, switch uplinks,
-and client associations have not been independently collected.
+The router-side ports below were collected on 20 October. Intermediate
+switch ports, faceplate labels, and every client association remain unverified.
 The study NAS-to-iMac path does not need the kitchen uplink.
 
 The owner reports slow house runs: study about 100 Mbit/s, studio about
@@ -40,6 +40,28 @@ The owner reports slow house runs: study about 100 Mbit/s, studio about
 intrinsic socket ratings. The fault location is unverified. The studio wall
 path is not the uplink; the working WDS bridge bypasses it.
 In-wall repair and a cable across the bedroom doorway are not current options.
+
+## Observed router-side ports
+
+Collected: 2026-10-20 at about 03:16 UTC. MikroTik bridge learning associates
+these AP MAC addresses with each router port. This is passive forwarding data.
+It does not prove a direct cable or identify every intermediate switch.
+
+| MikroTik port | Observed role/path | Negotiated link |
+|---|---|---|
+| `ether1` | Internet-facing port | 1 Gbit/s |
+| `ether2` | No current link | Down |
+| `ether3` | AXT1800 / bedroom path | 1 Gbit/s |
+| `ether4` | MT1300 / study path | 100 Mbit/s |
+| `ether5` | MT6000 / kitchen path | 1 Gbit/s |
+| `sfp1` | No module/link | Down |
+
+AXT1800's physical `wan` is bridged into `br-lan`. Treat it as a LAN uplink.
+MT1300's `wan` and MT6000's `eth1` are also in their LAN bridges in vendor AP mode.
+Their WAN protocol sections remain disabled. Do not change their AP mode.
+WAX202 `lan1` serves the studio switch; `lan2` and `lan3` are in the same bridge.
+Its separate `wan` is down and has no current uplink role. Leave that jack unused.
+No physical label was applied by this remote review.
 
 ## Critical forwarding path
 
@@ -118,7 +140,7 @@ limit; it does not establish an MT1300 radio capacity limit.
 
 Evidence: the investigation [facts and performance records](https://github.com/volo1st/wds-arp-discovery-debug/blob/master/note.md)
 and [accepted plan](https://github.com/volo1st/wds-arp-discovery-debug/blob/master/plan.md).
-The source documents and performance logs currently include uncommitted updates
-in the local investigation workspace. Their local files are authoritative until
-publication. Audit implementation and recovery gates remain solely in
+The investigation repository retains the source records and performance logs.
+Private recovery material remains ignored. Audit implementation and recovery
+gates remain solely in
 [work package 12](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery).

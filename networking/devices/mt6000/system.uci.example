@@ -1,0 +1,19 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config system
+	option log_size '64'
+	option urandom_seed '0'
+	option hostname 'GL-MT6000'
+	option compat_version '1.0'
+	option cronloglevel '10'
+	option ttylogin '1'
+	option timezone 'AEST-10AEDT,M10.1.0,M4.1.0/3'
+	option zonename 'Australia/Sydney'
+
+config timeserver 'ntp'
+	option enabled '1'
+	option enable_server '0'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'

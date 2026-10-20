@@ -7,7 +7,7 @@ On 2026-10-17, the owner also accepted the swapped access point (AP) layout
 as sufficient for normal use.
 Retain MT6000 in the kitchen, MT1300 in the study, and the AXT1800–WAX202 WDS pair.
 Hardware purchases and further Wi-Fi tuning are deferred.
-Firmware-review and recovery gates remain open in work package 12.
+Firmware acceptance is complete. Recovery and final closeout decisions remain in work package 12.
 
 - [Topology, addressing, naming, and accepted limits](topology.md)
 - [Studio WDS backhaul](wds-backhaul-setup.md)
@@ -21,6 +21,8 @@ Firmware-review and recovery gates remain open in work package 12.
 - [OpenWrt web-service security update and results](changes/openwrt-uhttpd-security.md)
 - [Network improvement stages](../intial-plan-after-audit.md#network-improvement-stages)
 - [Configuration capture and recovery](configuration-backup.md)
+- [Reviewed device templates](devices/README.md)
+- [Current baseline review and finding dispositions](baseline-review-2026-10-20.md)
 - [Source reconciliation](source-reconciliation.md)
 
 ## Sources of truth
@@ -32,12 +34,13 @@ The private [investigation repository](https://github.com/volo1st/wds-arp-discov
 owns raw WDS evidence, performance logs, hardware research, and investigation tools.
 Its local workspace is `/sandbox/vincent/workspace/wds-arp-discovery-debug`.
 The 2026-10-16 results and 2026-10-17 owner acceptance are in its local `note.md`
-and `plan.md`. Some updates and logs are not yet committed.
+and `plan.md`. Reviewed checkpoints are retained in Git; private recovery
+material remains ignored.
 
 The static and runtime audits describe their dated captures. They are not the
 current inventory after later changes. Use [topology.md](topology.md) for the
-latest recorded software, addresses, and placement. Exact cable ports and
-reviewed reproducible templates remain unverified.
+latest recorded software, addresses, and placement. Router-side ports and reviewed essential templates are now recorded.
+Physical faceplate labels and actual device restoration remain unverified.
 
 ## Routine operating baseline
 
@@ -106,5 +109,5 @@ Do not reopen the resolved ARP fault solely because a separate check is pending.
 The encrypted NAS-local recovery bundle passed integrity, decryption, and
 retrieval checks. The owner accepts that NAS loss also loses that copy.
 It is not off-host protection or an actual restore test.
-Reviewed templates, a representative restore, and a verified final-state
-recovery capture remain open. See [recovery coverage](configuration-backup.md#current-coverage).
+Current templates and the refreshed final-state recovery bundle pass their
+integrity and syntax checks. A representative device restore remains untested. See [recovery coverage](configuration-backup.md#current-coverage).

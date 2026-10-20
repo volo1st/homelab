@@ -1,0 +1,7 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config dropbear 'main'
+	option Port '22'
+	option enable '1'
+	option PasswordAuth 'off'
+	option RootPasswordAuth 'off'

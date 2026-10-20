@@ -94,49 +94,80 @@ Source: [MikroTik configuration export and import](https://help.mikrotik.com/doc
 
 ## Current coverage
 
-The 2026-10-06 capture completed from the Linux development container.
-Its private files are in `secrets/local/network/20261006T103815Z/`.
-All four OpenWrt archives passed readability checks. All recorded checksums
-passed. The MikroTik text export contains 28 menu sections.
-Capture directories are `0700`, files are `0600`, and Git ignores the capture.
-No raw configuration was committed.
+The current capture is `secrets/local/network/20261020T031655Z/`.
+Four readable native AP archives match their backup lists and SHA-256 checks.
+The MikroTik export and current private dependencies were collected.
+Reviewed [device templates](devices/README.md) preserve the essential native
+settings. All 33 AP templates pass native parsing. Private authentication files
+and remaining vendor state stay in the full archives. Keep the Air private key
+available separately; a router archive does not contain that client key.
 
-The encrypted bundle at
-`/sandbox/vincent/home_network_backup/20261009T085347Z/` passed decryption,
-integrity, and retrieval checks. It contains an encrypted MikroTik binary
-backup with matching downloaded copies. Private recovery secrets remain
-outside Git. Required SSH-key dependencies were inventoried.
-The corrected certificate listing contained no certificate objects.
-See [Stage 0 evidence](../intial-plan-after-audit.md#stage-0-prepare-recovery-and-the-first-change).
+Current encrypted recovery directory:
+`/sandbox/vincent/home_network_backup/20261020T033118Z/`.
+Outer archive SHA-256:
+`7f38f90ad39317fd1b2452eeab280db3c95ff6480d9de5dc93ef2c34af7e25b5`.
+The 145-member archive passes decryption and plaintext hash comparison.
+The new encrypted MikroTik binary backup is 43,611 bytes. Two downloads match.
+Its random password is inside the outer archive. No certificate objects were
+listed. Authorized public keys were inventoried privately.
 
-The owner accepted NAS-local storage on 2026-10-09. NAS loss also loses this
-copy. An off-host copy is deferred under that accepted risk; it is not an
-unperformed deployment silently required by the current baseline.
+The bundle includes current runtime, paired firmware images, corrected web
+packages, both custom files, and recovery notes. MT6000's native archive omits
+its web-host Lua change. MT1300's native archive omits its sysntpd patch.
+Both are separately included under `supplement/custom/`. Review the patches
+against their exact firmware before restoration. Never copy stale vendor code
+over a different build.
 
-MikroTik and WAX202 upgrade preparation also saved paired recovery material.
-See [MikroTik firmware](changes/mikrotik-firmware.md) and
-[WAX202 firmware](changes/wax202-firmware.md).
-The initial bundle predates later configuration and firmware changes.
-No complete post-change capture of the retained 2026-10-17 state was verified
-in this closeout. Do not assume the old bundle exactly reproduces that state.
+The outer passphrase remains privately at
+`secrets/local/network-recovery-keys/20261020T033118Z.passphrase`.
+The existing helper verifies ignored key storage and refuses repository output.
+It now requires an explicit current source. It records inputs and rejects a
+resume with different paths. Its CLI guard and offline fixture checks pass.
+Its live bundle creation, retrieval, encryption, and decryption checks pass.
 
-MT6000's 2026-10-19/20 update has paired 4.9.1 and 4.11.0 images and
-private native backups in the investigation workspace at
-`backups/mt6000-update/`. Both backup archives passed integrity checks.
-The final 4.11.0 archive has 163 entries. It does not include the local
-web-host allowlist source change. Recover that change from the reviewed
-[helper and update record](changes/mt6000-firmware.md#browser-hostname-compatibility),
-not by restoring the complete old Lua file over a different firmware build.
-This per-device checkpoint does not refresh the whole encrypted bundle or
-prove a representative restore.
+To refresh an approved copy, run from this repository:
 
-Reviewed templates, final-state recovery copies, and a representative restore
-remain open. No router restore, Netinstall, or recovery flash was tested.
-A successful decrypt proves archive access, not device recovery.
-Use an isolated or spare target first when practical. A production restore
-requires a separately approved outage and physical recovery path.
+```sh
+python3 scripts/prepare-network-recovery.py --run \
+  --source secrets/local/network/<configuration-UTC> \
+  --runtime secrets/local/network-runtime/<runtime-UTC> \
+  --supplement <reviewed-recovery-assets-directory>
+```
 
-The collector passed Bash syntax, ShellCheck, and mocked success and interrupted
-SSH checks. It also completed live collection on all five devices from Linux.
-Track the remaining implementation only in
+The supplement needs a complete reviewed `SHA256SUMS.json`. The current input
+paths are saved in the recovery directory's `inputs.json` and `manifest.json`.
+Verify them before using `--resume <UTC>`. Partial results remain private.
+
+The owner accepts NAS-local-only storage. NAS loss also loses the bundle and
+local key. A second directory on this NAS is not off-host protection.
+The previous 20261009 bundle is retained as historical recovery material.
+Use the current bundle for the present configuration.
+
+## Prepared device recovery
+
+This is a prepared procedure, not evidence of a completed device restore.
+A production restore needs a specific outage and recovery approval.
+Use an isolated or spare same-model device first when available.
+
+1. Confirm physical access, power, and a wired Air connection to the target.
+2. Keep the recovery archive and private key accessible before taking down WDS.
+3. Use the private passphrase file to decrypt the archive into a private directory.
+4. Verify the archive hash, included source hashes, model, and paired image hash.
+5. Keep the existing known Air SSH key and browser credentials available.
+6. For OpenWrt, use the same-family firmware and native full configuration restore.
+7. For MikroTik, use the matching version and password-encrypted binary backup.
+8. Restore each build-specific custom fix after checking its source and procedure.
+9. On official OpenWrt, restore the corrected uHTTPd/module pair through the existing trusted release feed.
+10. Verify management IP, DNS, gateway, key access, browser login, role, and AU.
+11. Verify WDS and affected client access if the target carries that bridge.
+12. If verification fails, use the saved paired firmware/configuration and physical recovery path.
+
+Standalone included APKs previously returned an untrusted verification result.
+They are retained evidence, not permission to bypass package trust. The native
+signed-index/feed workflow remains required. Keep working Internet access for
+that step. Bootloader recovery, replacement hardware, cross-version import,
+and actual restores on all five models remain untested.
+
+The [current review](baseline-review-2026-10-20.md) records limits and collector
+omissions. Track actions only in
 [work package 12](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery).

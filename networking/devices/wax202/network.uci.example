@@ -1,0 +1,56 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	list ipaddr '127.0.0.1/8'
+
+config globals 'globals'
+	option dhcp_default_duid '0004e94c99c32b7b452a96cfb04aeda6efec'
+	option ula_prefix 'fd3f:186c:12d6::/48'
+	option packet_steering '1'
+	option flow_offloading '0'
+	option flow_offloading_hw '0'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	list ports 'lan1'
+	list ports 'lan2'
+	list ports 'lan3'
+
+config device
+	option name 'lan1'
+	option macaddr '34:98:b5:28:89:52'
+
+config device
+	option name 'lan2'
+	option macaddr '34:98:b5:28:89:52'
+
+config device
+	option name 'lan3'
+	option macaddr '34:98:b5:28:89:52'
+
+config interface 'lan'
+	option device 'br-lan'
+	option proto 'static'
+	option ipaddr '192.168.88.4'
+	option ip6assign '60'
+	option netmask '255.255.255.0'
+	option gateway '192.168.88.1'
+	option dns '192.168.88.1'
+	option macaddr_acl '0'
+	option igmp_snooping '0'
+	option hairpin '1'
+
+config device
+	option name 'wan'
+	option macaddr '34:98:b5:28:89:53'
+
+config interface 'wan'
+	option device 'wan'
+	option proto 'dhcp'
+
+config interface 'wan6'
+	option device 'wan'
+	option proto 'dhcpv6'

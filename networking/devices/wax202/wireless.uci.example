@@ -1,0 +1,53 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option path '1e140000.pcie/pci0000:00/0000:00:01.0/0000:02:00.0'
+	option band '2g'
+	option channel 1
+	option htmode HT20
+	option disabled 0
+	option country AU
+
+config wifi-iface 'default_radio0'
+	option device 'radio0'
+	option network 'lan'
+	option mode 'ap'
+	option ssid 'Moo Moo Farm'
+	option encryption psk2+ccmp
+	option disabled 0
+	option multicast_to_unicast '0'
+	option isolate 0
+	option disassoc_low_ack '0'
+	option key '<PRIVATE_WAX202_KEY_1>'
+	option hidden 0
+	option ieee80211w 1
+
+config wifi-device 'radio1'
+	option type 'mac80211'
+	option path '1e140000.pcie/pci0000:00/0000:00:01.0/0000:02:00.0+1'
+	option band '5g'
+	option channel '153'
+	option htmode 'HE80'
+	option country 'AU'
+
+config wifi-iface 'default_radio1'
+	option device 'radio1'
+	option network 'lan'
+	option mode 'ap'
+	option ssid 'OpenWrt'
+	option encryption 'none'
+	option disabled '1'
+	option multicast_to_unicast '0'
+	option isolate '0'
+	option disassoc_low_ack '0'
+
+config wifi-iface 'wdssta'
+	option device 'radio1'
+	option mode 'sta'
+	option network 'lan'
+	option ssid 'Secret Cow Level'
+	option encryption 'psk2'
+	option key '<PRIVATE_WAX202_KEY_2>'
+	option wds '1'
+	option bssid '5E:81:E0:EE:07:05'

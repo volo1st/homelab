@@ -1,0 +1,20 @@
+# Reviewed native configuration, 2026-10-20. Restore private values before use.
+
+config globals 'globals'
+	option enabled '0'
+	option origin_ula_prefix 'fdd0:4302:7220::/48'
+
+config interface 'wan'
+	option interface 'wan'
+	option addrmode 'auto'
+	option dnsmode 'auto'
+
+config interface 'secondwan'
+	option interface 'secondwan'
+	option addrmode 'auto'
+	option dnsmode 'auto'
+
+config interface 'lan'
+	option mode 'nat6'
+	option dnsmode 'auto'
+	option lan_ip6addr 'fdd0:4302:7220::1/64'

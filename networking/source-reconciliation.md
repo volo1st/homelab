@@ -101,3 +101,16 @@ The remote-access decision task remains open for its full rationale, threat
 assumptions, access scope, and maintenance record.
 Todoist retains lightweight status and links. Technical implementation tasks
 remain only in the canonical audit plan.
+
+## Home baseline scope correction — 2026-10-20
+
+The later home-network scope supersedes the open-gate language in the dated
+checkpoints above. Work package 12 is complete for everyday access, basic
+security, production firmware, and current private backups. Live restore drills,
+full policy audits, physical labels, and repeated regression campaigns are
+outside that baseline. No unperformed test is recorded as passed.
+
+Retain the working Tailscale path. A second VPN is not required. Optional
+Pi-hole, naming, playback, and WireGuard research remain separate Todoist items.
+See [the current operating reference](README.md) and
+[the canonical scope](../intial-plan-after-audit.md#work-package-12-network-documentation-and-recovery).

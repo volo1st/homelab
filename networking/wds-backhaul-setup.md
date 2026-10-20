@@ -69,10 +69,9 @@ Its SHA-256 is `6703e3f714c4da46ea24c10d2d826298b8549369f2ecd806ead96ae3e0fbd12d
 The rollback image and private pre-upgrade archive remain required recovery
 artifacts. Do not restore the GL.iNet archive into official OpenWrt.
 
-Current device exports were collected on 2026-10-06. Reviewed configuration
-templates and restore verification remain pending. Follow
-[configuration-backup.md](configuration-backup.md) for the capture evidence
-and remaining recovery work.
+Current backups were refreshed on 2026-10-20. Reviewed native templates pass
+syntax checks. Actual restoration remains untested; a drill is outside this
+home baseline. See [configuration-backup.md](configuration-backup.md).
 
 ## Evidence and earlier experience
 

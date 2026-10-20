@@ -3,6 +3,10 @@
 This record extends the dated configuration and runtime audits. It does not
 rewrite their findings. Work package 12 remains the only action checklist.
 The owner accepts normal home use without a fixed waiting period.
+The later 20 October scope correction removes unnecessary closure procedures.
+The home baseline is complete: everyday access, basic security corrections,
+production firmware, and current private backups have supporting evidence.
+Untested items below remain facts. They are outside the revised completion criteria.
 
 ## Evidence
 
@@ -58,7 +62,8 @@ Retain the tested Apple TV Tailscale path. Do not deploy another VPN.
 Router vendor configuration alone cannot prove cloud unbinding or a tailnet
 access policy. MT6000 retains rtty feature flags; these are not proof of an
 active cloud session. No external enrollment/policy audit was performed.
-That limit needs an explicit closeout decision, rather than an invented pass.
+A full policy audit is outside this baseline. Revisit it when users, enrollment,
+exposure, or access needs change. No audit pass or cloud-unbinding claim is made.
 
 ## Runtime collector coverage
 
@@ -76,14 +81,14 @@ No router package was installed to fill a report. Compound commands may hide
 an earlier subcommand failure. This capture does not certify full coverage.
 Transport and per-section results were inspected separately.
 
-## Acceptance and remaining checks
+## Acceptance and checks outside the baseline
 
 Recent owner checks cover fresh Air SSH, browser login, off-LAN Tailscale,
 OX app control, and normal use. MT6000's repaired browser login passed.
 The owner reports about half a day without MT6000 issues and no other AXT1800
 issues. Earlier WDS packet evidence and demanding file use remain valid for
 the original fault. No later network change occurred in this closeout.
-No new fixed observation timer is required.
+No new fixed observation timer or routine regression campaign is required.
 
 Printer wake, discovery from every client, fresh idle ARP, and measured transfer
 counters were not rerun after the last firmware change. Treat them as untested.
@@ -102,5 +107,8 @@ closeout tested or corrected those cleanup paths.
 
 Physical faceplate and intermediate switch labels remain unverified.
 The [router-side port map](topology.md#observed-router-side-ports) is usable,
-but it does not identify every cable end. Actual restore and the access-policy
-limit remain explicit decisions before package closure.
+but it does not identify every cable end. Physical labelling, live restore drills,
+and complete policy audits are outside the home baseline. The owner asked to
+remove superfluous procedures. This changes scope; it does not convert an
+untested item into a passed test. The earlier request for another acceptance
+round is superseded. Required household operation has already been confirmed.

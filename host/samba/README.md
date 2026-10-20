@@ -235,3 +235,8 @@ If the Samba configuration also needs rollback, use the manual rollback procedur
 - If a permission check fails, run `stat` on the reported path.
 - If a client cannot write, confirm that its account is in `smbwriters`.
 - If a client has unexpected access, confirm its Unix groups and Samba account.
+
+## Reference notes
+
+- [Bind mounts and workspace sharing](bind-mount-reference.md): preserved concept
+  and untested example, not a deployed mount.

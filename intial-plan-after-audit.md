@@ -9,7 +9,7 @@ The filename keeps the spelling from the initial request. Do not create a second
 
 ## Current status
 
-Last update: 2026-10-20
+Last update: 2026-10-21
 
 Last completed package: **Work package 12: network documentation and recovery**.
 State: **Complete under the home-network scope below**.
@@ -27,6 +27,13 @@ Use `networking/README.md` for routine operation. Use
 Restore drills, exhaustive policy audits, physical labels, repeated acceptance
 runs, and diagnostic-tool promotion are outside this baseline. They were not
 performed or passed. They are no longer pending completion gates.
+
+Documentation checkpoint, 2026-10-21: preserved the workspace bind-mount note in
+`host/samba/bind-mount-reference.md` and linked it from the Samba README. The
+mount concept was checked against the util-linux manual. The original paths and
+fstab example remain untested. No host operation or new audit package was started.
+Work package 12 remains complete. The next focus and resume condition below are
+unchanged.
 
 Next available focus: the existing paused iPhone-sync work, when the owner
 resumes it. Its own plan remains canonical. No other work package starts as
